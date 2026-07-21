@@ -1,0 +1,336 @@
+// ===========================================================================
+// BASSIR CORPORATE ACADEMY PLATFORM (BCAP)
+// Multi-tenant enterprise workforce transformation SaaS.
+//
+// Tenancy model: SHARED DATABASE, TENANT_ID COLUMN, enforced by PostgreSQL
+// Row-Level Security (RLS). Every tenant-scoped table carries `tenantId` and
+// is protected by an RLS policy keyed on the `app.current_tenant` session
+// variable. See prisma/migrations/**/rls.sql and src/lib/tenant-db.ts.
+// ===========================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// PLATFORM / TENANCY
+// ---------------------------------------------------------------------------
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  TRIAL
+  CANCELLED
+}
+
+enum Industry {
+  ENGINEERING_CONSULTANCY
+  CONSTRUCTION_CONTRACTING
+  LOGISTICS
+  MANUFACTURING
+  FINANCE
+  HEALTHCARE
+  TECHNOLOGY
+  RETAIL
+  OTHER
+}
+
+enum PlanTier {
+  STARTER
+  GROWTH
+  ENTERPRISE
+}
+
+/// A company/customer. The root of every tenant-scoped record.
+model Tenant {
+  id        String       @id @default(cuid())
+  name      String
+  slug      String       @unique // used for path/subdomain routing, e.g. "alarrab"
+  subdomain String?      @unique
+  industry  Industry     @default(OTHER)
+  status    TenantStatus @default(TRIAL)
+  plan      PlanTier     @default(GROWTH)
+  country   String       @default("SA")
+  timezone  String       @default("Asia/Riyadh")
+  locale    String       @default("en")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  branches           Branch[]
+  departments        Department[]
+  users              User[]
+  roles              Role[]
+  competencyCategories CompetencyCategory[]
+  competencies       Competency[]
+  trainingPrograms   TrainingProgram[]
+  enrollments        Enrollment[]
+  auditLogs          AuditLog[]
+
+  @@map("tenants")
+}
+
+// ---------------------------------------------------------------------------
+// ORG STRUCTURE
+// ---------------------------------------------------------------------------
+
+model Branch {
+  id        String   @id @default(cuid())
+  tenantId  String
+  name      String
+  city      String?
+  country   String   @default("SA")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  departments Department[]
+  users       User[]
+
+  @@index([tenantId])
+  @@map("branches")
+}
+
+model Department {
+  id        String   @id @default(cuid())
+  tenantId  String
+  branchId  String?
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  branch Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  users  User[]
+
+  @@index([tenantId])
+  @@map("departments")
+}
+
+// ---------------------------------------------------------------------------
+// IDENTITY & ACCESS
+// ---------------------------------------------------------------------------
+
+enum UserStatus {
+  ACTIVE
+  INVITED
+  DISABLED
+}
+
+model User {
+  id           String     @id @default(cuid())
+  tenantId     String
+  email        String
+  passwordHash String
+  firstName    String
+  lastName     String
+  jobTitle     String?
+  status       UserStatus @default(ACTIVE)
+  isTenantOwner Boolean   @default(false)
+
+  branchId     String?
+  departmentId String?
+  managerId    String?
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  lastLoginAt  DateTime?
+
+  tenant     Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  branch     Branch?      @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  department Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  manager    User?        @relation("UserManager", fields: [managerId], references: [id], onDelete: SetNull)
+  reports    User[]       @relation("UserManager")
+
+  userRoles       UserRole[]
+  enrollments     Enrollment[]
+  authoredPrograms TrainingProgram[] @relation("ProgramAuthor")
+  auditLogs       AuditLog[]
+
+  // Email is unique WITHIN a tenant, not globally — the same person may exist
+  // in multiple companies.
+  @@unique([tenantId, email])
+  @@index([tenantId])
+  @@index([managerId])
+  @@map("users")
+}
+
+/// Roles are tenant-scoped. System-default roles are cloned into each tenant
+/// at provisioning time (see prisma/seed.ts).
+model Role {
+  id          String   @id @default(cuid())
+  tenantId    String
+  key         String // stable identifier, e.g. "admin", "manager", "learner"
+  name        String
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  @@unique([tenantId, key])
+  @@index([tenantId])
+  @@map("roles")
+}
+
+/// Global permission catalog (NOT tenant-scoped). Keys are referenced in code.
+model Permission {
+  id          String   @id @default(cuid())
+  key         String   @unique // e.g. "training.program.create"
+  description String
+  category    String   @default("general")
+
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+// ---------------------------------------------------------------------------
+// COMPETENCY FRAMEWORK  (core differentiator vs. an LMS)
+// ---------------------------------------------------------------------------
+
+model CompetencyCategory {
+  id        String   @id @default(cuid())
+  tenantId  String
+  name      String
+  createdAt DateTime @default(now())
+
+  tenant       Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  competencies Competency[]
+
+  @@index([tenantId])
+  @@map("competency_categories")
+}
+
+model Competency {
+  id          String   @id @default(cuid())
+  tenantId    String
+  categoryId  String?
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  tenant   Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  category CompetencyCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  programs TrainingProgram[]
+
+  @@index([tenantId])
+  @@map("competencies")
+}
+
+// ---------------------------------------------------------------------------
+// TRAINING / DEVELOPMENT  (the end-to-end working module for Phase 1)
+// ---------------------------------------------------------------------------
+
+enum ProgramLevel {
+  FOUNDATION
+  INTERMEDIATE
+  ADVANCED
+  LEADERSHIP
+}
+
+enum ProgramStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model TrainingProgram {
+  id           String        @id @default(cuid())
+  tenantId     String
+  title        String
+  description  String?
+  level        ProgramLevel  @default(FOUNDATION)
+  status       ProgramStatus @default(DRAFT)
+  durationHours Int          @default(0)
+  competencyId String?
+  authorId     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  tenant     Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  competency Competency?  @relation(fields: [competencyId], references: [id], onDelete: SetNull)
+  author     User?        @relation("ProgramAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  enrollments Enrollment[]
+
+  @@index([tenantId])
+  @@map("training_programs")
+}
+
+enum EnrollmentStatus {
+  ENROLLED
+  IN_PROGRESS
+  COMPLETED
+  DROPPED
+}
+
+model Enrollment {
+  id          String           @id @default(cuid())
+  tenantId    String
+  programId   String
+  userId      String
+  status      EnrollmentStatus @default(ENROLLED)
+  progress    Int              @default(0) // 0-100
+  score       Int? // final assessment score, 0-100
+  enrolledAt  DateTime         @default(now())
+  completedAt DateTime?
+
+  tenant  Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  program TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, userId])
+  @@index([tenantId])
+  @@index([userId])
+  @@map("enrollments")
+}
+
+// ---------------------------------------------------------------------------
+// AUDIT
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  actorId   String?
+  action    String // e.g. "user.login", "training.program.create"
+  entity    String? // e.g. "TrainingProgram"
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  actor  User?  @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([tenantId, createdAt])
+  @@map("audit_logs")
+}
