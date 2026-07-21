@@ -29,9 +29,22 @@ future module builds on:
 | **Audit log** | Tenant-scoped audit trail (logins, program creation, …). |
 | **Seed** | Provisions the three launch customers: Alarrab Engineering Consultancy, Azoom United Contracting, Hadathah Logistics. |
 
+## Status — Phase 2 (Talent modules)
+
+Built on the Phase 1 core, these modules are live end-to-end (schema + RLS +
+seed + UI), all tenant-scoped and permission-gated:
+
+| Module | Delivered |
+|--------|-----------|
+| **Competency assessments** | Per-employee self / manager / target levels (1–5), an interactive skill matrix (managers & HR click a cell to re-assess), and organization skill-gap analysis. |
+| **Certifications** | Internal corporate-university certifications with awards, holders, validity and status; managers issue certificates to employees. |
+| **Leadership & succession** | 9-box talent grid (performance × potential) and succession pipelines with successor readiness for critical roles. |
+| **Analytics** | Completion / active-learner / compliance donuts, enrollments-by-level, a 6-month trend and competency coverage. |
+| **AI insights** | Priority skill gaps, program recommendations that close the largest gaps, role-readiness scoring and a retention watch. |
+
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design and the
-[roadmap](docs/ARCHITECTURE.md#roadmap) of upcoming modules (leadership &
-succession, certifications, AI workforce insights, billing, …).
+[roadmap](docs/ARCHITECTURE.md#roadmap) of remaining modules (billing, SSO,
+platform-admin plane, full Arabic/RTL, …).
 
 ---
 

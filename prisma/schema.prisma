@@ -67,8 +67,13 @@ model Tenant {
   roles              Role[]
   competencyCategories CompetencyCategory[]
   competencies       Competency[]
+  competencyRatings  CompetencyRating[]
   trainingPrograms   TrainingProgram[]
   enrollments        Enrollment[]
+  certifications     Certification[]
+  certificationAwards CertificationAward[]
+  criticalRoles      CriticalRole[]
+  successionCandidates SuccessionCandidate[]
   auditLogs          AuditLog[]
 
   @@map("tenants")
@@ -136,6 +141,10 @@ model User {
   departmentId String?
   managerId    String?
 
+  // 9-box talent grid placement (1..3 each). Null until assessed.
+  performanceRating Int?
+  potentialRating   Int?
+
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   lastLoginAt  DateTime?
@@ -149,6 +158,10 @@ model User {
   userRoles       UserRole[]
   enrollments     Enrollment[]
   authoredPrograms TrainingProgram[] @relation("ProgramAuthor")
+  competencyRatings CompetencyRating[]
+  certificationAwards CertificationAward[]
+  incumbentOf     CriticalRole[]      @relation("RoleIncumbent")
+  successionCandidacies SuccessionCandidate[]
   auditLogs       AuditLog[]
 
   // Email is unique WITHIN a tenant, not globally — the same person may exist
@@ -241,9 +254,123 @@ model Competency {
   tenant   Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   category CompetencyCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   programs TrainingProgram[]
+  ratings  CompetencyRating[]
+  certifications Certification[]
 
   @@index([tenantId])
   @@map("competencies")
+}
+
+// ---------------------------------------------------------------------------
+// COMPETENCY ASSESSMENTS  (measure real capability, not just completions)
+// ---------------------------------------------------------------------------
+
+/// One employee's assessed level on one competency. Levels are 1..5.
+/// `current` is the working level; self/manager are the assessment inputs.
+model CompetencyRating {
+  id           String   @id @default(cuid())
+  tenantId     String
+  userId       String
+  competencyId String
+  selfLevel    Int      @default(1)
+  managerLevel Int      @default(1)
+  currentLevel Int      @default(1)
+  targetLevel  Int      @default(3)
+  updatedAt    DateTime @updatedAt
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  competency Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, competencyId])
+  @@index([tenantId])
+  @@map("competency_ratings")
+}
+
+// ---------------------------------------------------------------------------
+// CORPORATE UNIVERSITY — INTERNAL CERTIFICATIONS
+// ---------------------------------------------------------------------------
+
+enum CertificationStatus {
+  ACTIVE
+  EXPIRING
+  EXPIRED
+}
+
+model Certification {
+  id              String              @id @default(cuid())
+  tenantId        String
+  name            String
+  competencyId    String?
+  validityMonths  Int                 @default(24)
+  status          CertificationStatus @default(ACTIVE)
+  createdAt       DateTime            @default(now())
+
+  tenant     Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  competency Competency?          @relation(fields: [competencyId], references: [id], onDelete: SetNull)
+  awards     CertificationAward[]
+
+  @@index([tenantId])
+  @@map("certifications")
+}
+
+model CertificationAward {
+  id              String    @id @default(cuid())
+  tenantId        String
+  certificationId String
+  userId          String
+  issuedAt        DateTime  @default(now())
+  expiresAt       DateTime?
+
+  tenant        Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  certification Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([certificationId, userId])
+  @@index([tenantId])
+  @@map("certification_awards")
+}
+
+// ---------------------------------------------------------------------------
+// LEADERSHIP & SUCCESSION
+// ---------------------------------------------------------------------------
+
+enum SuccessionReadiness {
+  READY_NOW
+  ONE_TO_TWO_YEARS
+  THREE_PLUS_YEARS
+}
+
+model CriticalRole {
+  id          String   @id @default(cuid())
+  tenantId    String
+  title       String
+  incumbentId String?
+  createdAt   DateTime @default(now())
+
+  tenant     Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  incumbent  User?                 @relation("RoleIncumbent", fields: [incumbentId], references: [id], onDelete: SetNull)
+  candidates SuccessionCandidate[]
+
+  @@index([tenantId])
+  @@map("critical_roles")
+}
+
+model SuccessionCandidate {
+  id             String              @id @default(cuid())
+  tenantId       String
+  criticalRoleId String
+  userId         String
+  readiness      SuccessionReadiness @default(ONE_TO_TWO_YEARS)
+  score          Int                 @default(50) // readiness %, 0..100
+
+  tenant       Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  criticalRole CriticalRole @relation(fields: [criticalRoleId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([criticalRoleId, userId])
+  @@index([tenantId])
+  @@map("succession_candidates")
 }
 
 // ---------------------------------------------------------------------------

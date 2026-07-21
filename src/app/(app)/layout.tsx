@@ -1,6 +1,19 @@
 import { requireSession } from "@/lib/auth";
-import { SidebarNav } from "@/components/nav";
+import { can, type PermissionKey } from "@/lib/rbac";
+import { SidebarNav, type NavItem } from "@/components/nav";
 import { logoutAction } from "./logout-action";
+
+const NAV_DEFS: (NavItem & { perm?: PermissionKey })[] = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/training", label: "Training Programs", group: "Develop", perm: "training.program.read" },
+  { href: "/competencies", label: "Competencies", group: "Develop", perm: "competency.read" },
+  { href: "/certifications", label: "Certifications", group: "Develop", perm: "training.program.read" },
+  { href: "/people", label: "People", group: "Talent", perm: "user.read" },
+  { href: "/succession", label: "Leadership & Succession", group: "Talent", perm: "report.view" },
+  { href: "/analytics", label: "Analytics", group: "Talent", perm: "report.view" },
+  { href: "/insights", label: "AI Insights", group: "Intelligence", perm: "report.view" },
+  { href: "/settings", label: "Settings" },
+];
 
 export default async function AppLayout({
   children,
@@ -8,6 +21,9 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const session = await requireSession();
+  const navItems: NavItem[] = NAV_DEFS.filter(
+    (i) => !i.perm || can(session, i.perm)
+  ).map(({ href, label, group }) => ({ href, label, group }));
   const initials = session.name
     .split(" ")
     .map((p) => p[0])
@@ -29,7 +45,7 @@ export default async function AppLayout({
             </p>
           </div>
         </div>
-        <SidebarNav />
+        <SidebarNav items={navItems} />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">

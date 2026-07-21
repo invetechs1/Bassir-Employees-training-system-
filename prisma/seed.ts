@@ -234,30 +234,82 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
       return user;
     }
 
-    await makeUser("Admin", spec.name.split(" ")[0], "admin", {
+    // 9-box talent-grid placement per user index: [performance, potential] (1..3).
+    const NINE_BOX: [number, number][] = [
+      [3, 3],
+      [3, 2],
+      [2, 3],
+      [2, 2],
+      [1, 2],
+    ];
+    const admin = await makeUser("Admin", spec.name.split(" ")[0], "admin", {
       owner: true,
       jobTitle: "Platform Administrator",
     });
-    await makeUser("Huda", "Al-Otaibi", "hr_manager", {
+    const huda = await makeUser("Huda", "Al-Otaibi", "hr_manager", {
       jobTitle: "L&D Manager",
       deptIndex: 0,
     });
-    await makeUser("Faisal", "Al-Harbi", "manager", {
+    const faisal = await makeUser("Faisal", "Al-Harbi", "manager", {
       jobTitle: "Department Manager",
       deptIndex: 1,
     });
-    const learner1 = await makeUser("Sara", "Al-Qahtani", "learner", {
+    const sara = await makeUser("Sara", "Al-Qahtani", "learner", {
       jobTitle: "Engineer",
       deptIndex: 0,
     });
-    await makeUser("Omar", "Al-Ghamdi", "learner", {
+    const omar = await makeUser("Omar", "Al-Ghamdi", "learner", {
       jobTitle: "Specialist",
       deptIndex: 2,
     });
+    const users = [admin, huda, faisal, sara, omar];
 
-    // Programs (published) + one sample enrollment
+    // Set 9-box placement.
+    for (let ui = 0; ui < users.length; ui++) {
+      const [perf, pot] = NINE_BOX[ui] ?? [2, 2];
+      await tx.user.update({
+        where: { id: users[ui].id },
+        data: { performanceRating: perf, potentialRating: pot },
+      });
+    }
+
+    // Competency ratings (self / manager / current / target, levels 1..5).
+    const competencies = await tx.competency.findMany({
+      where: { tenantId: tenant.id },
+      orderBy: { createdAt: "asc" },
+    });
+    const currentByUserComp: Record<string, Record<string, number>> = {};
+    for (let ui = 0; ui < users.length; ui++) {
+      const u = users[ui];
+      currentByUserComp[u.id] = {};
+      const boost = u.isTenantOwner || u.id === huda.id ? 1 : 0;
+      for (let ci = 0; ci < competencies.length; ci++) {
+        const base = 2 + ((ui * 2 + ci) % 3);
+        const selfLevel = Math.min(5, base + (ci % 2) + boost);
+        const managerLevel = Math.min(5, Math.max(1, base - (ui % 2 === 0 ? 0 : 1)) + boost);
+        const currentLevel = Math.round((selfLevel + managerLevel) / 2);
+        const targetLevel = Math.min(5, Math.max(currentLevel, base) + 1);
+        currentByUserComp[u.id][competencies[ci].id] = currentLevel;
+        await tx.competencyRating.create({
+          data: {
+            tenantId: tenant.id,
+            userId: u.id,
+            competencyId: competencies[ci].id,
+            selfLevel,
+            managerLevel,
+            currentLevel,
+            targetLevel,
+          },
+        });
+      }
+    }
+
+    // Programs (published), linked to a competency + one sample enrollment.
     const createdPrograms = [];
-    for (const p of spec.programs) {
+    for (let pi = 0; pi < spec.programs.length; pi++) {
+      const p = spec.programs[pi];
+      const linked =
+        pi === 0 ? competencies[0] : competencies[competencies.length - 1];
       const program = await tx.trainingProgram.create({
         data: {
           tenantId: tenant.id,
@@ -266,6 +318,7 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
           level: p.level,
           durationHours: p.durationHours,
           status: "PUBLISHED",
+          competencyId: linked?.id ?? null,
         },
       });
       createdPrograms.push(program);
@@ -275,12 +328,63 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
         data: {
           tenantId: tenant.id,
           programId: createdPrograms[0].id,
-          userId: learner1.id,
+          userId: sara.id,
           status: "IN_PROGRESS",
           progress: 50,
         },
       });
     }
+
+    // Internal certifications from the top competencies + awards to proficient staff.
+    for (let ci = 0; ci < Math.min(3, competencies.length); ci++) {
+      const comp = competencies[ci];
+      const validityMonths = 24;
+      const cert = await tx.certification.create({
+        data: {
+          tenantId: tenant.id,
+          name: `${comp.name} Certification`,
+          competencyId: comp.id,
+          validityMonths,
+          status: ci === 1 ? "EXPIRING" : "ACTIVE",
+        },
+      });
+      let holders = users.filter(
+        (u) => (currentByUserComp[u.id][comp.id] ?? 0) >= 4
+      );
+      if (holders.length === 0) holders = [huda, sara];
+      for (const h of holders) {
+        const expiresAt = new Date();
+        expiresAt.setMonth(expiresAt.getMonth() + validityMonths);
+        await tx.certificationAward.create({
+          data: {
+            tenantId: tenant.id,
+            certificationId: cert.id,
+            userId: h.id,
+            expiresAt,
+          },
+        });
+      }
+    }
+
+    // Critical roles + succession pipelines.
+    const role1 = await tx.criticalRole.create({
+      data: { tenantId: tenant.id, title: faisal.jobTitle ?? "Manager", incumbentId: faisal.id },
+    });
+    await tx.successionCandidate.createMany({
+      data: [
+        { tenantId: tenant.id, criticalRoleId: role1.id, userId: sara.id, readiness: "READY_NOW", score: 82 },
+        { tenantId: tenant.id, criticalRoleId: role1.id, userId: omar.id, readiness: "ONE_TO_TWO_YEARS", score: 54 },
+      ],
+    });
+    const role2 = await tx.criticalRole.create({
+      data: { tenantId: tenant.id, title: huda.jobTitle ?? "Manager", incumbentId: huda.id },
+    });
+    await tx.successionCandidate.createMany({
+      data: [
+        { tenantId: tenant.id, criticalRoleId: role2.id, userId: omar.id, readiness: "ONE_TO_TWO_YEARS", score: 61 },
+        { tenantId: tenant.id, criticalRoleId: role2.id, userId: sara.id, readiness: "THREE_PLUS_YEARS", score: 38 },
+      ],
+    });
   });
 
   console.log(`✔ Seeded tenant: ${spec.name} (${spec.slug})`);
