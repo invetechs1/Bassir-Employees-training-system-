@@ -48,8 +48,8 @@ The platform is ready to run for real employees:
 
 | Capability | Delivered |
 |-----------|-----------|
-| **Add employees** | Admins & HR invite employees from **People** — pick a role and department; the system generates a one-time temporary password to hand over. |
-| **Secure first login** | Invited employees are forced to set their own password before they can use the app. |
+| **Invite employees** | Admins & HR invite employees from **People** — pick a role and department; an **invitation email** with a secure link is sent (and the admin always gets the link to share manually). |
+| **Secure onboarding** | Invitees click the link, set their own password, and are signed in. Links are single-use and expire in 7 days; no password is ever emailed. |
 | **Manage access** | Reset an employee's password, disable/enable accounts (the owner and yourself are protected). |
 | **Self-service** | Anyone can change their own password from **Settings → Account security**. |
 | **Provision a company** | `npm run provision` stands up a new company + its first administrator (no demo data). |
@@ -72,8 +72,10 @@ docker compose exec app npm run provision -- \
 # 4. Open http://localhost:3000 → sign in with company "yourco".
 ```
 
-Then, as the admin, open **People → Add employee** to onboard your team. Hand
-each person their temporary password; they set their own on first login.
+Then, as the admin, open **People → Invite employee** to onboard your team.
+If you've configured SMTP (see `.env.example`), each person receives an
+invitation email; otherwise share the link the app shows you. They click it,
+set their own password, and they're in.
 
 > Put the app behind HTTPS (a reverse proxy such as Caddy/Nginx, or a platform
 > like Vercel + managed Postgres) before going live — secure session cookies

@@ -39,8 +39,16 @@ services:
       DATABASE_URL: "postgresql://bcap_app:bcap_app_password@db:5432/bcap?schema=public"
       # CHANGE THIS: openssl rand -base64 48
       AUTH_SECRET: "REPLACE_WITH_A_LONG_RANDOM_SECRET_AT_LEAST_32_CHARS"
+      # Set APP_BASE_URL to your real public URL so invitation links work.
       APP_BASE_URL: "http://localhost:3000"
       NODE_ENV: "production"
+      # Optional — enable email invitations by filling these in:
+      # SMTP_HOST: "smtp.example.com"
+      # SMTP_PORT: "587"
+      # SMTP_SECURE: "false"
+      # SMTP_USER: "apikey-or-username"
+      # SMTP_PASS: "your-smtp-password"
+      # SMTP_FROM: "BCAP <no-reply@yourcompany.com>"
     ports:
       - "3000:3000"
 

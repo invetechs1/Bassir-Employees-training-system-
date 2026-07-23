@@ -8,6 +8,14 @@ import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
 import { hashPassword } from "@/lib/password";
 import { generateTempPassword } from "@/lib/temp-password";
+import {
+  generateInviteToken,
+  hashInviteToken,
+  inviteLink,
+  INVITE_TTL_DAYS,
+} from "@/lib/invite-token";
+import { sendMail, invitationEmail } from "@/lib/email";
+import { prisma } from "@/lib/prisma";
 
 const ASSIGNABLE_ROLES = ["learner", "manager", "hr_manager", "admin"] as const;
 
@@ -23,9 +31,11 @@ const InviteSchema = z.object({
 export interface InviteState {
   error?: string;
   ok?: boolean;
-  // Shown once to the admin so they can hand the credentials to the employee.
   createdEmail?: string;
-  tempPassword?: string;
+  // The accept link is always returned so the admin can share it manually if
+  // email delivery isn't configured or fails.
+  inviteLink?: string;
+  emailSent?: boolean;
 }
 
 export async function inviteUserAction(
@@ -55,8 +65,13 @@ export async function inviteUserAction(
     return { error: "Only the account owner can create administrators." };
   }
 
-  const tempPassword = generateTempPassword();
-  const passwordHash = await hashPassword(tempPassword);
+  // The invited user has no usable password until they accept; store a random
+  // unguessable hash as a placeholder.
+  const placeholderHash = await hashPassword(generateTempPassword(24));
+  const rawToken = generateInviteToken();
+  const inviteExpiresAt = new Date(
+    Date.now() + INVITE_TTL_DAYS * 24 * 60 * 60 * 1000
+  );
 
   const result = await withTenant(session.tenantId, async (tx) => {
     const role = await tx.role.findFirst({ where: { key: data.roleKey } });
@@ -67,13 +82,15 @@ export async function inviteUserAction(
         data: {
           tenantId: session.tenantId,
           email: data.email,
-          passwordHash,
+          passwordHash: placeholderHash,
           firstName: data.firstName,
           lastName: data.lastName,
           jobTitle: data.jobTitle || null,
           departmentId: data.departmentId || null,
-          status: "ACTIVE",
-          mustChangePassword: true,
+          status: "INVITED",
+          mustChangePassword: false,
+          inviteTokenHash: hashInviteToken(rawToken),
+          inviteExpiresAt,
         },
       });
       await tx.userRole.create({ data: { userId: user.id, roleId: role.id } });
@@ -99,8 +116,21 @@ export async function inviteUserAction(
     return { error: result.err };
   }
 
+  // Company name for the email (tenants table is not tenant-scoped).
+  const tenant = await prisma.tenant.findUnique({
+    where: { id: session.tenantId },
+    select: { name: true, slug: true },
+  });
+  const link = inviteLink(tenant?.slug ?? session.tenantSlug, rawToken);
+  const mail = invitationEmail({
+    companyName: tenant?.name ?? "your company",
+    inviteeName: data.firstName,
+    link,
+  });
+  const { sent } = await sendMail({ to: data.email, ...mail });
+
   revalidatePath("/people");
-  return { ok: true, createdEmail: data.email, tempPassword };
+  return { ok: true, createdEmail: data.email, inviteLink: link, emailSent: sent };
 }
 
 const IdSchema = z.object({ userId: z.string().min(1) });
