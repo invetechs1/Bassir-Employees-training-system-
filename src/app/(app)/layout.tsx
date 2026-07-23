@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { requireSession } from "@/lib/auth";
 import { can, type PermissionKey } from "@/lib/rbac";
 import { SidebarNav, type NavItem } from "@/components/nav";
@@ -21,6 +22,9 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const session = await requireSession();
+  if (session.mustChangePassword) {
+    redirect("/account/password");
+  }
   const navItems: NavItem[] = NAV_DEFS.filter(
     (i) => !i.perm || can(session, i.perm)
   ).map(({ href, label, group }) => ({ href, label, group }));

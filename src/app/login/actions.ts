@@ -67,6 +67,7 @@ export async function loginAction(
       email: user.email,
       isTenantOwner: user.isTenantOwner,
       roles: user.userRoles.map((ur) => ur.role.key),
+      mustChangePassword: user.mustChangePassword,
     };
   });
 
@@ -82,8 +83,14 @@ export async function loginAction(
     name: result.name,
     roles: result.roles,
     isTenantOwner: result.isTenantOwner,
+    mustChangePassword: result.mustChangePassword,
   });
   await setSessionCookie(token);
+
+  // New / admin-invited employees must set their own password first.
+  if (result.mustChangePassword) {
+    redirect("/account/password");
+  }
 
   const next = parsed.data.next;
   redirect(next && next.startsWith("/") ? next : "/dashboard");

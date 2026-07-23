@@ -1,72 +1,60 @@
 import { requirePermission } from "@/lib/auth";
+import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
+import { PeopleClient, type PersonRow } from "./people-client";
+
+const ROLE_LABEL: Record<string, string> = {
+  admin: "Administrator",
+  hr_manager: "HR / L&D Manager",
+  manager: "Line Manager",
+  learner: "Employee",
+};
 
 export default async function PeoplePage() {
   const session = await requirePermission("user.read");
+  const canManage = can(session, "user.manage");
 
-  const users = await withTenant(session.tenantId, (tx) =>
-    tx.user.findMany({
-      orderBy: { createdAt: "asc" },
-      include: {
-        department: true,
-        branch: true,
-        userRoles: { include: { role: true } },
-      },
-    })
-  );
+  const { users, departments } = await withTenant(session.tenantId, async (tx) => {
+    const [users, departments] = await Promise.all([
+      tx.user.findMany({
+        orderBy: { createdAt: "asc" },
+        include: {
+          department: { select: { name: true } },
+          userRoles: { include: { role: { select: { key: true } } } },
+        },
+      }),
+      tx.department.findMany({
+        orderBy: { name: "asc" },
+        select: { id: true, name: true },
+      }),
+    ]);
+    return { users, departments };
+  });
+
+  const rows: PersonRow[] = users.map((u) => {
+    const roleKey = u.userRoles[0]?.role.key ?? "learner";
+    return {
+      id: u.id,
+      firstName: u.firstName,
+      lastName: u.lastName,
+      email: u.email,
+      jobTitle: u.jobTitle ?? "",
+      department: u.department?.name ?? "",
+      roleKey,
+      roleLabel: ROLE_LABEL[roleKey] ?? roleKey,
+      status: u.status,
+      isTenantOwner: u.isTenantOwner,
+      mustChangePassword: u.mustChangePassword,
+    };
+  });
 
   return (
-    <div>
-      <h1 className="text-xl font-semibold text-slate-900">People</h1>
-      <p className="mt-1 text-sm text-slate-500">
-        Everyone in your company workspace.
-      </p>
-
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-            <tr>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Department</th>
-              <th className="px-4 py-3">Roles</th>
-              <th className="px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {users.map((u) => (
-              <tr key={u.id}>
-                <td className="px-4 py-3 font-medium text-slate-800">
-                  {u.firstName} {u.lastName}
-                  {u.jobTitle ? (
-                    <span className="block text-xs font-normal text-slate-400">
-                      {u.jobTitle}
-                    </span>
-                  ) : null}
-                </td>
-                <td className="px-4 py-3 text-slate-600">{u.email}</td>
-                <td className="px-4 py-3 text-slate-600">
-                  {u.department?.name ?? "—"}
-                </td>
-                <td className="px-4 py-3 text-slate-600">
-                  {u.userRoles.map((ur) => ur.role.name).join(", ") || "—"}
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs ${
-                      u.status === "ACTIVE"
-                        ? "bg-green-50 text-green-700"
-                        : "bg-slate-100 text-slate-500"
-                    }`}
-                  >
-                    {u.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <PeopleClient
+      rows={rows}
+      departments={departments}
+      canManage={canManage}
+      isOwner={session.isTenantOwner}
+      currentUserId={session.userId}
+    />
   );
 }

@@ -136,6 +136,8 @@ model User {
   jobTitle     String?
   status       UserStatus @default(ACTIVE)
   isTenantOwner Boolean   @default(false)
+  // Force a password change on next login (set for admin-invited employees).
+  mustChangePassword Boolean @default(false)
 
   branchId     String?
   departmentId String?

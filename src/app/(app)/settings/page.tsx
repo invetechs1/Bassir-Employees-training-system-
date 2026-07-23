@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { withTenant } from "@/lib/tenant-db";
@@ -45,6 +46,21 @@ export default async function SettingsPage() {
             <dd className="text-sm text-slate-800">{tenant?.plan}</dd>
           </div>
         </dl>
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-6">
+        <h2 className="text-sm font-semibold text-slate-800">Account security</h2>
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-sm text-slate-500">
+            Change the password for your account.
+          </p>
+          <Link
+            href="/account/password"
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >
+            Change password
+          </Link>
+        </div>
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-6">

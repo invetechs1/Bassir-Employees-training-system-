@@ -2,7 +2,18 @@ import { NextResponse, type NextRequest } from "next/server";
 import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/session";
 
 // Routes that require an authenticated session.
-const PROTECTED_PREFIXES = ["/dashboard", "/training", "/people", "/settings"];
+const PROTECTED_PREFIXES = [
+  "/dashboard",
+  "/training",
+  "/people",
+  "/competencies",
+  "/certifications",
+  "/succession",
+  "/analytics",
+  "/insights",
+  "/settings",
+  "/account",
+];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -27,5 +38,16 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/training/:path*", "/people/:path*", "/settings/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/training/:path*",
+    "/people/:path*",
+    "/competencies/:path*",
+    "/certifications/:path*",
+    "/succession/:path*",
+    "/analytics/:path*",
+    "/insights/:path*",
+    "/settings/:path*",
+    "/account/:path*",
+  ],
 };

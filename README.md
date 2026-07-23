@@ -42,9 +42,46 @@ seed + UI), all tenant-scoped and permission-gated:
 | **Analytics** | Completion / active-learner / compliance donuts, enrollments-by-level, a 6-month trend and competency coverage. |
 | **AI insights** | Priority skill gaps, program recommendations that close the largest gaps, role-readiness scoring and a retention watch. |
 
+## Status — Phase 3 (Production readiness)
+
+The platform is ready to run for real employees:
+
+| Capability | Delivered |
+|-----------|-----------|
+| **Add employees** | Admins & HR invite employees from **People** — pick a role and department; the system generates a one-time temporary password to hand over. |
+| **Secure first login** | Invited employees are forced to set their own password before they can use the app. |
+| **Manage access** | Reset an employee's password, disable/enable accounts (the owner and yourself are protected). |
+| **Self-service** | Anyone can change their own password from **Settings → Account security**. |
+| **Provision a company** | `npm run provision` stands up a new company + its first administrator (no demo data). |
+| **Deploy** | One-command **Docker Compose** stack (app + PostgreSQL) that auto-runs migrations, including Row-Level Security. |
+| **Hardened config** | Real Prisma migrations, security headers, `AUTH_SECRET` strength checks, secure cookies in production, non-superuser DB role. |
+
+### Deploy in one command
+
+```bash
+# 1. Set a strong AUTH_SECRET in docker-compose.yml  (openssl rand -base64 48)
+#    and change the database passwords.
+# 2. Build and start:
+docker compose up -d --build
+# 3. Create your company + admin:
+docker compose exec app npm run provision -- \
+  --name "Your Company" --slug yourco \
+  --industry CONSTRUCTION_CONTRACTING \
+  --admin-name "Your Name" --admin-email you@yourco.com \
+  --admin-password 'ChangeThisPassword1'
+# 4. Open http://localhost:3000 → sign in with company "yourco".
+```
+
+Then, as the admin, open **People → Add employee** to onboard your team. Hand
+each person their temporary password; they set their own on first login.
+
+> Put the app behind HTTPS (a reverse proxy such as Caddy/Nginx, or a platform
+> like Vercel + managed Postgres) before going live — secure session cookies
+> require it.
+
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design and the
-[roadmap](docs/ARCHITECTURE.md#roadmap) of remaining modules (billing, SSO,
-platform-admin plane, full Arabic/RTL, …).
+[roadmap](docs/ARCHITECTURE.md#roadmap) of remaining work (email invites, SSO,
+billing, platform-admin plane, full in-app Arabic/RTL, …).
 
 ---
 

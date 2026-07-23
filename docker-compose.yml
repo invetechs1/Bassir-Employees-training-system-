@@ -1,0 +1,48 @@
+# ---------------------------------------------------------------------------
+# BCAP — single-host deployment (app + PostgreSQL).
+#
+#   1. Set a strong AUTH_SECRET below (openssl rand -base64 48).
+#   2. Change the database passwords (here AND in DATABASE_URL) for production.
+#   3. docker compose up -d --build
+#   4. Provision your company:
+#        docker compose exec app npm run provision -- \
+#          --name "Your Company" --slug yourco \
+#          --industry CONSTRUCTION_CONTRACTING \
+#          --admin-name "Your Name" --admin-email you@yourco.com \
+#          --admin-password 'ChangeThisPassword1'
+#   5. Open http://localhost:3000 and sign in with company "yourco".
+# ---------------------------------------------------------------------------
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_superuser_password
+      POSTGRES_DB: bcap
+    volumes:
+      - bcap-db:/var/lib/postgresql/data
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bcap"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://bcap_app:bcap_app_password@db:5432/bcap?schema=public"
+      # CHANGE THIS: openssl rand -base64 48
+      AUTH_SECRET: "REPLACE_WITH_A_LONG_RANDOM_SECRET_AT_LEAST_32_CHARS"
+      APP_BASE_URL: "http://localhost:3000"
+      NODE_ENV: "production"
+    ports:
+      - "3000:3000"
+
+volumes:
+  bcap-db:
