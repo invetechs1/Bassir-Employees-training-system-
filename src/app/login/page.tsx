@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getLocale, translator } from "@/lib/i18n";
 import { LoginForm } from "./login-form";
 
 export default async function LoginPage({
@@ -7,6 +8,7 @@ export default async function LoginPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const { next } = await searchParams;
+  const t = translator(await getLocale());
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
@@ -16,21 +18,28 @@ export default async function LoginPage({
             B
           </div>
           <h1 className="text-xl font-semibold text-slate-900">
-            Sign in to BCAP
+            {t("login.title")}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Bassir Corporate Academy Platform
-          </p>
+          <p className="mt-1 text-sm text-slate-500">{t("login.subtitle")}</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <LoginForm next={next} />
+          <LoginForm
+            next={next}
+            labels={{
+              company: t("login.company"),
+              email: t("login.email"),
+              password: t("login.password"),
+              signIn: t("login.signIn"),
+              signingIn: t("login.signingIn"),
+            }}
+          />
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">
-          Powered by Bassir Technology ·{" "}
+          {t("poweredByBcap")} ·{" "}
           <Link href="/" className="underline hover:text-slate-600">
-            Back to home
+            {t("login.back")}
           </Link>
         </p>
       </div>

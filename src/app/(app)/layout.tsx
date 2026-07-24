@@ -4,7 +4,9 @@ import { can, type PermissionKey } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { planHasFeature, type FeatureKey } from "@/lib/plans";
 import { brandingOf } from "@/lib/branding";
+import { getLocale, translator } from "@/lib/i18n";
 import { SidebarNav, type NavItem } from "@/components/nav";
+import { LocaleToggle } from "@/components/locale-toggle";
 import { logoutAction } from "./logout-action";
 
 const NAV_DEFS: (NavItem & { perm?: PermissionKey; feature?: FeatureKey; owner?: boolean })[] = [
@@ -41,12 +43,19 @@ export default async function AppLayout({
   });
   const canManageBilling = session.isTenantOwner || can(session, "org.manage");
 
+  const locale = await getLocale();
+  const t = translator(locale);
+
   const navItems: NavItem[] = NAV_DEFS.filter((i) => {
     if (i.perm && !can(session, i.perm)) return false;
     if (i.feature && !planHasFeature(plan, i.feature)) return false;
     if (i.owner && !canManageBilling) return false;
     return true;
-  }).map(({ href, label, group }) => ({ href, label, group }));
+  }).map(({ href, label, group }) => ({
+    href,
+    label: t(`nav.${label}`),
+    group: group ? t(`group.${group}`) : undefined,
+  }));
   const initials = session.name
     .split(" ")
     .map((p) => p[0])
@@ -56,7 +65,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen bg-slate-50">
-      <aside className="hidden w-60 shrink-0 flex-col border-r border-slate-200 bg-white p-4 md:flex">
+      <aside className="hidden w-60 shrink-0 flex-col border-e border-slate-200 bg-white p-4 md:flex">
         <div className="mb-6 flex items-center gap-2 px-1">
           {brand.logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -76,7 +85,7 @@ export default async function AppLayout({
           <div>
             <p className="text-sm font-semibold leading-tight">{brand.name}</p>
             <p className="text-xs text-slate-500 leading-tight">
-              Powered by BCAP
+              {t("poweredByBcap")}
             </p>
           </div>
         </div>
@@ -85,11 +94,9 @@ export default async function AppLayout({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-3">
-          <div className="text-sm text-slate-500">
-            Bassir Corporate Academy Platform
-          </div>
+          <div className="text-sm text-slate-500">{t("platformName")}</div>
           <div className="flex items-center gap-3">
-            <div className="text-right">
+            <div className="text-end">
               <p className="text-sm font-medium leading-tight text-slate-800">
                 {session.name}
               </p>
@@ -100,12 +107,13 @@ export default async function AppLayout({
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
               {initials}
             </div>
+            <LocaleToggle locale={locale} />
             <form action={logoutAction}>
               <button
                 type="submit"
                 className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
               >
-                Sign out
+                {t("signOut")}
               </button>
             </form>
           </div>
