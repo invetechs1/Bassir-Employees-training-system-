@@ -77,9 +77,30 @@ model Tenant {
   certificationAwards CertificationAward[]
   criticalRoles      CriticalRole[]
   successionCandidates SuccessionCandidate[]
+  ssoConnection      SsoConnection?
   auditLogs          AuditLog[]
 
   @@map("tenants")
+}
+
+/// Per-company OpenID Connect (OIDC) single sign-on configuration.
+/// One connection per tenant. Enterprise plan only.
+model SsoConnection {
+  id            String   @id @default(cuid())
+  tenantId      String   @unique
+  issuer        String // e.g. https://accounts.google.com
+  clientId      String
+  clientSecret  String
+  enabled       Boolean  @default(false)
+  autoProvision Boolean  @default(true) // create users on first SSO login
+  defaultRoleKey String  @default("learner")
+  allowedDomain String? // if set, only emails on this domain may sign in
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("sso_connections")
 }
 
 // ---------------------------------------------------------------------------

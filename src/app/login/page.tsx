@@ -5,10 +5,20 @@ import { LoginForm } from "./login-form";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; err?: string }>;
 }) {
-  const { next } = await searchParams;
+  const { next, err } = await searchParams;
   const t = translator(await getLocale());
+
+  const errorMessage = err
+    ? err === "sso_nouser"
+      ? t("login.err.sso_nouser")
+      : err === "disabled"
+        ? t("login.err.disabled")
+        : err.startsWith("sso")
+          ? t("login.err.sso")
+          : null
+    : null;
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
@@ -24,6 +34,11 @@ export default async function LoginPage({
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          {errorMessage ? (
+            <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+              {errorMessage}
+            </p>
+          ) : null}
           <LoginForm
             next={next}
             labels={{
@@ -32,6 +47,7 @@ export default async function LoginPage({
               password: t("login.password"),
               signIn: t("login.signIn"),
               signingIn: t("login.signingIn"),
+              sso: t("login.sso"),
             }}
           />
         </div>

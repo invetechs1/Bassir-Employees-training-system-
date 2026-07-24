@@ -79,6 +79,16 @@ export const DICT: Record<string, Entry> = {
   "login.signIn": { en: "Sign in", ar: "دخول" },
   "login.signingIn": { en: "Signing in…", ar: "جارٍ الدخول…" },
   "login.back": { en: "Back to home", ar: "العودة للرئيسية" },
+  "login.sso": { en: "Sign in with company SSO", ar: "الدخول عبر SSO للشركة" },
+  "login.err.sso": {
+    en: "SSO sign-in failed. Please try again or contact your administrator.",
+    ar: "فشل تسجيل الدخول عبر SSO. حاول مجددًا أو تواصل مع المسؤول.",
+  },
+  "login.err.sso_nouser": {
+    en: "No account matches your SSO identity. Ask an administrator to invite you.",
+    ar: "لا يوجد حساب مطابق لهويتك عبر SSO. اطلب من المسؤول دعوتك.",
+  },
+  "login.err.disabled": { en: "Your account is disabled.", ar: "حسابك معطّل." },
 
   // Common
   "common.settings": { en: "Settings", ar: "الإعدادات" },

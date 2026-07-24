@@ -3,7 +3,9 @@ import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { withTenant } from "@/lib/tenant-db";
+import { planHasFeature } from "@/lib/plans";
 import { BrandingForm } from "./branding-form";
+import { SsoForm } from "./sso-form";
 
 export default async function SettingsPage() {
   const session = await requireSession();
@@ -11,7 +13,10 @@ export default async function SettingsPage() {
 
   const tenant = await prisma.tenant.findUnique({
     where: { id: session.tenantId },
+    include: { ssoConnection: true },
   });
+  const showSso =
+    session.isTenantOwner && planHasFeature(tenant?.plan ?? "STARTER", "sso");
 
   const roles = await withTenant(session.tenantId, (tx) =>
     tx.role.findMany({
@@ -61,6 +66,33 @@ export default async function SettingsPage() {
             <BrandingForm
               brandColor={tenant?.brandColor ?? ""}
               logoUrl={tenant?.logoUrl ?? ""}
+            />
+          </div>
+        </section>
+      ) : null}
+
+      {showSso ? (
+        <section className="rounded-xl border border-slate-200 bg-white p-6">
+          <h2 className="text-sm font-semibold text-slate-800">
+            Single sign-on (SSO)
+          </h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Let employees sign in with your company&apos;s identity provider
+            (OpenID Connect).
+          </p>
+          <div className="mt-4">
+            <SsoForm
+              values={{
+                issuer: tenant?.ssoConnection?.issuer ?? "",
+                clientId: tenant?.ssoConnection?.clientId ?? "",
+                enabled: tenant?.ssoConnection?.enabled ?? false,
+                autoProvision: tenant?.ssoConnection?.autoProvision ?? true,
+                defaultRoleKey:
+                  tenant?.ssoConnection?.defaultRoleKey ?? "learner",
+                allowedDomain: tenant?.ssoConnection?.allowedDomain ?? "",
+                hasSecret: Boolean(tenant?.ssoConnection?.clientSecret),
+                slug: tenant?.slug ?? "",
+              }}
             />
           </div>
         </section>
