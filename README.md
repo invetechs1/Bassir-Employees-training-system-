@@ -81,9 +81,18 @@ set their own password, and they're in.
 > like Vercel + managed Postgres) before going live — secure session cookies
 > require it.
 
+## Status — Phase 5–8 (Commercial & enterprise)
+
+| Capability | Delivered |
+|-----------|-----------|
+| **Subscription plans** | Starter / Growth / Enterprise with seat limits and per-feature access; premium modules gated, seat limits enforced on invites, self-serve plan changes on the Billing page. |
+| **Per-company branding** | Company logo + brand color applied to the workspace and to branded invitation emails, editable in Settings. |
+| **Arabic / RTL** | Bilingual English/Arabic with a locale toggle and right-to-left layout across the app shell, dashboard and login (extensible dictionary in `src/lib/i18n.ts`). |
+| **Single sign-on** | Per-company OpenID Connect SSO (Google, Microsoft Entra, Okta, Auth0, …) with discovery, ID-token verification and just-in-time provisioning. Enterprise plan. |
+
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design and the
-[roadmap](docs/ARCHITECTURE.md#roadmap) of remaining work (email invites, SSO,
-billing, platform-admin plane, full in-app Arabic/RTL, …).
+[roadmap](docs/ARCHITECTURE.md#roadmap) of remaining work (payment processing,
+platform-admin plane, deep per-page Arabic coverage, …).
 
 ---
 
