@@ -58,6 +58,9 @@ model Tenant {
   country   String       @default("SA")
   timezone  String       @default("Asia/Riyadh")
   locale    String       @default("en")
+  // Per-company branding (applied to the workspace UI and invitation emails).
+  brandColor String?     // hex, e.g. "#2953d9"
+  logoUrl    String?     // absolute URL to the company logo image
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 

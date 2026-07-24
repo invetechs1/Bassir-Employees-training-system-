@@ -17,6 +17,7 @@ import {
 import { sendMail, invitationEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
 import { seatLimit, planConfig } from "@/lib/plans";
+import { brandingOf } from "@/lib/branding";
 
 const ASSIGNABLE_ROLES = ["learner", "manager", "hr_manager", "admin"] as const;
 
@@ -134,16 +135,20 @@ export async function inviteUserAction(
     return { error: result.err };
   }
 
-  // Company name for the email (tenants table is not tenant-scoped).
+  // Company name + branding for the email (tenants table is not tenant-scoped).
   const tenant = await prisma.tenant.findUnique({
     where: { id: session.tenantId },
-    select: { name: true, slug: true },
+    select: { name: true, slug: true, brandColor: true, logoUrl: true },
   });
   const link = inviteLink(tenant?.slug ?? session.tenantSlug, rawToken);
+  const brand = tenant ? brandingOf(tenant) : null;
   const mail = invitationEmail({
     companyName: tenant?.name ?? "your company",
     inviteeName: data.firstName,
     link,
+    brand: brand
+      ? { color: brand.color, logoUrl: brand.logoUrl, initial: brand.initial }
+      : undefined,
   });
   const { sent } = await sendMail({ to: data.email, ...mail });
 

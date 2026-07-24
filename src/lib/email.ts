@@ -70,13 +70,32 @@ export async function sendMail(
   }
 }
 
-/** Build the invitation email body. */
+export interface EmailBranding {
+  color?: string;
+  logoUrl?: string | null;
+  initial?: string;
+}
+
+function emailHeader(companyName: string, brand?: EmailBranding): string {
+  const color = brand?.color ?? "#17204d";
+  const logo = brand?.logoUrl
+    ? `<img src="${brand.logoUrl}" alt="${companyName}" height="34" style="height:34px;display:block" />`
+    : `<div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.18);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff">${brand?.initial ?? "B"}</div>`;
+  return `<div style="background:${color};color:#fff;padding:20px 24px;border-radius:12px 12px 0 0;display:flex;align-items:center;gap:12px">
+    ${logo}
+    <div><strong style="font-size:16px">${companyName}</strong><div style="color:rgba(255,255,255,.75);font-size:12px">Powered by Bassir Technology</div></div>
+  </div>`;
+}
+
+/** Build the invitation email body, styled with the company's branding. */
 export function invitationEmail(params: {
   companyName: string;
   inviteeName: string;
   link: string;
+  brand?: EmailBranding;
 }): { subject: string; html: string; text: string } {
-  const { companyName, inviteeName, link } = params;
+  const { companyName, inviteeName, link, brand } = params;
+  const btnColor = brand?.color ?? "#2953d9";
   const subject = `You're invited to ${companyName} on BCAP`;
   const text = `Hi ${inviteeName},
 
@@ -87,17 +106,14 @@ ${link}
 
 This link expires in 7 days.`;
   const html = `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:auto;color:#0f1729">
-  <div style="background:#17204d;color:#fff;padding:20px 24px;border-radius:12px 12px 0 0">
-    <strong style="font-size:18px">BCAP</strong>
-    <div style="color:#9fb2e8;font-size:12px">Bassir Corporate Academy Platform</div>
-  </div>
+  ${emailHeader(companyName, brand)}
   <div style="border:1px solid #e3e8f2;border-top:0;padding:24px;border-radius:0 0 12px 12px">
     <p>Hi ${inviteeName},</p>
     <p>You've been invited to join <strong>${companyName}</strong> and start growing your skills.</p>
     <p style="margin:24px 0">
-      <a href="${link}" style="background:#2953d9;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;display:inline-block">Set your password &amp; sign in</a>
+      <a href="${link}" style="background:${btnColor};color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;display:inline-block">Set your password &amp; sign in</a>
     </p>
-    <p style="color:#7a869c;font-size:13px">Or paste this link into your browser:<br><a href="${link}" style="color:#2953d9">${link}</a></p>
+    <p style="color:#7a869c;font-size:13px">Or paste this link into your browser:<br><a href="${link}" style="color:${btnColor}">${link}</a></p>
     <p style="color:#7a869c;font-size:13px">This invitation expires in 7 days.</p>
   </div>
 </div>`;

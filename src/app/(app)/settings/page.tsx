@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { withTenant } from "@/lib/tenant-db";
+import { BrandingForm } from "./branding-form";
 
 export default async function SettingsPage() {
   const session = await requireSession();
+  const canBrand = session.isTenantOwner || can(session, "org.manage");
 
   const tenant = await prisma.tenant.findUnique({
     where: { id: session.tenantId },
@@ -47,6 +50,21 @@ export default async function SettingsPage() {
           </div>
         </dl>
       </section>
+
+      {canBrand ? (
+        <section className="rounded-xl border border-slate-200 bg-white p-6">
+          <h2 className="text-sm font-semibold text-slate-800">Branding</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Make the workspace and emails feel like {tenant?.name}.
+          </p>
+          <div className="mt-4">
+            <BrandingForm
+              brandColor={tenant?.brandColor ?? ""}
+              logoUrl={tenant?.logoUrl ?? ""}
+            />
+          </div>
+        </section>
+      ) : null}
 
       <section className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="text-sm font-semibold text-slate-800">Account security</h2>

@@ -3,6 +3,7 @@ import { requireSession } from "@/lib/auth";
 import { can, type PermissionKey } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { planHasFeature, type FeatureKey } from "@/lib/plans";
+import { brandingOf } from "@/lib/branding";
 import { SidebarNav, type NavItem } from "@/components/nav";
 import { logoutAction } from "./logout-action";
 
@@ -30,9 +31,14 @@ export default async function AppLayout({
   }
   const tenant = await prisma.tenant.findUnique({
     where: { id: session.tenantId },
-    select: { plan: true },
+    select: { plan: true, name: true, brandColor: true, logoUrl: true },
   });
   const plan = tenant?.plan ?? "STARTER";
+  const brand = brandingOf({
+    name: tenant?.name ?? session.tenantSlug,
+    brandColor: tenant?.brandColor,
+    logoUrl: tenant?.logoUrl,
+  });
   const canManageBilling = session.isTenantOwner || can(session, "org.manage");
 
   const navItems: NavItem[] = NAV_DEFS.filter((i) => {
@@ -52,13 +58,25 @@ export default async function AppLayout({
     <div className="flex min-h-screen bg-slate-50">
       <aside className="hidden w-60 shrink-0 flex-col border-r border-slate-200 bg-white p-4 md:flex">
         <div className="mb-6 flex items-center gap-2 px-1">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
-            B
-          </div>
+          {brand.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={brand.logoUrl}
+              alt={brand.name}
+              className="h-8 w-8 rounded-lg object-contain"
+            />
+          ) : (
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white"
+              style={{ background: brand.color }}
+            >
+              {brand.initial}
+            </div>
+          )}
           <div>
-            <p className="text-sm font-semibold leading-tight">BCAP</p>
-            <p className="text-xs capitalize text-slate-500 leading-tight">
-              {session.tenantSlug}
+            <p className="text-sm font-semibold leading-tight">{brand.name}</p>
+            <p className="text-xs text-slate-500 leading-tight">
+              Powered by BCAP
             </p>
           </div>
         </div>
