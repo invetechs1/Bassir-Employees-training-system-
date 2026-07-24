@@ -1,9 +1,10 @@
-import { requirePermission } from "@/lib/auth";
+import { requireFeature, requirePermission } from "@/lib/auth";
 import { withTenant } from "@/lib/tenant-db";
 import { avatarColor, initials } from "@/lib/talent";
 import { Avatar, Donut, ProgressBar } from "@/components/charts";
 
 export default async function InsightsPage() {
+  await requireFeature("insights");
   const session = await requirePermission("report.view");
 
   const data = await withTenant(session.tenantId, async (tx) => {

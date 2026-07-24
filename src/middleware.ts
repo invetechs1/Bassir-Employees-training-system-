@@ -11,6 +11,7 @@ const PROTECTED_PREFIXES = [
   "/succession",
   "/analytics",
   "/insights",
+  "/billing",
   "/settings",
   "/account",
 ];
@@ -47,6 +48,7 @@ export const config = {
     "/succession/:path*",
     "/analytics/:path*",
     "/insights/:path*",
+    "/billing/:path*",
     "/settings/:path*",
     "/account/:path*",
   ],

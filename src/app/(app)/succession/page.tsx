@@ -1,4 +1,4 @@
-import { requirePermission } from "@/lib/auth";
+import { requireFeature, requirePermission } from "@/lib/auth";
 import { withTenant } from "@/lib/tenant-db";
 import { READINESS_LABEL, avatarColor, initials } from "@/lib/talent";
 import { Avatar, ProgressBar } from "@/components/charts";
@@ -17,6 +17,7 @@ function boxLabel(perf: number, pot: number): string {
 }
 
 export default async function SuccessionPage() {
+  await requireFeature("succession");
   const session = await requirePermission("report.view");
 
   const { users, roles } = await withTenant(session.tenantId, async (tx) => {

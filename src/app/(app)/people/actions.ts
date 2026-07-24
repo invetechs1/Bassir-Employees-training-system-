@@ -16,6 +16,7 @@ import {
 } from "@/lib/invite-token";
 import { sendMail, invitationEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
+import { seatLimit, planConfig } from "@/lib/plans";
 
 const ASSIGNABLE_ROLES = ["learner", "manager", "hr_manager", "admin"] as const;
 
@@ -63,6 +64,23 @@ export async function inviteUserAction(
   // Only a tenant owner may mint new administrators.
   if (data.roleKey === "admin" && !session.isTenantOwner) {
     return { error: "Only the account owner can create administrators." };
+  }
+
+  // Seat limit enforcement based on the company's plan.
+  const tenantForSeats = await prisma.tenant.findUnique({
+    where: { id: session.tenantId },
+    select: { plan: true },
+  });
+  const limit = seatLimit(tenantForSeats?.plan ?? "STARTER");
+  if (limit !== null) {
+    const used = await withTenant(session.tenantId, (tx) =>
+      tx.user.count({ where: { status: { in: ["ACTIVE", "INVITED"] } } })
+    );
+    if (used >= limit) {
+      return {
+        error: `Your ${planConfig(tenantForSeats?.plan ?? "STARTER").name} plan is limited to ${limit} seats (all in use). Upgrade your plan to add more employees.`,
+      };
+    }
   }
 
   // The invited user has no usable password until they accept; store a random

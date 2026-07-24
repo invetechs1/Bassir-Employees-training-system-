@@ -1,19 +1,22 @@
 import { redirect } from "next/navigation";
 import { requireSession } from "@/lib/auth";
 import { can, type PermissionKey } from "@/lib/rbac";
+import { prisma } from "@/lib/prisma";
+import { planHasFeature, type FeatureKey } from "@/lib/plans";
 import { SidebarNav, type NavItem } from "@/components/nav";
 import { logoutAction } from "./logout-action";
 
-const NAV_DEFS: (NavItem & { perm?: PermissionKey })[] = [
+const NAV_DEFS: (NavItem & { perm?: PermissionKey; feature?: FeatureKey; owner?: boolean })[] = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/training", label: "Training Programs", group: "Develop", perm: "training.program.read" },
-  { href: "/competencies", label: "Competencies", group: "Develop", perm: "competency.read" },
-  { href: "/certifications", label: "Certifications", group: "Develop", perm: "training.program.read" },
-  { href: "/people", label: "People", group: "Talent", perm: "user.read" },
-  { href: "/succession", label: "Leadership & Succession", group: "Talent", perm: "report.view" },
-  { href: "/analytics", label: "Analytics", group: "Talent", perm: "report.view" },
-  { href: "/insights", label: "AI Insights", group: "Intelligence", perm: "report.view" },
-  { href: "/settings", label: "Settings" },
+  { href: "/training", label: "Training Programs", group: "Develop", perm: "training.program.read", feature: "training" },
+  { href: "/competencies", label: "Competencies", group: "Develop", perm: "competency.read", feature: "competencies" },
+  { href: "/certifications", label: "Certifications", group: "Develop", perm: "training.program.read", feature: "certifications" },
+  { href: "/people", label: "People", group: "Talent", perm: "user.read", feature: "people" },
+  { href: "/succession", label: "Leadership & Succession", group: "Talent", perm: "report.view", feature: "succession" },
+  { href: "/analytics", label: "Analytics", group: "Talent", perm: "report.view", feature: "analytics" },
+  { href: "/insights", label: "AI Insights", group: "Intelligence", perm: "report.view", feature: "insights" },
+  { href: "/billing", label: "Billing & Plan", group: "Company", owner: true },
+  { href: "/settings", label: "Settings", group: "Company" },
 ];
 
 export default async function AppLayout({
@@ -25,9 +28,19 @@ export default async function AppLayout({
   if (session.mustChangePassword) {
     redirect("/account/password");
   }
-  const navItems: NavItem[] = NAV_DEFS.filter(
-    (i) => !i.perm || can(session, i.perm)
-  ).map(({ href, label, group }) => ({ href, label, group }));
+  const tenant = await prisma.tenant.findUnique({
+    where: { id: session.tenantId },
+    select: { plan: true },
+  });
+  const plan = tenant?.plan ?? "STARTER";
+  const canManageBilling = session.isTenantOwner || can(session, "org.manage");
+
+  const navItems: NavItem[] = NAV_DEFS.filter((i) => {
+    if (i.perm && !can(session, i.perm)) return false;
+    if (i.feature && !planHasFeature(plan, i.feature)) return false;
+    if (i.owner && !canManageBilling) return false;
+    return true;
+  }).map(({ href, label, group }) => ({ href, label, group }));
   const initials = session.name
     .split(" ")
     .map((p) => p[0])

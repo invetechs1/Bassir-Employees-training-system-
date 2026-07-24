@@ -1,9 +1,10 @@
-import { requirePermission } from "@/lib/auth";
+import { requireFeature, requirePermission } from "@/lib/auth";
 import { withTenant } from "@/lib/tenant-db";
 import { LEVEL_LABEL, PROGRAM_LEVELS } from "@/lib/talent";
 import { Donut, ProgressBar, AreaChart } from "@/components/charts";
 
 export default async function AnalyticsPage() {
+  await requireFeature("analytics");
   const session = await requirePermission("report.view");
 
   const data = await withTenant(session.tenantId, async (tx) => {
