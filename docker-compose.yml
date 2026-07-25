@@ -49,6 +49,11 @@ services:
       # SMTP_USER: "apikey-or-username"
       # SMTP_PASS: "your-smtp-password"
       # SMTP_FROM: "BCAP <no-reply@yourcompany.com>"
+      # Optional — enable Stripe subscription billing:
+      # STRIPE_SECRET_KEY: "sk_..."
+      # STRIPE_WEBHOOK_SECRET: "whsec_..."
+      # STRIPE_PRICE_GROWTH: "price_..."
+      # STRIPE_PRICE_ENTERPRISE: "price_..."
     ports:
       - "3000:3000"
 

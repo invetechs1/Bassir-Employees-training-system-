@@ -256,6 +256,10 @@ export const DICT: Record<string, Entry> = {
   "bill.footnote": { en: "Plan changes apply immediately. Payment processing is handled by your Bassir Technology account manager.", ar: "تُطبّق تغييرات الباقة فورًا. تُدار المدفوعات عبر مدير حسابك في بشير تكنولوجي." },
   "bill.notIncluded": { en: "isn't included in your plan. Upgrade below to unlock it.", ar: "غير مضمّنة في باقتك. رقِّ الباقة أدناه لتفعيلها." },
   "bill.planNow": { en: "Your plan is now", ar: "باقتك الآن" },
+  "bill.manage": { en: "Manage subscription", ar: "إدارة الاشتراك" },
+  "bill.checkoutSuccess": { en: "Payment received — your subscription is active.", ar: "تم استلام الدفعة — اشتراكك نشط." },
+  "bill.checkoutCancel": { en: "Checkout canceled. Your plan is unchanged.", ar: "تم إلغاء الدفع. لم تتغيّر باقتك." },
+  "bill.stripeErr": { en: "Something went wrong with billing. Please try again.", ar: "حدث خطأ في الفوترة. حاول مجددًا." },
 };
 
 export function translator(locale: Locale) {

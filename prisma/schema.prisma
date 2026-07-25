@@ -61,6 +61,10 @@ model Tenant {
   // Per-company branding (applied to the workspace UI and invitation emails).
   brandColor String?     // hex, e.g. "#2953d9"
   logoUrl    String?     // absolute URL to the company logo image
+  // Stripe billing (null until the company subscribes to a paid plan).
+  stripeCustomerId     String?  @unique
+  stripeSubscriptionId String?  @unique
+  subscriptionStatus   String?  // e.g. active, past_due, canceled
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 

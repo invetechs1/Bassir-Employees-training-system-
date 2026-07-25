@@ -12,8 +12,9 @@ import {
   type FeatureKey,
 } from "@/lib/plans";
 import { getLocale, translator } from "@/lib/i18n";
+import { isStripeEnabled } from "@/lib/stripe";
 import { ProgressBar } from "@/components/charts";
-import { changePlanAction } from "./actions";
+import { changePlanAction, openPortalAction } from "./actions";
 
 const ALL_FEATURES = Object.keys(FEATURE_LABEL) as FeatureKey[];
 
@@ -26,6 +27,7 @@ export default async function BillingPage({
     need?: string;
     limit?: string;
     ok?: string;
+    checkout?: string;
   }>;
 }) {
   const session = await requireSession();
@@ -37,9 +39,16 @@ export default async function BillingPage({
 
   const tenant = await prisma.tenant.findUnique({
     where: { id: session.tenantId },
-    select: { plan: true, name: true },
+    select: {
+      plan: true,
+      name: true,
+      stripeSubscriptionId: true,
+      subscriptionStatus: true,
+    },
   });
   const currentPlan = tenant?.plan ?? "STARTER";
+  const hasSubscription =
+    isStripeEnabled() && Boolean(tenant?.stripeSubscriptionId);
   const current = planConfig(currentPlan);
   const seats = seatLimit(currentPlan);
 
@@ -69,6 +78,21 @@ export default async function BillingPage({
           {t("bill.planNow")} <b>{sp.ok}</b>.
         </div>
       ) : null}
+      {sp.checkout === "success" ? (
+        <div className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          {t("bill.checkoutSuccess")}
+        </div>
+      ) : null}
+      {sp.checkout === "cancel" ? (
+        <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+          {t("bill.checkoutCancel")}
+        </div>
+      ) : null}
+      {sp.err === "stripe" ? (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {t("bill.stripeErr")}
+        </div>
+      ) : null}
       {sp.err === "seats" ? (
         <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
           You have <b>{sp.need}</b> employees but that plan allows only{" "}
@@ -87,9 +111,21 @@ export default async function BillingPage({
               {t(`plan.${current.tier}`)}
             </p>
           </div>
-          <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">
-            {current.priceLabel}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">
+              {current.priceLabel}
+            </span>
+            {hasSubscription ? (
+              <form action={openPortalAction}>
+                <button
+                  type="submit"
+                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  {t("bill.manage")}
+                </button>
+              </form>
+            ) : null}
+          </div>
         </div>
         <div className="mt-4">
           <div className="mb-1.5 flex justify-between text-sm">
