@@ -162,10 +162,21 @@ Each tenant also has `huda@…` (HR/L&D Manager), `faisal@…` (Line Manager),
 | `npm run dev` | Start the dev server |
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run typecheck` | TypeScript check |
+| `npm test` | Run the unit test suite (Vitest) |
 | `npm run db:push` | Sync schema to the database |
 | `npm run db:migrate` | Create a migration (for production workflows) |
 | `npm run db:seed` | Seed tenants + sample data |
 | `npm run db:studio` | Open Prisma Studio |
+
+## Testing & CI
+
+- **Unit tests** (`npm test`, Vitest) cover the core logic: RBAC permissions,
+  plan/feature entitlements, Stripe plan↔price mapping, invite-token hashing,
+  password hashing, branding validation and OIDC auth-URL building.
+- **GitHub Actions** (`.github/workflows/ci.yml`) runs on every push/PR:
+  typecheck → tests → production build, plus a job that spins up PostgreSQL,
+  applies the full migration chain and asserts Row-Level Security is enabled
+  on tenant tables.
 
 ---
 
