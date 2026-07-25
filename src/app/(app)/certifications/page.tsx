@@ -2,6 +2,7 @@ import { requirePermission } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
 import { avatarColor, initials } from "@/lib/talent";
+import { getLocale, translator } from "@/lib/i18n";
 import { awardCertificationAction } from "./actions";
 
 const STATUS_STYLE: Record<string, string> = {
@@ -9,14 +10,10 @@ const STATUS_STYLE: Record<string, string> = {
   EXPIRING: "bg-amber-50 text-amber-700",
   EXPIRED: "bg-red-50 text-red-700",
 };
-const STATUS_LABEL: Record<string, string> = {
-  ACTIVE: "Active",
-  EXPIRING: "Expiring soon",
-  EXPIRED: "Expired",
-};
 
 export default async function CertificationsPage() {
   const session = await requirePermission("training.program.read");
+  const t = translator(await getLocale());
   const canIssue = can(session, "training.program.manage");
 
   const { certs, users } = await withTenant(session.tenantId, async (tx) => {
@@ -43,11 +40,10 @@ export default async function CertificationsPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-xl font-semibold text-slate-900">Certifications</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Internal certifications from your corporate university — issued,
-          tracked and renewed.
-        </p>
+        <h1 className="text-xl font-semibold text-slate-900">
+          {t("nav.Certifications")}
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">{t("cert.subtitle")}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -78,15 +74,16 @@ export default async function CertificationsPage() {
                 <span
                   className={`rounded-full px-2 py-0.5 text-[11.5px] font-bold ${STATUS_STYLE[cert.status]}`}
                 >
-                  {STATUS_LABEL[cert.status]}
+                  {t(`cert.status.${cert.status}`)}
                 </span>
               </div>
 
               <h3 className="mt-3 font-semibold text-slate-900">{cert.name}</h3>
               <p className="mt-1 text-xs text-slate-400">
-                <span className="tabular-nums">{cert.awards.length}</span> holders
-                · valid <span className="tabular-nums">{cert.validityMonths}</span>{" "}
-                months
+                <span className="tabular-nums">{cert.awards.length}</span>{" "}
+                {t("cert.holders")} · {t("cert.valid")}{" "}
+                <span className="tabular-nums">{cert.validityMonths}</span>{" "}
+                {t("cert.months")}
               </p>
 
               <div className="mt-3 flex">
@@ -119,7 +116,7 @@ export default async function CertificationsPage() {
                     className="min-w-0 flex-1 rounded-lg border border-slate-300 px-2 py-1.5 text-xs"
                   >
                     <option value="" disabled>
-                      {eligible.length ? "Select employee…" : "All certified"}
+                      {eligible.length ? t("cert.selectEmp") : t("cert.allCertified")}
                     </option>
                     {eligible.map((u) => (
                       <option key={u.id} value={u.id}>
@@ -132,12 +129,12 @@ export default async function CertificationsPage() {
                     disabled={eligible.length === 0}
                     className="rounded-lg border border-brand-600 bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700 disabled:opacity-50"
                   >
-                    Issue
+                    {t("cert.issue")}
                   </button>
                 </form>
               ) : (
                 <div className="mt-auto pt-4">
-                  <span className="text-xs text-slate-400">Read-only</span>
+                  <span className="text-xs text-slate-400">{t("common.readOnly")}</span>
                 </div>
               )}
             </div>

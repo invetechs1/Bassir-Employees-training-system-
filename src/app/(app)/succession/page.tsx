@@ -1,6 +1,7 @@
 import { requireFeature, requirePermission } from "@/lib/auth";
 import { withTenant } from "@/lib/tenant-db";
-import { READINESS_LABEL, avatarColor, initials } from "@/lib/talent";
+import { avatarColor, initials } from "@/lib/talent";
+import { getLocale, translator } from "@/lib/i18n";
 import { Avatar, ProgressBar } from "@/components/charts";
 
 const READINESS_PILL: Record<string, string> = {
@@ -10,15 +11,16 @@ const READINESS_PILL: Record<string, string> = {
 };
 
 function boxLabel(perf: number, pot: number): string {
-  if (perf === 3 && pot === 3) return "★ Stars";
-  if (perf + pot >= 5) return "High potential";
-  if (perf + pot <= 2) return "Needs support";
-  return "Core";
+  if (perf === 3 && pot === 3) return "succ.box.stars";
+  if (perf + pot >= 5) return "succ.box.high";
+  if (perf + pot <= 2) return "succ.box.needs";
+  return "succ.box.core";
 }
 
 export default async function SuccessionPage() {
   await requireFeature("succession");
   const session = await requirePermission("report.view");
+  const t = translator(await getLocale());
 
   const { users, roles } = await withTenant(session.tenantId, async (tx) => {
     const [users, roles] = await Promise.all([
@@ -64,16 +66,13 @@ export default async function SuccessionPage() {
     <div>
       <div className="mb-5">
         <h1 className="text-xl font-semibold text-slate-900">
-          Leadership &amp; Succession
+          {t("nav.Leadership & Succession")}
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Identify high-potentials and build succession pipelines for critical
-          roles.
-        </p>
+        <p className="mt-1 text-sm text-slate-500">{t("succ.subtitle")}</p>
       </div>
 
       <h2 className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-400">
-        9-box talent grid
+        {t("succ.nineBox")}
       </h2>
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         <div className="flex gap-3">
@@ -81,7 +80,7 @@ export default async function SuccessionPage() {
             className="flex items-center justify-center text-[11px] font-semibold uppercase tracking-wide text-slate-400"
             style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
           >
-            Potential →
+            {t("succ.potential")}
           </div>
           <div className="flex-1">
             <div className="grid grid-cols-3 gap-2">
@@ -105,7 +104,7 @@ export default async function SuccessionPage() {
                       }`}
                     >
                       <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">
-                        {boxLabel(perf, pot)}
+                        {t(boxLabel(perf, pot))}
                       </p>
                       <div className="mt-1.5 flex flex-wrap gap-1">
                         {occ.map((u) => (
@@ -124,14 +123,14 @@ export default async function SuccessionPage() {
               )}
             </div>
             <p className="mt-2 text-center text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-              Performance →
+              {t("succ.performance")}
             </p>
           </div>
         </div>
       </div>
 
       <h2 className="mb-3 mt-8 text-xs font-bold uppercase tracking-wide text-slate-400">
-        Succession pipelines
+        {t("succ.pipelines")}
       </h2>
       <div className="grid gap-4 sm:grid-cols-2">
         {roles.map((role) => (
@@ -140,7 +139,7 @@ export default async function SuccessionPage() {
             className="rounded-xl border border-slate-200 bg-white p-5"
           >
             <span className="inline-block rounded-full bg-red-50 px-2 py-0.5 text-[11.5px] font-bold text-red-700">
-              Critical role
+              {t("succ.critical")}
             </span>
             <p className="mt-2 font-semibold text-slate-900">{role.title}</p>
             {role.incumbent ? (
@@ -156,12 +155,13 @@ export default async function SuccessionPage() {
                   )}
                   size={22}
                 />
-                Incumbent: {role.incumbent.firstName} {role.incumbent.lastName}
+                {t("succ.incumbent")}: {role.incumbent.firstName}{" "}
+                {role.incumbent.lastName}
               </p>
             ) : null}
 
             <p className="mb-1 mt-4 text-[11px] font-bold uppercase tracking-wide text-slate-400">
-              Successors
+              {t("succ.successors")}
             </p>
             {role.candidates.map((cand) => (
               <div
@@ -191,7 +191,7 @@ export default async function SuccessionPage() {
                   <span
                     className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${READINESS_PILL[cand.readiness]}`}
                   >
-                    {READINESS_LABEL[cand.readiness]}
+                    {t(`readiness.${cand.readiness}`)}
                   </span>
                 </div>
               </div>

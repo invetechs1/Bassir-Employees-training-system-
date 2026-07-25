@@ -22,16 +22,30 @@ export interface MatrixComp {
   name: string;
 }
 
+export interface MatrixLabels {
+  employee: string;
+  assess: string;
+  managerLevel: string;
+  targetLevel: string;
+  self: string;
+  current: string;
+  cancel: string;
+  save: string;
+  saving: string;
+}
+
 const initialState: AssessState = {};
 
 export function CompetencyMatrix({
   users,
   competencies,
   canManage,
+  labels,
 }: {
   users: MatrixUser[];
   competencies: MatrixComp[];
   canManage: boolean;
+  labels: MatrixLabels;
 }) {
   const [editing, setEditing] = useState<{
     user: MatrixUser;
@@ -45,7 +59,7 @@ export function CompetencyMatrix({
         <thead>
           <tr>
             <th className="px-2 py-1.5 text-start text-xs font-semibold text-slate-500">
-              Employee
+              {labels.employee}
             </th>
             {competencies.map((c) => (
               <th
@@ -114,6 +128,7 @@ export function CompetencyMatrix({
         <AssessDialog
           key={`${editing.user.id}:${editing.comp.id}`}
           editing={editing}
+          labels={labels}
           onClose={() => setEditing(null)}
         />
       ) : null}
@@ -123,9 +138,11 @@ export function CompetencyMatrix({
 
 function AssessDialog({
   editing,
+  labels,
   onClose,
 }: {
   editing: { user: MatrixUser; cell: MatrixCell; comp: MatrixComp };
+  labels: MatrixLabels;
   onClose: () => void;
 }) {
   const [state, formAction, pending] = useActionState(
@@ -151,7 +168,7 @@ function AssessDialog({
       <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="border-b border-slate-200 px-5 py-4">
           <h3 className="text-base font-semibold text-slate-900">
-            Assess: {editing.user.name}
+            {labels.assess}: {editing.user.name}
           </h3>
           <p className="mt-0.5 text-sm text-slate-500">{editing.comp.name}</p>
         </div>
@@ -160,7 +177,7 @@ function AssessDialog({
           <input type="hidden" name="competencyId" value={editing.comp.id} />
 
           <label className="mb-1 block text-sm font-medium text-slate-700">
-            Manager level (1–5)
+            {labels.managerLevel}
           </label>
           <select
             name="managerLevel"
@@ -175,7 +192,7 @@ function AssessDialog({
           </select>
 
           <label className="mb-1 block text-sm font-medium text-slate-700">
-            Target level (1–5)
+            {labels.targetLevel}
           </label>
           <select
             name="targetLevel"
@@ -190,7 +207,8 @@ function AssessDialog({
           </select>
 
           <p className="mb-3 text-xs text-slate-400">
-            Self: {editing.cell.self} · Current: {editing.cell.current}
+            {labels.self}: {editing.cell.self} · {labels.current}:{" "}
+            {editing.cell.current}
           </p>
 
           {state.error ? (
@@ -205,14 +223,14 @@ function AssessDialog({
               onClick={onClose}
               className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
             >
-              Cancel
+              {labels.cancel}
             </button>
             <button
               type="submit"
               disabled={pending}
               className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
             >
-              {pending ? "Saving…" : "Save"}
+              {pending ? labels.saving : labels.save}
             </button>
           </div>
         </form>

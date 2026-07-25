@@ -1,11 +1,13 @@
 import { requireFeature, requirePermission } from "@/lib/auth";
 import { withTenant } from "@/lib/tenant-db";
 import { avatarColor, initials } from "@/lib/talent";
+import { getLocale, translator } from "@/lib/i18n";
 import { Avatar, Donut, ProgressBar } from "@/components/charts";
 
 export default async function InsightsPage() {
   await requireFeature("insights");
   const session = await requirePermission("report.view");
+  const t = translator(await getLocale());
 
   const data = await withTenant(session.tenantId, async (tx) => {
     const [competencies, ratings, programs, roles, learners, enrollments] =
@@ -108,17 +110,16 @@ export default async function InsightsPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-xl font-semibold text-slate-900">AI Insights</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Turn development data into decisions — gaps, readiness and
-          recommendations.
-        </p>
+        <h1 className="text-xl font-semibold text-slate-900">
+          {t("nav.AI Insights")}
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">{t("ins.subtitle")}</p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div>
           <h2 className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-400">
-            Priority skill gaps
+            {t("ins.priorityGaps")}
           </h2>
           <div className="rounded-xl border border-slate-200 bg-white p-5">
             {gaps.slice(0, 4).map((g) => (
@@ -135,7 +136,7 @@ export default async function InsightsPage() {
 
         <div>
           <h2 className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-400">
-            Role-readiness scoring
+            {t("ins.roleReadiness")}
           </h2>
           <div className="grid gap-3">
             {data.roles.map((role) => {
@@ -170,7 +171,7 @@ export default async function InsightsPage() {
                       </p>
                     ) : (
                       <p className="mt-1 text-xs text-slate-400">
-                        No ready successor
+                        {t("ins.noSuccessor")}
                       </p>
                     )}
                   </div>
@@ -182,7 +183,7 @@ export default async function InsightsPage() {
       </div>
 
       <h2 className="mb-3 mt-8 text-xs font-bold uppercase tracking-wide text-slate-400">
-        Recommended programs
+        {t("ins.recommended")}
       </h2>
       <div className="grid gap-3">
         {recs.map((r) => (
@@ -213,8 +214,8 @@ export default async function InsightsPage() {
                 {r.program ? r.program.title : r.gap.name}
               </h4>
               <p className="text-xs text-slate-500">
-                Closes the largest gap in <b>{r.gap.name}</b> · recommended for{" "}
-                {r.gap.affected} people
+                {t("ins.closesGap")} <b>{r.gap.name}</b> · {t("ins.recFor")}{" "}
+                {r.gap.affected} {t("ins.people")}
               </p>
             </div>
             <span
@@ -228,7 +229,7 @@ export default async function InsightsPage() {
       </div>
 
       <h2 className="mb-3 mt-8 text-xs font-bold uppercase tracking-wide text-slate-400">
-        Retention watch
+        {t("ins.retention")}
       </h2>
       <div className="rounded-xl border border-slate-200 bg-white px-5">
         {risks.map((r, i) => (
@@ -257,7 +258,7 @@ export default async function InsightsPage() {
             <span
               className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${RISK_PILL[r.level]}`}
             >
-              {r.level}
+              {t(`risk.${r.level}`)}
             </span>
           </div>
         ))}

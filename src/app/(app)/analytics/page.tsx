@@ -1,11 +1,13 @@
 import { requireFeature, requirePermission } from "@/lib/auth";
 import { withTenant } from "@/lib/tenant-db";
-import { LEVEL_LABEL, PROGRAM_LEVELS } from "@/lib/talent";
+import { PROGRAM_LEVELS } from "@/lib/talent";
+import { getLocale, translator } from "@/lib/i18n";
 import { Donut, ProgressBar, AreaChart } from "@/components/charts";
 
 export default async function AnalyticsPage() {
   await requireFeature("analytics");
   const session = await requirePermission("report.view");
+  const t = translator(await getLocale());
 
   const data = await withTenant(session.tenantId, async (tx) => {
     const [users, programs, enrollments, ratings, firstCert] = await Promise.all(
@@ -75,17 +77,17 @@ export default async function AnalyticsPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-xl font-semibold text-slate-900">Analytics</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Workforce, learning and readiness analytics for leadership.
-        </p>
+        <h1 className="text-xl font-semibold text-slate-900">
+          {t("nav.Analytics")}
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">{t("an.subtitle")}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         {[
-          { pct: completionRate, color: "#0f9d6e", label: "Completion rate" },
-          { pct: activeRatio, color: "#2953d9", label: "Active learners" },
-          { pct: compliancePct, color: "#b9760a", label: "HSE compliance" },
+          { pct: completionRate, color: "#0f9d6e", label: t("an.completionRate") },
+          { pct: activeRatio, color: "#2953d9", label: t("an.activeLearners") },
+          { pct: compliancePct, color: "#b9760a", label: t("an.compliance") },
         ].map((d) => (
           <div
             key={d.label}
@@ -100,13 +102,13 @@ export default async function AnalyticsPage() {
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <div>
           <h2 className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-400">
-            Enrollments by level
+            {t("an.byLevel")}
           </h2>
           <div className="rounded-xl border border-slate-200 bg-white p-5">
             {PROGRAM_LEVELS.map((lvl) => (
               <div key={lvl} className="mb-3 last:mb-0">
                 <div className="mb-1.5 flex justify-between text-sm">
-                  <span className="text-slate-600">{LEVEL_LABEL[lvl]}</span>
+                  <span className="text-slate-600">{t(`level.${lvl}`)}</span>
                   <span className="tabular-nums text-slate-400">
                     {byLevel[lvl]}
                   </span>
@@ -122,12 +124,12 @@ export default async function AnalyticsPage() {
 
         <div>
           <h2 className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-400">
-            Active learners — 6 months
+            {t("an.trend")}
           </h2>
           <div className="rounded-xl border border-slate-200 bg-white p-5 pb-2 text-brand-600">
             <AreaChart values={trend} />
             <div className="mt-1 flex justify-between text-[11px] text-slate-400">
-              {["-5", "-4", "-3", "-2", "-1", "now"].map((m) => (
+              {["-5", "-4", "-3", "-2", "-1", t("an.now")].map((m) => (
                 <span key={m}>{m}</span>
               ))}
             </div>
@@ -136,7 +138,7 @@ export default async function AnalyticsPage() {
       </div>
 
       <h2 className="mb-3 mt-8 text-xs font-bold uppercase tracking-wide text-slate-400">
-        Competency coverage
+        {t("an.coverage")}
       </h2>
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         {coverage.map((c) => (

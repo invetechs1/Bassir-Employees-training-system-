@@ -1,12 +1,15 @@
-import { requirePermission } from "@/lib/auth";
+import { requireFeature, requirePermission } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
 import { LEVEL_COLORS } from "@/lib/talent";
+import { getLocale, translator } from "@/lib/i18n";
 import { ProgressBar } from "@/components/charts";
 import { CompetencyMatrix, type MatrixUser, type MatrixComp } from "./matrix";
 
 export default async function CompetenciesPage() {
+  await requireFeature("competencies");
   const session = await requirePermission("competency.read");
+  const t = translator(await getLocale());
   const canManage = can(session, "competency.manage");
 
   const { users, competencies, ratings } = await withTenant(
@@ -79,20 +82,30 @@ export default async function CompetenciesPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-xl font-semibold text-slate-900">Competencies</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Measure real capability — self, manager and target levels across the
-          competency framework.
-        </p>
+        <h1 className="text-xl font-semibold text-slate-900">
+          {t("nav.Competencies")}
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">{t("comp.subtitle")}</p>
       </div>
 
       <h2 className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-400">
-        Competency matrix
+        {t("comp.matrix")}
       </h2>
       <CompetencyMatrix
         users={matrixUsers}
         competencies={matrixComps}
         canManage={canManage}
+        labels={{
+          employee: t("comp.employee"),
+          assess: t("comp.assessTitle"),
+          managerLevel: t("comp.managerLevel"),
+          targetLevel: t("comp.targetLevel"),
+          self: t("comp.self"),
+          current: t("comp.current"),
+          cancel: t("common.cancel"),
+          save: t("common.save"),
+          saving: t("comp.saving"),
+        }}
       />
       <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-slate-500">
         {LEVEL_COLORS.map((c, i) => (
@@ -101,26 +114,26 @@ export default async function CompetenciesPage() {
               className="inline-block h-3.5 w-3.5 rounded"
               style={{ background: c }}
             />
-            Level {i + 1}
+            {t("comp.level")} {i + 1}
           </span>
         ))}
-        <span className="text-slate-400">·&nbsp; ▲ = target</span>
+        <span className="text-slate-400">·&nbsp; ▲ = {t("comp.target")}</span>
       </div>
       {canManage ? (
-        <p className="mt-2 text-xs text-slate-400">
-          Click any cell to update an employee&apos;s manager rating and target.
-        </p>
+        <p className="mt-2 text-xs text-slate-400">{t("comp.clickCell")}</p>
       ) : null}
 
       <h2 className="mb-3 mt-8 text-xs font-bold uppercase tracking-wide text-slate-400">
-        Organization skill gaps
+        {t("comp.gaps")}
       </h2>
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         {gaps.map((g) => (
           <div key={g.name} className="mb-3 last:mb-0">
             <div className="mb-1.5 flex justify-between text-sm">
               <span className="text-slate-600">{g.name}</span>
-              <span className="tabular-nums text-slate-400">{g.gap} gap</span>
+              <span className="tabular-nums text-slate-400">
+                {g.gap} {t("comp.gap")}
+              </span>
             </div>
             <ProgressBar pct={(g.gap / maxGap) * 100} variant="amber" />
           </div>

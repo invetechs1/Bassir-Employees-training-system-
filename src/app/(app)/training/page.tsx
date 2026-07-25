@@ -2,17 +2,12 @@ import Link from "next/link";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
+import { getLocale, translator } from "@/lib/i18n";
 import { enrollSelfAction, updateProgressAction } from "./actions";
-
-const LEVEL_LABELS: Record<string, string> = {
-  FOUNDATION: "Foundation",
-  INTERMEDIATE: "Intermediate",
-  ADVANCED: "Advanced",
-  LEADERSHIP: "Leadership",
-};
 
 export default async function TrainingPage() {
   const session = await requireSession();
+  const t = translator(await getLocale());
   const canCreate = can(session, "training.program.create");
 
   const { programs, myEnrollments } = await withTenant(
@@ -41,18 +36,16 @@ export default async function TrainingPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-slate-900">
-            Training Programs
+            {t("nav.Training Programs")}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Build capability through structured, competency-linked programs.
-          </p>
+          <p className="mt-1 text-sm text-slate-500">{t("training.subtitle")}</p>
         </div>
         {canCreate ? (
           <Link
             href="/training/new"
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
           >
-            New program
+            {t("training.new")}
           </Link>
         ) : null}
       </div>
@@ -60,12 +53,11 @@ export default async function TrainingPage() {
       {/* My learning */}
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          My learning
+          {t("training.myLearning")}
         </h2>
         {myEnrollments.length === 0 ? (
           <p className="rounded-lg border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
-            You have not enrolled in any programs yet. Pick one below to start
-            growing.
+            {t("training.noEnroll")}
           </p>
         ) : (
           <div className="space-y-3">
@@ -80,7 +72,7 @@ export default async function TrainingPage() {
                       {e.program.title}
                     </p>
                     <p className="text-xs text-slate-500">
-                      {LEVEL_LABELS[e.program.level]} · {e.status}
+                      {t(`level.${e.program.level}`)} · {t(`estatus.${e.status}`)}
                     </p>
                   </div>
                   <span className="text-sm font-semibold text-brand-700">
@@ -106,7 +98,7 @@ export default async function TrainingPage() {
                       value={p}
                       className="rounded-md border border-slate-300 px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-50"
                     >
-                      {p === 100 ? "Complete" : `${p}%`}
+                      {p === 100 ? t("training.markComplete") : `${p}%`}
                     </button>
                   ))}
                 </form>
@@ -119,12 +111,11 @@ export default async function TrainingPage() {
       {/* Catalog */}
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Program catalog
+          {t("training.catalog")}
         </h2>
         {programs.length === 0 ? (
           <p className="rounded-lg border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
-            No published programs yet.
-            {canCreate ? " Create the first one to get started." : ""}
+            {t("training.noPrograms")}
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -137,7 +128,7 @@ export default async function TrainingPage() {
                 >
                   <div className="flex-1">
                     <span className="inline-block rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700">
-                      {LEVEL_LABELS[p.level]}
+                      {t(`level.${p.level}`)}
                     </span>
                     <h3 className="mt-2 font-semibold text-slate-900">
                       {p.title}
@@ -148,13 +139,15 @@ export default async function TrainingPage() {
                       </p>
                     ) : null}
                     <p className="mt-2 text-xs text-slate-400">
-                      {p.durationHours}h · {p._count.enrollments} enrolled
+                      {p.durationHours}
+                      {t("training.hours")} · {p._count.enrollments}{" "}
+                      {t("training.enrolledCount")}
                     </p>
                   </div>
                   <div className="mt-4">
                     {enrolled ? (
                       <span className="inline-block rounded-lg bg-slate-100 px-3 py-1.5 text-sm text-slate-500">
-                        Enrolled
+                        {t("training.enrolled")}
                       </span>
                     ) : can(session, "training.enroll.self") ? (
                       <form action={enrollSelfAction}>
@@ -163,7 +156,7 @@ export default async function TrainingPage() {
                           type="submit"
                           className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
                         >
-                          Enroll
+                          {t("training.enroll")}
                         </button>
                       </form>
                     ) : null}
