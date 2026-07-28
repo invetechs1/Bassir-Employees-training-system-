@@ -35,6 +35,36 @@ interface InviteResult {
   emailSent: boolean;
 }
 
+export interface ModalLabels {
+  inviteTitle: string;
+  inviteHint: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  jobTitle: string;
+  role: string;
+  department: string;
+  send: string;
+  sending: string;
+  cancel: string;
+  inviteCreated: string;
+  emailSentTo: string;
+  shareLink: string;
+  inviteLink: string;
+  linkExpiry: string;
+  copyLink: string;
+  copied: string;
+  copy: string;
+  done: string;
+  pwReset: string;
+  pwResetHint: string;
+  tempPw: string;
+  roleEmployee: string;
+  roleManager: string;
+  roleHr: string;
+  roleAdmin: string;
+}
+
 export interface PeopleLabels {
   title: string;
   subManage: string;
@@ -53,6 +83,7 @@ export interface PeopleLabels {
   reset: string;
   enable: string;
   disable: string;
+  m: ModalLabels;
 }
 
 export function PeopleClient({
@@ -169,6 +200,7 @@ export function PeopleClient({
         <InviteModal
           departments={departments}
           isOwner={isOwner}
+          m={labels.m}
           onClose={() => setInviteOpen(false)}
           onCreated={(r) => {
             setInviteOpen(false);
@@ -180,6 +212,7 @@ export function PeopleClient({
       {inviteResult ? (
         <InviteResultModal
           result={inviteResult}
+          m={labels.m}
           onClose={() => setInviteResult(null)}
         />
       ) : null}
@@ -187,6 +220,7 @@ export function PeopleClient({
       {credential ? (
         <CredentialModal
           credential={credential}
+          m={labels.m}
           onClose={() => setCredential(null)}
         />
       ) : null}
@@ -300,11 +334,13 @@ const initialInvite: InviteState = {};
 function InviteModal({
   departments,
   isOwner,
+  m,
   onClose,
   onCreated,
 }: {
   departments: { id: string; name: string }[];
   isOwner: boolean;
+  m: ModalLabels;
   onClose: () => void;
   onCreated: (r: InviteResult) => void;
 }) {
@@ -327,36 +363,35 @@ function InviteModal({
   return (
     <Overlay onClose={onClose}>
       <div className="border-b border-slate-200 px-5 py-4">
-        <h3 className="text-base font-semibold text-slate-900">Invite employee</h3>
-        <p className="mt-0.5 text-sm text-slate-500">
-          We&apos;ll email them an invitation link to set their own password.
-          You&apos;ll also get the link to share directly.
-        </p>
+        <h3 className="text-base font-semibold text-slate-900">{m.inviteTitle}</h3>
+        <p className="mt-0.5 text-sm text-slate-500">{m.inviteHint}</p>
       </div>
       <form action={formAction} className="px-5 py-4">
         <div className="grid grid-cols-2 gap-3">
-          <Field name="firstName" label="First name" required />
-          <Field name="lastName" label="Last name" required />
+          <Field name="firstName" label={m.firstName} required />
+          <Field name="lastName" label={m.lastName} required />
         </div>
-        <Field name="email" label="Work email" type="email" required />
-        <Field name="jobTitle" label="Job title (optional)" />
+        <Field name="email" label={m.email} type="email" required />
+        <Field name="jobTitle" label={m.jobTitle} />
         <div className="grid grid-cols-2 gap-3">
           <div className="mt-3">
-            <label className="mb-1 block text-sm font-medium text-slate-700">Role</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">
+              {m.role}
+            </label>
             <select
               name="roleKey"
               defaultValue="learner"
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
             >
-              <option value="learner">Employee</option>
-              <option value="manager">Line Manager</option>
-              <option value="hr_manager">HR / L&amp;D Manager</option>
-              {isOwner ? <option value="admin">Administrator</option> : null}
+              <option value="learner">{m.roleEmployee}</option>
+              <option value="manager">{m.roleManager}</option>
+              <option value="hr_manager">{m.roleHr}</option>
+              {isOwner ? <option value="admin">{m.roleAdmin}</option> : null}
             </select>
           </div>
           <div className="mt-3">
             <label className="mb-1 block text-sm font-medium text-slate-700">
-              Department
+              {m.department}
             </label>
             <select
               name="departmentId"
@@ -385,14 +420,14 @@ function InviteModal({
             onClick={onClose}
             className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
           >
-            Cancel
+            {m.cancel}
           </button>
           <button
             type="submit"
             disabled={pending}
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
           >
-            {pending ? "Sending…" : "Send invitation"}
+            {pending ? m.sending : m.send}
           </button>
         </div>
       </form>
@@ -402,9 +437,11 @@ function InviteModal({
 
 function InviteResultModal({
   result,
+  m,
   onClose,
 }: {
   result: InviteResult;
+  m: ModalLabels;
   onClose: () => void;
 }) {
   const [copied, setCopied] = useState(false);
@@ -422,38 +459,36 @@ function InviteResultModal({
     <Overlay onClose={onClose}>
       <div className="border-b border-slate-200 px-5 py-4">
         <h3 className="text-base font-semibold text-slate-900">
-          Invitation created
+          {m.inviteCreated}
         </h3>
         <p className="mt-0.5 text-sm text-slate-500">
           {result.emailSent
-            ? `An invitation email was sent to ${result.email}.`
-            : `Email isn't configured yet — share this link with ${result.email} directly.`}
+            ? `${m.emailSentTo} ${result.email}.`
+            : `${m.shareLink} ${result.email}.`}
         </p>
       </div>
       <div className="px-5 py-4">
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
           <span className="text-xs uppercase tracking-wide text-slate-400">
-            Invitation link
+            {m.inviteLink}
           </span>
           <div className="mt-1 break-all font-mono text-xs text-slate-800">
             {result.link}
           </div>
         </div>
-        <p className="mt-2 text-xs text-slate-400">
-          The link expires in 7 days and can only be used once.
-        </p>
+        <p className="mt-2 text-xs text-slate-400">{m.linkExpiry}</p>
         <div className="mt-4 flex justify-end gap-2">
           <button
             onClick={copy}
             className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
           >
-            {copied ? "Copied ✓" : "Copy link"}
+            {copied ? m.copied : m.copyLink}
           </button>
           <button
             onClick={onClose}
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
           >
-            Done
+            {m.done}
           </button>
         </div>
       </div>
@@ -463,9 +498,11 @@ function InviteResultModal({
 
 function CredentialModal({
   credential,
+  m,
   onClose,
 }: {
   credential: Credential;
+  m: ModalLabels;
   onClose: () => void;
 }) {
   const [copied, setCopied] = useState(false);
@@ -484,21 +521,20 @@ function CredentialModal({
   return (
     <Overlay onClose={onClose}>
       <div className="border-b border-slate-200 px-5 py-4">
-        <h3 className="text-base font-semibold text-slate-900">Password reset</h3>
-        <p className="mt-0.5 text-sm text-slate-500">
-          Share this temporary password securely. It is shown only once and must
-          be changed at next login.
-        </p>
+        <h3 className="text-base font-semibold text-slate-900">{m.pwReset}</h3>
+        <p className="mt-0.5 text-sm text-slate-500">{m.pwResetHint}</p>
       </div>
       <div className="px-5 py-4">
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm">
           <div className="mb-2">
-            <span className="text-xs uppercase tracking-wide text-slate-400">Email</span>
+            <span className="text-xs uppercase tracking-wide text-slate-400">
+              {m.email}
+            </span>
             <div className="font-medium text-slate-800">{credential.email}</div>
           </div>
           <div>
             <span className="text-xs uppercase tracking-wide text-slate-400">
-              Temporary password
+              {m.tempPw}
             </span>
             <div className="font-mono text-base font-semibold tracking-wide text-slate-900">
               {credential.password}
@@ -510,13 +546,13 @@ function CredentialModal({
             onClick={copy}
             className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
           >
-            {copied ? "Copied ✓" : "Copy"}
+            {copied ? m.copied : m.copy}
           </button>
           <button
             onClick={onClose}
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
           >
-            Done
+            {m.done}
           </button>
         </div>
       </div>
