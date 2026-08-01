@@ -54,6 +54,7 @@ The platform is ready to run for real employees:
 | **Self-service** | Anyone can change their own password from **Settings → Account security**. |
 | **Forgot password** | From the sign-in page, users request a reset link (**Forgot password?**). A one-time link (valid 60 min) is emailed — or shown in the server log when SMTP is unconfigured. The form gives the same response whether or not the email exists, so it can't be used to discover registered addresses. |
 | **Email verification** | Accepting an invite verifies the mailbox automatically; a dedicated confirmation link (single-use) is also supported for other flows. |
+| **Policy pages** | Public, bilingual (EN/AR, RTL) **Terms of Service** (`/legal/terms`) and **Privacy Policy** (`/legal/privacy`), aligned with Saudi **PDPL** concepts. Provided as review-ready templates — set `LEGAL_ENTITY_NAME` / `LEGAL_CONTACT_EMAIL` and have counsel review before launch. |
 | **Provision a company** | `npm run provision` stands up a new company + its first administrator (no demo data). |
 | **Deploy** | One-command **Docker Compose** stack (app + PostgreSQL) that auto-runs migrations, including Row-Level Security. |
 | **Hardened config** | Real Prisma migrations, security headers, `AUTH_SECRET` strength checks, secure cookies in production, non-superuser DB role. |

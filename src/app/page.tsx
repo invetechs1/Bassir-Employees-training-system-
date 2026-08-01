@@ -87,8 +87,18 @@ export default function LandingPage() {
       </section>
 
       <footer className="border-t border-slate-200 bg-slate-50">
-        <div className="mx-auto max-w-6xl px-6 py-8 text-sm text-slate-500">
-          © {new Date().getFullYear()} Bassir Technology. All rights reserved.
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <span>
+            © {new Date().getFullYear()} Bassir Technology. All rights reserved.
+          </span>
+          <nav className="flex gap-4">
+            <Link href="/legal/terms" className="hover:text-slate-700">
+              Terms of Service
+            </Link>
+            <Link href="/legal/privacy" className="hover:text-slate-700">
+              Privacy Policy
+            </Link>
+          </nav>
         </div>
       </footer>
     </main>

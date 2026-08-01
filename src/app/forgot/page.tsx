@@ -36,6 +36,15 @@ export default async function ForgotPage() {
             {t("forgot.backToLogin")}
           </Link>
         </p>
+        <p className="mt-2 text-center text-xs text-slate-400">
+          <Link href="/legal/terms" className="hover:text-slate-600">
+            {t("legal.terms")}
+          </Link>{" "}
+          ·{" "}
+          <Link href="/legal/privacy" className="hover:text-slate-600">
+            {t("legal.privacy")}
+          </Link>
+        </p>
       </div>
     </main>
   );

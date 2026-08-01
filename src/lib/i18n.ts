@@ -136,6 +136,10 @@ export const DICT: Record<string, Entry> = {
   },
   "verify.continue": { en: "Continue to sign in", ar: "المتابعة لتسجيل الدخول" },
 
+  // Legal
+  "legal.terms": { en: "Terms", ar: "الشروط" },
+  "legal.privacy": { en: "Privacy", ar: "الخصوصية" },
+
   // Common
   "common.settings": { en: "Settings", ar: "الإعدادات" },
   "common.readOnly": { en: "Read-only", ar: "للعرض فقط" },
