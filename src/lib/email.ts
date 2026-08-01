@@ -119,3 +119,71 @@ This link expires in 7 days.`;
 </div>`;
   return { subject, html, text };
 }
+
+/** Build the password-reset email body, styled with the company's branding. */
+export function passwordResetEmail(params: {
+  companyName: string;
+  userName: string;
+  link: string;
+  ttlMinutes: number;
+  brand?: EmailBranding;
+}): { subject: string; html: string; text: string } {
+  const { companyName, userName, link, ttlMinutes, brand } = params;
+  const btnColor = brand?.color ?? "#2953d9";
+  const subject = `Reset your ${companyName} password`;
+  const text = `Hi ${userName},
+
+We received a request to reset the password for your ${companyName} account on BCAP.
+
+Reset your password:
+${link}
+
+This link expires in ${ttlMinutes} minutes. If you didn't request this, you can safely ignore this email — your password will not change.`;
+  const html = `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:auto;color:#0f1729">
+  ${emailHeader(companyName, brand)}
+  <div style="border:1px solid #e3e8f2;border-top:0;padding:24px;border-radius:0 0 12px 12px">
+    <p>Hi ${userName},</p>
+    <p>We received a request to reset the password for your <strong>${companyName}</strong> account.</p>
+    <p style="margin:24px 0">
+      <a href="${link}" style="background:${btnColor};color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;display:inline-block">Reset your password</a>
+    </p>
+    <p style="color:#7a869c;font-size:13px">Or paste this link into your browser:<br><a href="${link}" style="color:${btnColor}">${link}</a></p>
+    <p style="color:#7a869c;font-size:13px">This link expires in ${ttlMinutes} minutes. If you didn't request this, ignore this email — your password will not change.</p>
+  </div>
+</div>`;
+  return { subject, html, text };
+}
+
+/** Build the email-verification email body, styled with the company's branding. */
+export function verifyEmailEmail(params: {
+  companyName: string;
+  userName: string;
+  link: string;
+  ttlHours: number;
+  brand?: EmailBranding;
+}): { subject: string; html: string; text: string } {
+  const { companyName, userName, link, ttlHours, brand } = params;
+  const btnColor = brand?.color ?? "#2953d9";
+  const subject = `Confirm your email for ${companyName}`;
+  const text = `Hi ${userName},
+
+Please confirm this email address for your ${companyName} account on BCAP.
+
+Confirm your email:
+${link}
+
+This link expires in ${ttlHours} hours.`;
+  const html = `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:auto;color:#0f1729">
+  ${emailHeader(companyName, brand)}
+  <div style="border:1px solid #e3e8f2;border-top:0;padding:24px;border-radius:0 0 12px 12px">
+    <p>Hi ${userName},</p>
+    <p>Please confirm this email address for your <strong>${companyName}</strong> account.</p>
+    <p style="margin:24px 0">
+      <a href="${link}" style="background:${btnColor};color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;display:inline-block">Confirm email</a>
+    </p>
+    <p style="color:#7a869c;font-size:13px">Or paste this link into your browser:<br><a href="${link}" style="color:${btnColor}">${link}</a></p>
+    <p style="color:#7a869c;font-size:13px">This link expires in ${ttlHours} hours.</p>
+  </div>
+</div>`;
+  return { subject, html, text };
+}

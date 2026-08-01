@@ -89,6 +89,52 @@ export const DICT: Record<string, Entry> = {
     ar: "لا يوجد حساب مطابق لهويتك عبر SSO. اطلب من المسؤول دعوتك.",
   },
   "login.err.disabled": { en: "Your account is disabled.", ar: "حسابك معطّل." },
+  "login.forgot": { en: "Forgot password?", ar: "نسيت كلمة المرور؟" },
+
+  // Forgot password
+  "forgot.title": { en: "Reset your password", ar: "إعادة تعيين كلمة المرور" },
+  "forgot.subtitle": {
+    en: "Enter your company and email and we'll send you a reset link.",
+    ar: "أدخل اسم الشركة والبريد الإلكتروني وسنرسل لك رابط إعادة التعيين.",
+  },
+  "forgot.submit": { en: "Send reset link", ar: "إرسال رابط إعادة التعيين" },
+  "forgot.submitting": { en: "Sending…", ar: "جارٍ الإرسال…" },
+  "forgot.done": {
+    en: "If an account matches those details, we've sent a password reset link. Please check your inbox.",
+    ar: "إذا كان هناك حساب مطابق لهذه البيانات، فقد أرسلنا رابط إعادة تعيين كلمة المرور. يرجى مراجعة بريدك.",
+  },
+  "forgot.backToLogin": { en: "Back to sign in", ar: "العودة لتسجيل الدخول" },
+
+  // Reset password
+  "reset.title": { en: "Choose a new password", ar: "اختر كلمة مرور جديدة" },
+  "reset.subtitle": {
+    en: "Set a new password for your account.",
+    ar: "عيّن كلمة مرور جديدة لحسابك.",
+  },
+  "reset.invalidTitle": { en: "Link unavailable", ar: "الرابط غير متاح" },
+  "reset.invalidBody": {
+    en: "This reset link is invalid or has expired.",
+    ar: "رابط إعادة التعيين غير صالح أو منتهي الصلاحية.",
+  },
+  "reset.password": { en: "New password", ar: "كلمة المرور الجديدة" },
+  "reset.hint": { en: "At least 8 characters.", ar: "٨ أحرف على الأقل." },
+  "reset.confirm": { en: "Confirm password", ar: "تأكيد كلمة المرور" },
+  "reset.submit": { en: "Reset password & sign in", ar: "إعادة التعيين والدخول" },
+  "reset.submitting": { en: "Resetting…", ar: "جارٍ إعادة التعيين…" },
+  "reset.requestNew": { en: "Request a new link", ar: "طلب رابط جديد" },
+
+  // Email verification
+  "verify.okTitle": { en: "Email confirmed", ar: "تم تأكيد البريد" },
+  "verify.okBody": {
+    en: "Thanks — your email address is now verified.",
+    ar: "شكرًا — تم تأكيد عنوان بريدك الإلكتروني الآن.",
+  },
+  "verify.badTitle": { en: "Link unavailable", ar: "الرابط غير متاح" },
+  "verify.badBody": {
+    en: "This confirmation link is invalid or has expired.",
+    ar: "رابط التأكيد غير صالح أو منتهي الصلاحية.",
+  },
+  "verify.continue": { en: "Continue to sign in", ar: "المتابعة لتسجيل الدخول" },
 
   // Common
   "common.settings": { en: "Settings", ar: "الإعدادات" },

@@ -48,6 +48,7 @@ export default async function LoginPage({
               signIn: t("login.signIn"),
               signingIn: t("login.signingIn"),
               sso: t("login.sso"),
+              forgot: t("login.forgot"),
             }}
           />
         </div>

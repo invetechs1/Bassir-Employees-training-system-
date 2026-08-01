@@ -169,6 +169,13 @@ model User {
   // Pending email-invitation state (SHA-256 of the invite token + its expiry).
   inviteTokenHash    String?  @unique
   inviteExpiresAt    DateTime?
+  // Self-service password-reset state (SHA-256 of the reset token + its expiry).
+  resetTokenHash     String?  @unique
+  resetExpiresAt     DateTime?
+  // Email-verification state. verifiedAt is set once the address is confirmed.
+  emailVerifiedAt    DateTime?
+  verifyTokenHash    String?  @unique
+  verifyExpiresAt    DateTime?
 
   branchId     String?
   departmentId String?

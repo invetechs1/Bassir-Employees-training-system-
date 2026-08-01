@@ -5,7 +5,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { withTenant } from "@/lib/tenant-db";
 import { hashPassword } from "@/lib/password";
-import { hashInviteToken } from "@/lib/invite-token";
+import { hashToken } from "@/lib/reset-token";
 import { createSessionToken, setSessionCookie } from "@/lib/session";
 
 const Schema = z
@@ -20,14 +20,14 @@ const Schema = z
     path: ["confirm"],
   });
 
-export interface AcceptState {
+export interface ResetState {
   error?: string;
 }
 
-export async function acceptInviteAction(
-  _prev: AcceptState,
+export async function resetPasswordAction(
+  _prev: ResetState,
   formData: FormData
-): Promise<AcceptState> {
+): Promise<ResetState> {
   const parsed = Schema.safeParse({
     slug: formData.get("slug"),
     token: formData.get("token"),
@@ -40,16 +40,16 @@ export async function acceptInviteAction(
   const { slug, token, password } = parsed.data;
 
   const tenant = await prisma.tenant.findUnique({ where: { slug } });
-  if (!tenant) return { error: "This invitation is no longer valid." };
+  if (!tenant) return { error: "This reset link is no longer valid." };
 
-  const tokenHash = hashInviteToken(token);
+  const tokenHash = hashToken(token);
 
   const result = await withTenant(tenant.id, async (tx) => {
     const user = await tx.user.findFirst({
       where: {
-        inviteTokenHash: tokenHash,
-        status: "INVITED",
-        inviteExpiresAt: { gt: new Date() },
+        resetTokenHash: tokenHash,
+        status: "ACTIVE",
+        resetExpiresAt: { gt: new Date() },
       },
       include: { userRoles: { include: { role: true } } },
     });
@@ -59,12 +59,13 @@ export async function acceptInviteAction(
       where: { id: user.id },
       data: {
         passwordHash: await hashPassword(password),
-        status: "ACTIVE",
+        // A successful reset proves control of the mailbox, so the address is
+        // now verified and any forced-change flag is cleared. The one-time
+        // reset token is consumed.
         mustChangePassword: false,
-        // Accepting an emailed invite proves control of the mailbox.
-        emailVerifiedAt: new Date(),
-        inviteTokenHash: null,
-        inviteExpiresAt: null,
+        emailVerifiedAt: user.emailVerifiedAt ?? new Date(),
+        resetTokenHash: null,
+        resetExpiresAt: null,
         lastLoginAt: new Date(),
       },
     });
@@ -72,7 +73,7 @@ export async function acceptInviteAction(
       data: {
         tenantId: tenant.id,
         actorId: user.id,
-        action: "user.invite.accept",
+        action: "user.password.reset",
         entity: "User",
         entityId: user.id,
       },
@@ -89,11 +90,11 @@ export async function acceptInviteAction(
 
   if (!result) {
     return {
-      error: "This invitation is invalid or has expired. Ask an administrator to resend it.",
+      error:
+        "This reset link is invalid or has expired. Request a new one from the sign-in page.",
     };
   }
 
-  // Sign the new employee in immediately.
   const sessionToken = await createSessionToken({
     userId: result.userId,
     tenantId: tenant.id,

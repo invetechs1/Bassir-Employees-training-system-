@@ -52,6 +52,8 @@ The platform is ready to run for real employees:
 | **Secure onboarding** | Invitees click the link, set their own password, and are signed in. Links are single-use and expire in 7 days; no password is ever emailed. |
 | **Manage access** | Reset an employee's password, disable/enable accounts (the owner and yourself are protected). |
 | **Self-service** | Anyone can change their own password from **Settings → Account security**. |
+| **Forgot password** | From the sign-in page, users request a reset link (**Forgot password?**). A one-time link (valid 60 min) is emailed — or shown in the server log when SMTP is unconfigured. The form gives the same response whether or not the email exists, so it can't be used to discover registered addresses. |
+| **Email verification** | Accepting an invite verifies the mailbox automatically; a dedicated confirmation link (single-use) is also supported for other flows. |
 | **Provision a company** | `npm run provision` stands up a new company + its first administrator (no demo data). |
 | **Deploy** | One-command **Docker Compose** stack (app + PostgreSQL) that auto-runs migrations, including Row-Level Security. |
 | **Hardened config** | Real Prisma migrations, security headers, `AUTH_SECRET` strength checks, secure cookies in production, non-superuser DB role. |

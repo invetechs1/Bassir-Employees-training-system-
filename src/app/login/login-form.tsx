@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { loginAction, type LoginState } from "./actions";
 
@@ -12,6 +13,7 @@ interface Labels {
   signIn: string;
   signingIn: string;
   sso: string;
+  forgot: string;
 }
 
 export function LoginForm({ next, labels }: { next?: string; labels: Labels }) {
@@ -61,9 +63,17 @@ export function LoginForm({ next, labels }: { next?: string; labels: Labels }) {
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-slate-700">
-          {labels.password}
-        </label>
+        <div className="flex items-center justify-between">
+          <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+            {labels.password}
+          </label>
+          <Link
+            href="/forgot"
+            className="text-xs font-medium text-brand-600 hover:text-brand-700"
+          >
+            {labels.forgot}
+          </Link>
+        </div>
         <input
           id="password"
           name="password"
