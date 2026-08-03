@@ -95,7 +95,9 @@ set their own password, and they're in.
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design and the
 [roadmap](docs/ARCHITECTURE.md#roadmap) of remaining work (payment processing,
-platform-admin plane, deep per-page Arabic coverage, …).
+platform-admin plane, deep per-page Arabic coverage, …). For running BCAP in
+production — health checks (`GET /api/health`), database backups & disaster
+recovery, and monitoring/error tracking — see [`docs/OPERATIONS.md`](docs/OPERATIONS.md).
 
 ---
 

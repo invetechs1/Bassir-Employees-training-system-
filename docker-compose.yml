@@ -56,6 +56,35 @@ services:
       # STRIPE_PRICE_ENTERPRISE: "price_..."
     ports:
       - "3000:3000"
+    healthcheck:
+      # Uses the app's own /api/health endpoint (checks DB connectivity too).
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  # Optional daily database backup. Enable with:  docker compose --profile backup up -d
+  # Dumps are written to the ./backups directory on the host (retention: 14 days).
+  backup:
+    image: postgres:16
+    profiles: ["backup"]
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Backups must bypass RLS, so use the postgres superuser (NOT the app role).
+      BACKUP_DATABASE_URL: "postgresql://postgres:postgres_superuser_password@db:5432/bcap"
+      BACKUP_DIR: "/backups"
+      RETENTION_DAYS: "14"
+    volumes:
+      - ./scripts:/scripts:ro
+      - ./backups:/backups
+    entrypoint: ["/bin/sh", "-c"]
+    # Runs a backup on start, then once every 24h. Adjust the interval as needed.
+    command: >-
+      "while true; do /scripts/backup.sh || echo '[backup] failed'; sleep 86400; done"
 
 volumes:
   bcap-db:
