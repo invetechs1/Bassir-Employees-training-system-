@@ -18,6 +18,7 @@
 import { PrismaClient, type Industry } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { PERMISSIONS, SYSTEM_ROLES } from "../src/lib/rbac";
+import { installCurriculum } from "../src/lib/curriculum-install";
 
 const prisma = new PrismaClient();
 
@@ -139,6 +140,17 @@ async function main() {
     await tx.userRole.create({
       data: { userId: owner.id, roleId: roleByKey.admin },
     });
+
+    // Ship the bilingual starter curriculum unless explicitly skipped, so the
+    // company has ready-made courses (Accounting, HR, PM, Executive) at launch.
+    if (!process.argv.includes("--no-curriculum")) {
+      const installed = await installCurriculum(tx, tenant.id, {
+        authorId: owner.id,
+      });
+      console.log(
+        `  Curriculum: ${installed.programsCreated} programs, ${installed.lessonsCreated} lessons installed.`
+      );
+    }
   });
 
   console.log("\n✅ Company provisioned.\n");

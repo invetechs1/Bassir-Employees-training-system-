@@ -26,6 +26,8 @@ future module builds on:
 | **Org structure** | Companies → Branches → Departments → Users (with manager hierarchy). |
 | **Competency framework** | Competency categories & competencies (the differentiator vs. an LMS). |
 | **Training module (end-to-end)** | Create/publish programs, self-enroll, track progress to completion — the first vertical slice. |
+| **Course content & lessons** | Programs hold ordered **modules → lessons** (reading/video/resource) with a lesson player; learner progress is **derived from completed lessons**. |
+| **Starter curriculum library** | Bilingual (EN/AR) ready-made courses by specialist track — Accounting & Finance, HR, Project Management, Executive/COO — installed automatically for every company. See [`docs/CURRICULUM.md`](docs/CURRICULUM.md). |
 | **Audit log** | Tenant-scoped audit trail (logins, program creation, …). |
 | **Seed** | Provisions the three launch customers: Alarrab Engineering Consultancy, Azoom United Contracting, Hadathah Logistics. |
 
@@ -170,7 +172,8 @@ Each tenant also has `huda@…` (HR/L&D Manager), `faisal@…` (Line Manager),
 | `npm test` | Run the unit test suite (Vitest) |
 | `npm run db:push` | Sync schema to the database |
 | `npm run db:migrate` | Create a migration (for production workflows) |
-| `npm run db:seed` | Seed tenants + sample data |
+| `npm run db:seed` | Seed tenants + sample data (installs the starter curriculum) |
+| `npm run seed:curriculum -- --slug <company>` | Install/refresh the bilingual starter curriculum for a company (`--all` for every tenant) |
 | `npm run db:studio` | Open Prisma Studio |
 
 ## Testing & CI

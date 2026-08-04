@@ -15,6 +15,7 @@
 import { PrismaClient, type Industry } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { PERMISSIONS, SYSTEM_ROLES, type SystemRoleKey } from "../src/lib/rbac";
+import { installCurriculum } from "../src/lib/curriculum-install";
 
 const prisma = new PrismaClient();
 
@@ -385,6 +386,13 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
         { tenantId: tenant.id, criticalRoleId: role2.id, userId: sara.id, readiness: "THREE_PLUS_YEARS", score: 38 },
       ],
     });
+
+    // Install the bilingual starter curriculum library (Accounting, HR, PM,
+    // Executive) so every demo tenant has real course content on day one.
+    const installed = await installCurriculum(tx, tenant.id, { authorId: admin.id });
+    console.log(
+      `  ↳ curriculum: +${installed.programsCreated} programs, ${installed.lessonsCreated} lessons`
+    );
   });
 
   console.log(`✔ Seeded tenant: ${spec.name} (${spec.slug})`);

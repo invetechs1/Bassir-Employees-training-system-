@@ -48,41 +48,44 @@ enum PlanTier {
 
 /// A company/customer. The root of every tenant-scoped record.
 model Tenant {
-  id        String       @id @default(cuid())
-  name      String
-  slug      String       @unique // used for path/subdomain routing, e.g. "alarrab"
-  subdomain String?      @unique
-  industry  Industry     @default(OTHER)
-  status    TenantStatus @default(TRIAL)
-  plan      PlanTier     @default(GROWTH)
-  country   String       @default("SA")
-  timezone  String       @default("Asia/Riyadh")
-  locale    String       @default("en")
+  id                   String       @id @default(cuid())
+  name                 String
+  slug                 String       @unique // used for path/subdomain routing, e.g. "alarrab"
+  subdomain            String?      @unique
+  industry             Industry     @default(OTHER)
+  status               TenantStatus @default(TRIAL)
+  plan                 PlanTier     @default(GROWTH)
+  country              String       @default("SA")
+  timezone             String       @default("Asia/Riyadh")
+  locale               String       @default("en")
   // Per-company branding (applied to the workspace UI and invitation emails).
-  brandColor String?     // hex, e.g. "#2953d9"
-  logoUrl    String?     // absolute URL to the company logo image
+  brandColor           String? // hex, e.g. "#2953d9"
+  logoUrl              String? // absolute URL to the company logo image
   // Stripe billing (null until the company subscribes to a paid plan).
-  stripeCustomerId     String?  @unique
-  stripeSubscriptionId String?  @unique
-  subscriptionStatus   String?  // e.g. active, past_due, canceled
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  stripeCustomerId     String?      @unique
+  stripeSubscriptionId String?      @unique
+  subscriptionStatus   String? // e.g. active, past_due, canceled
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
 
-  branches           Branch[]
-  departments        Department[]
-  users              User[]
-  roles              Role[]
+  branches             Branch[]
+  departments          Department[]
+  users                User[]
+  roles                Role[]
   competencyCategories CompetencyCategory[]
-  competencies       Competency[]
-  competencyRatings  CompetencyRating[]
-  trainingPrograms   TrainingProgram[]
-  enrollments        Enrollment[]
-  certifications     Certification[]
-  certificationAwards CertificationAward[]
-  criticalRoles      CriticalRole[]
+  competencies         Competency[]
+  competencyRatings    CompetencyRating[]
+  trainingPrograms     TrainingProgram[]
+  trainingModules      TrainingModule[]
+  lessons              Lesson[]
+  lessonCompletions    LessonCompletion[]
+  enrollments          Enrollment[]
+  certifications       Certification[]
+  certificationAwards  CertificationAward[]
+  criticalRoles        CriticalRole[]
   successionCandidates SuccessionCandidate[]
-  ssoConnection      SsoConnection?
-  auditLogs          AuditLog[]
+  ssoConnection        SsoConnection?
+  auditLogs            AuditLog[]
 
   @@map("tenants")
 }
@@ -90,17 +93,17 @@ model Tenant {
 /// Per-company OpenID Connect (OIDC) single sign-on configuration.
 /// One connection per tenant. Enterprise plan only.
 model SsoConnection {
-  id            String   @id @default(cuid())
-  tenantId      String   @unique
-  issuer        String // e.g. https://accounts.google.com
-  clientId      String
-  clientSecret  String
-  enabled       Boolean  @default(false)
-  autoProvision Boolean  @default(true) // create users on first SSO login
-  defaultRoleKey String  @default("learner")
-  allowedDomain String? // if set, only emails on this domain may sign in
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String   @id @default(cuid())
+  tenantId       String   @unique
+  issuer         String // e.g. https://accounts.google.com
+  clientId       String
+  clientSecret   String
+  enabled        Boolean  @default(false)
+  autoProvision  Boolean  @default(true) // create users on first SSO login
+  defaultRoleKey String   @default("learner")
+  allowedDomain  String? // if set, only emails on this domain may sign in
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
@@ -155,26 +158,26 @@ enum UserStatus {
 }
 
 model User {
-  id           String     @id @default(cuid())
-  tenantId     String
-  email        String
-  passwordHash String
-  firstName    String
-  lastName     String
-  jobTitle     String?
-  status       UserStatus @default(ACTIVE)
-  isTenantOwner Boolean   @default(false)
+  id                 String     @id @default(cuid())
+  tenantId           String
+  email              String
+  passwordHash       String
+  firstName          String
+  lastName           String
+  jobTitle           String?
+  status             UserStatus @default(ACTIVE)
+  isTenantOwner      Boolean    @default(false)
   // Force a password change on next login (set for admin-invited employees).
-  mustChangePassword Boolean @default(false)
+  mustChangePassword Boolean    @default(false)
   // Pending email-invitation state (SHA-256 of the invite token + its expiry).
-  inviteTokenHash    String?  @unique
+  inviteTokenHash    String?    @unique
   inviteExpiresAt    DateTime?
   // Self-service password-reset state (SHA-256 of the reset token + its expiry).
-  resetTokenHash     String?  @unique
+  resetTokenHash     String?    @unique
   resetExpiresAt     DateTime?
   // Email-verification state. verifiedAt is set once the address is confirmed.
   emailVerifiedAt    DateTime?
-  verifyTokenHash    String?  @unique
+  verifyTokenHash    String?    @unique
   verifyExpiresAt    DateTime?
 
   branchId     String?
@@ -185,24 +188,25 @@ model User {
   performanceRating Int?
   potentialRating   Int?
 
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  lastLoginAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastLoginAt DateTime?
 
-  tenant     Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  branch     Branch?      @relation(fields: [branchId], references: [id], onDelete: SetNull)
-  department Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-  manager    User?        @relation("UserManager", fields: [managerId], references: [id], onDelete: SetNull)
-  reports    User[]       @relation("UserManager")
+  tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  branch     Branch?     @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  department Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  manager    User?       @relation("UserManager", fields: [managerId], references: [id], onDelete: SetNull)
+  reports    User[]      @relation("UserManager")
 
-  userRoles       UserRole[]
-  enrollments     Enrollment[]
-  authoredPrograms TrainingProgram[] @relation("ProgramAuthor")
-  competencyRatings CompetencyRating[]
-  certificationAwards CertificationAward[]
-  incumbentOf     CriticalRole[]      @relation("RoleIncumbent")
+  userRoles             UserRole[]
+  enrollments           Enrollment[]
+  lessonCompletions     LessonCompletion[]
+  authoredPrograms      TrainingProgram[]     @relation("ProgramAuthor")
+  competencyRatings     CompetencyRating[]
+  certificationAwards   CertificationAward[]
+  incumbentOf           CriticalRole[]        @relation("RoleIncumbent")
   successionCandidacies SuccessionCandidate[]
-  auditLogs       AuditLog[]
+  auditLogs             AuditLog[]
 
   // Email is unique WITHIN a tenant, not globally — the same person may exist
   // in multiple companies.
@@ -234,10 +238,10 @@ model Role {
 
 /// Global permission catalog (NOT tenant-scoped). Keys are referenced in code.
 model Permission {
-  id          String   @id @default(cuid())
-  key         String   @unique // e.g. "training.program.create"
+  id          String @id @default(cuid())
+  key         String @unique // e.g. "training.program.create"
   description String
-  category    String   @default("general")
+  category    String @default("general")
 
   rolePermissions RolePermission[]
 
@@ -291,10 +295,10 @@ model Competency {
   description String?
   createdAt   DateTime @default(now())
 
-  tenant   Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  category CompetencyCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  programs TrainingProgram[]
-  ratings  CompetencyRating[]
+  tenant         Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  category       CompetencyCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  programs       TrainingProgram[]
+  ratings        CompetencyRating[]
   certifications Certification[]
 
   @@index([tenantId])
@@ -338,13 +342,13 @@ enum CertificationStatus {
 }
 
 model Certification {
-  id              String              @id @default(cuid())
-  tenantId        String
-  name            String
-  competencyId    String?
-  validityMonths  Int                 @default(24)
-  status          CertificationStatus @default(ACTIVE)
-  createdAt       DateTime            @default(now())
+  id             String              @id @default(cuid())
+  tenantId       String
+  name           String
+  competencyId   String?
+  validityMonths Int                 @default(24)
+  status         CertificationStatus @default(ACTIVE)
+  createdAt      DateTime            @default(now())
 
   tenant     Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   competency Competency?          @relation(fields: [competencyId], references: [id], onDelete: SetNull)
@@ -431,25 +435,102 @@ enum ProgramStatus {
 }
 
 model TrainingProgram {
-  id           String        @id @default(cuid())
-  tenantId     String
-  title        String
-  description  String?
-  level        ProgramLevel  @default(FOUNDATION)
-  status       ProgramStatus @default(DRAFT)
-  durationHours Int          @default(0)
-  competencyId String?
-  authorId     String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String        @id @default(cuid())
+  tenantId      String
+  title         String
+  titleAr       String? // Arabic title (bilingual catalog); falls back to `title`
+  description   String?
+  descriptionAr String? // Arabic description; falls back to `description`
+  // Specialist track this program belongs to, e.g. "Accounting & Finance",
+  // "Human Resources", "Project Management", "Executive / COO". Free-form so
+  // tenants can define their own tracks; null = uncategorized.
+  category      String?
+  level         ProgramLevel  @default(FOUNDATION)
+  status        ProgramStatus @default(DRAFT)
+  durationHours Int           @default(0)
+  competencyId  String?
+  authorId      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
-  tenant     Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  competency Competency?  @relation(fields: [competencyId], references: [id], onDelete: SetNull)
-  author     User?        @relation("ProgramAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  tenant      Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  competency  Competency?      @relation(fields: [competencyId], references: [id], onDelete: SetNull)
+  author      User?            @relation("ProgramAuthor", fields: [authorId], references: [id], onDelete: SetNull)
   enrollments Enrollment[]
+  modules     TrainingModule[]
 
   @@index([tenantId])
   @@map("training_programs")
+}
+
+// A program is organized into ordered modules, each holding ordered lessons.
+// This is the actual learning CONTENT layer (vs. the program/enrollment
+// tracking layer above).
+model TrainingModule {
+  id         String   @id @default(cuid())
+  tenantId   String
+  programId  String
+  title      String
+  titleAr    String?
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant  Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  program TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@index([tenantId])
+  @@index([programId])
+  @@map("training_modules")
+}
+
+enum LessonType {
+  TEXT // markdown article stored in `content`
+  VIDEO // `content` is a video URL (embedded)
+  RESOURCE // `content` is an external link / downloadable file URL
+}
+
+model Lesson {
+  id              String     @id @default(cuid())
+  tenantId        String
+  moduleId        String
+  title           String
+  titleAr         String?
+  type            LessonType @default(TEXT)
+  content         String? // markdown body (TEXT) or a URL (VIDEO/RESOURCE)
+  contentAr       String? // Arabic body; falls back to `content`
+  durationMinutes Int        @default(0)
+  orderIndex      Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  tenant      Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  module      TrainingModule     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  completions LessonCompletion[]
+
+  @@index([tenantId])
+  @@index([moduleId])
+  @@map("lessons")
+}
+
+// One row per (user, lesson) once the learner marks the lesson complete.
+// Enrollment.progress is recomputed from these (completed / total lessons).
+model LessonCompletion {
+  id          String   @id @default(cuid())
+  tenantId    String
+  lessonId    String
+  userId      String
+  completedAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, userId])
+  @@index([tenantId])
+  @@index([userId])
+  @@map("lesson_completions")
 }
 
 enum EnrollmentStatus {
