@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { withTenant } from "@/lib/tenant-db";
 import { planHasFeature } from "@/lib/plans";
 import { discover, buildAuthUrl } from "@/lib/oidc";
 import {
@@ -19,11 +20,12 @@ export async function GET(
   const { slug } = await params;
   const loginUrl = new URL("/login", baseUrl(req));
 
-  const tenant = await prisma.tenant.findUnique({
-    where: { slug },
-    include: { ssoConnection: true },
-  });
-  const sso = tenant?.ssoConnection;
+  const tenant = await prisma.tenant.findUnique({ where: { slug } });
+  const sso = tenant
+    ? await withTenant(tenant.id, (tx) =>
+        tx.ssoConnection.findFirst({ where: { tenantId: tenant.id } })
+      )
+    : null;
 
   if (
     !tenant ||

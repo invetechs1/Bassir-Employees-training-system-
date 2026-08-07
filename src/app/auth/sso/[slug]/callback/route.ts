@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withTenant } from "@/lib/tenant-db";
 import { planHasFeature } from "@/lib/plans";
+import { decryptSecret } from "@/lib/crypto";
 import { discover, exchangeCode, verifyIdToken } from "@/lib/oidc";
 import { hashPassword } from "@/lib/password";
 import { generateTempPassword } from "@/lib/temp-password";
@@ -37,11 +38,13 @@ export async function GET(
     return fail("sso_state");
   }
 
-  const tenant = await prisma.tenant.findUnique({
-    where: { slug },
-    include: { ssoConnection: true },
-  });
-  const sso = tenant?.ssoConnection;
+  const tenant = await prisma.tenant.findUnique({ where: { slug } });
+  // Read the SSO connection under the tenant's RLS context.
+  const sso = tenant
+    ? await withTenant(tenant.id, (tx) =>
+        tx.ssoConnection.findFirst({ where: { tenantId: tenant.id } })
+      )
+    : null;
   if (!tenant || !sso || !sso.enabled || !planHasFeature(tenant.plan, "sso")) {
     return fail("sso_unavailable");
   }
@@ -54,7 +57,7 @@ export async function GET(
     const tokens = await exchangeCode({
       discovery,
       clientId: sso.clientId,
-      clientSecret: sso.clientSecret,
+      clientSecret: decryptSecret(sso.clientSecret),
       code,
       redirectUri,
     });

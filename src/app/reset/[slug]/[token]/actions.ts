@@ -1,12 +1,14 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { withTenant } from "@/lib/tenant-db";
 import { hashPassword } from "@/lib/password";
 import { hashToken } from "@/lib/reset-token";
 import { createSessionToken, setSessionCookie } from "@/lib/session";
+import { rateLimit, clientIp, AUTH_LIMIT } from "@/lib/rate-limit";
 
 const Schema = z
   .object({
@@ -36,6 +38,11 @@ export async function resetPasswordAction(
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+  }
+  // Throttle per IP to prevent brute-forcing reset tokens.
+  const ip = clientIp(await headers());
+  if (!rateLimit(`reset:${ip}`, AUTH_LIMIT).allowed) {
+    return { error: "Too many attempts. Please wait a few minutes and try again." };
   }
   const { slug, token, password } = parsed.data;
 

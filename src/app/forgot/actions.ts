@@ -1,8 +1,10 @@
 "use server";
 
+import { headers } from "next/headers";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { withTenant } from "@/lib/tenant-db";
+import { rateLimit, clientIp, AUTH_LIMIT } from "@/lib/rate-limit";
 import {
   generateToken,
   hashToken,
@@ -39,6 +41,13 @@ export async function forgotAction(
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
   const { company, email } = parsed.data;
+
+  // Throttle per IP to prevent reset-email flooding / abuse (keyed by IP only,
+  // never by account, so it cannot be used to probe which emails exist).
+  const ip = clientIp(await headers());
+  if (!rateLimit(`forgot:${ip}`, AUTH_LIMIT).allowed) {
+    return { error: "Too many requests. Please wait a few minutes and try again." };
+  }
 
   // Resolving a tenant by slug happens before a tenant context exists (the
   // `tenants` table is not RLS-scoped).

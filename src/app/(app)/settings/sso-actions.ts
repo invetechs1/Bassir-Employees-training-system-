@@ -6,6 +6,7 @@ import { requireSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { withTenant } from "@/lib/tenant-db";
 import { planHasFeature } from "@/lib/plans";
+import { encryptSecret, isEncrypted } from "@/lib/crypto";
 
 const Schema = z.object({
   issuer: z.string().trim().url("Enter the provider's issuer URL"),
@@ -49,45 +50,49 @@ export async function saveSsoAction(
   }
   const d = parsed.data;
 
-  const existing = await prisma.ssoConnection.findUnique({
-    where: { tenantId: session.tenantId },
-  });
-  const secret = d.clientSecret.trim() || existing?.clientSecret;
-  if (!secret) {
-    return { error: "Client secret is required." };
-  }
+  // All sso_connections access goes through withTenant so Row-Level Security
+  // applies, and the client secret is encrypted at rest.
+  const result = await withTenant(session.tenantId, async (tx) => {
+    const existing = await tx.ssoConnection.findFirst({
+      where: { tenantId: session.tenantId },
+    });
+    // Keep the existing (already-encrypted) secret when the field is left blank;
+    // otherwise encrypt the newly entered secret.
+    const rawNew = d.clientSecret.trim();
+    const storedSecret = rawNew ? encryptSecret(rawNew) : existing?.clientSecret;
+    if (!storedSecret) {
+      return { error: "Client secret is required." as string };
+    }
+    // Defensive: never store a plaintext secret.
+    const clientSecret = isEncrypted(storedSecret)
+      ? storedSecret
+      : encryptSecret(storedSecret);
 
-  await prisma.ssoConnection.upsert({
-    where: { tenantId: session.tenantId },
-    create: {
-      tenantId: session.tenantId,
+    const data = {
       issuer: d.issuer,
       clientId: d.clientId,
-      clientSecret: secret,
+      clientSecret,
       enabled: d.enabled === "on",
       autoProvision: d.autoProvision === "on",
       defaultRoleKey: d.defaultRoleKey,
       allowedDomain: d.allowedDomain || null,
-    },
-    update: {
-      issuer: d.issuer,
-      clientId: d.clientId,
-      clientSecret: secret,
-      enabled: d.enabled === "on",
-      autoProvision: d.autoProvision === "on",
-      defaultRoleKey: d.defaultRoleKey,
-      allowedDomain: d.allowedDomain || null,
-    },
-  });
-  await withTenant(session.tenantId, (tx) =>
-    tx.auditLog.create({
+    };
+    await tx.ssoConnection.upsert({
+      where: { tenantId: session.tenantId },
+      create: { tenantId: session.tenantId, ...data },
+      update: data,
+    });
+    await tx.auditLog.create({
       data: {
         tenantId: session.tenantId,
         actorId: session.userId,
         action: "sso.configure",
       },
-    })
-  );
+    });
+    return { ok: true as const };
+  });
+
+  if ("error" in result) return { error: result.error };
 
   revalidatePath("/settings");
   return { ok: true };

@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { z } from "zod";
 import {
   verifyPlatformCredentials,
@@ -8,6 +9,7 @@ import {
   setPlatformCookie,
   isPlatformConfigured,
 } from "@/lib/platform";
+import { rateLimit, clientIp, STRICT_LIMIT } from "@/lib/rate-limit";
 
 const Schema = z.object({
   email: z.string().trim().min(1),
@@ -34,6 +36,16 @@ export async function platformLoginAction(
   });
   if (!parsed.success) {
     return { error: "Enter your email and password." };
+  }
+  // The single operator credential guards every tenant — throttle it hardest.
+  const ip = clientIp(await headers());
+  const limited = rateLimit(`platform-login:${ip}`, STRICT_LIMIT);
+  if (!limited.allowed) {
+    return {
+      error: `Too many attempts. Please wait ${Math.ceil(
+        limited.retryAfterSeconds / 60
+      )} minute(s) and try again.`,
+    };
   }
   if (!verifyPlatformCredentials(parsed.data.email, parsed.data.password)) {
     return { error: "Invalid operator credentials." };
