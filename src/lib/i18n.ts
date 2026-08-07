@@ -221,6 +221,12 @@ export const DICT: Record<string, Entry> = {
   "track.Human Resources": { en: "Human Resources", ar: "الموارد البشرية" },
   "track.Project Management": { en: "Project Management", ar: "إدارة المشاريع" },
   "track.Executive / COO": { en: "Executive / COO", ar: "القيادة التنفيذية" },
+  "track.Sales & Business Development": { en: "Sales & Business Development", ar: "المبيعات وتطوير الأعمال" },
+  "track.Information Technology": { en: "Information Technology", ar: "تقنية المعلومات" },
+  "track.Health, Safety & Environment": { en: "Health, Safety & Environment", ar: "الصحة والسلامة والبيئة" },
+  "track.Procurement & Supply Chain": { en: "Procurement & Supply Chain", ar: "المشتريات وسلسلة الإمداد" },
+  "track.Operations & Warehousing": { en: "Operations & Warehousing", ar: "العمليات والمستودعات" },
+  "track.Customer Service": { en: "Customer Service", ar: "خدمة العملاء" },
 
   // Competencies
   "comp.subtitle": { en: "Measure real capability — self, manager and target levels across the competency framework.", ar: "قِس القدرة الحقيقية — مستويات التقييم الذاتي والمدير والهدف عبر إطار الجدارات." },

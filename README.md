@@ -26,8 +26,9 @@ future module builds on:
 | **Org structure** | Companies → Branches → Departments → Users (with manager hierarchy). |
 | **Competency framework** | Competency categories & competencies (the differentiator vs. an LMS). |
 | **Training module (end-to-end)** | Create/publish programs, self-enroll, track progress to completion — the first vertical slice. |
-| **Course content & lessons** | Programs hold ordered **modules → lessons** (reading/video/resource) with a lesson player; learner progress is **derived from completed lessons**. |
-| **Starter curriculum library** | Bilingual (EN/AR) ready-made courses by specialist track — Accounting & Finance, HR, Project Management, Executive/COO — installed automatically for every company. See [`docs/CURRICULUM.md`](docs/CURRICULUM.md). |
+| **Course content & lessons** | Programs hold ordered **modules → lessons** (reading/video/resource/**quiz**) with a lesson player; learner progress is **derived from completed lessons**. |
+| **Quizzes & question banks** | Quiz lessons carry a bilingual question bank; learners are graded and a quiz only completes when they pass (default 70%). Every shipped course ends with a knowledge check. |
+| **Starter curriculum library** | Bilingual (EN/AR) ready-made courses across **10 specialist tracks** — Accounting/Finance, HR, Project Management, Executive/COO, Sales, IT, HSE/Safety, Procurement & Supply Chain, Operations/Warehousing, Customer Service — installed automatically for every company. See [`docs/CURRICULUM.md`](docs/CURRICULUM.md). |
 | **Audit log** | Tenant-scoped audit trail (logins, program creation, …). |
 | **Seed** | Provisions the three launch customers: Alarrab Engineering Consultancy, Azoom United Contracting, Hadathah Logistics. |
 
