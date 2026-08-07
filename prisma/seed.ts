@@ -17,6 +17,7 @@ import bcrypt from "bcryptjs";
 import { PERMISSIONS, SYSTEM_ROLES, type SystemRoleKey } from "../src/lib/rbac";
 import { installCurriculum } from "../src/lib/curriculum-install";
 import { assignDepartmentMembers } from "../src/lib/assign";
+import { issueCertificate } from "../src/lib/certificate";
 
 /** Demo mapping from a department name to a starter-curriculum track. */
 function categoryForDept(name: string): string | null {
@@ -421,6 +422,50 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
       assigned += res.enrollments;
     }
     if (assigned > 0) console.log(`  ↳ auto-assigned ${assigned} department enrollment(s)`);
+
+    // Demo: one engaged employee fully completes a course this month (earns a
+    // certificate + development KPI). Others stay inactive, so the reports show
+    // the "who is developing vs. who is not" contrast the platform is built for.
+    const demoProgram = await tx.trainingProgram.findFirst({
+      where: { title: "Financial Fundamentals for Accountants" },
+      include: { modules: { include: { lessons: true } } },
+    });
+    if (demoProgram) {
+      const lessons = demoProgram.modules.flatMap((m) => m.lessons);
+      for (const l of lessons) {
+        if (l.type === "QUIZ") {
+          await tx.quizAttempt.create({
+            data: {
+              tenantId: tenant.id,
+              lessonId: l.id,
+              userId: sara.id,
+              score: 100,
+              passed: true,
+              answers: "{}",
+            },
+          });
+        }
+        await tx.lessonCompletion.upsert({
+          where: { lessonId_userId: { lessonId: l.id, userId: sara.id } },
+          create: { tenantId: tenant.id, lessonId: l.id, userId: sara.id },
+          update: {},
+        });
+      }
+      await tx.enrollment.upsert({
+        where: { programId_userId: { programId: demoProgram.id, userId: sara.id } },
+        create: {
+          tenantId: tenant.id,
+          programId: demoProgram.id,
+          userId: sara.id,
+          status: "COMPLETED",
+          progress: 100,
+          completedAt: new Date(),
+        },
+        update: { status: "COMPLETED", progress: 100, completedAt: new Date() },
+      });
+      await issueCertificate(tx, tenant.id, sara.id, demoProgram.id);
+      console.log(`  ↳ demo: ${sara.firstName} completed a course (+certificate)`);
+    }
   });
 
   console.log(`✔ Seeded tenant: ${spec.name} (${spec.slug})`);

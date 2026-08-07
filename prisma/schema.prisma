@@ -82,6 +82,7 @@ model Tenant {
   questions            Question[]
   questionOptions      QuestionOption[]
   quizAttempts         QuizAttempt[]
+  courseCertificates   CourseCertificate[]
   enrollments          Enrollment[]
   certifications       Certification[]
   certificationAwards  CertificationAward[]
@@ -209,6 +210,7 @@ model User {
   enrollments           Enrollment[]
   lessonCompletions     LessonCompletion[]
   quizAttempts          QuizAttempt[]
+  courseCertificates    CourseCertificate[]
   authoredPrograms      TrainingProgram[]     @relation("ProgramAuthor")
   competencyRatings     CompetencyRating[]
   certificationAwards   CertificationAward[]
@@ -461,11 +463,12 @@ model TrainingProgram {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
-  tenant      Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  competency  Competency?      @relation(fields: [competencyId], references: [id], onDelete: SetNull)
-  author      User?            @relation("ProgramAuthor", fields: [authorId], references: [id], onDelete: SetNull)
-  enrollments Enrollment[]
-  modules     TrainingModule[]
+  tenant       Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  competency   Competency?         @relation(fields: [competencyId], references: [id], onDelete: SetNull)
+  author       User?               @relation("ProgramAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  enrollments  Enrollment[]
+  modules      TrainingModule[]
+  certificates CourseCertificate[]
 
   @@index([tenantId])
   @@map("training_programs")
@@ -612,6 +615,28 @@ model LessonCompletion {
   @@index([tenantId])
   @@index([userId])
   @@map("lesson_completions")
+}
+
+// Auto-issued when a learner completes a course (all lessons done / quizzes
+// passed). One per (program, user). `serial` is a human-readable verification
+// code shown on the printable certificate.
+model CourseCertificate {
+  id        String   @id @default(cuid())
+  tenantId  String
+  userId    String
+  programId String
+  serial    String   @unique
+  score     Int? // final/average quiz score at issuance, if the course had quizzes
+  issuedAt  DateTime @default(now())
+
+  tenant  Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, userId])
+  @@index([tenantId])
+  @@index([userId])
+  @@map("course_certificates")
 }
 
 enum EnrollmentStatus {

@@ -49,6 +49,14 @@ export default async function TrainingPage() {
           <p className="mt-1 text-sm text-slate-500">{t("training.subtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
+          {can(session, "report.view") ? (
+            <Link
+              href="/training/reports"
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              {t("report.link")}
+            </Link>
+          ) : null}
           {can(session, "training.program.manage") ? (
             <Link
               href="/training/departments"
@@ -106,7 +114,7 @@ export default async function TrainingPage() {
                     style={{ width: `${e.progress}%` }}
                   />
                 </div>
-                <div className="mt-3">
+                <div className="mt-3 flex items-center gap-2">
                   <Link
                     href={`/training/${e.programId}`}
                     className="inline-block rounded-md bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700"
@@ -117,6 +125,14 @@ export default async function TrainingPage() {
                         ? t("course.continue")
                         : t("course.start")}
                   </Link>
+                  {e.status === "COMPLETED" ? (
+                    <Link
+                      href={`/training/${e.programId}/certificate`}
+                      className="inline-block rounded-md border border-brand-200 px-3 py-1.5 text-xs font-medium text-brand-700 hover:bg-brand-50"
+                    >
+                      🎓 {t("cert.view")}
+                    </Link>
+                  ) : null}
                 </div>
               </div>
             ))}

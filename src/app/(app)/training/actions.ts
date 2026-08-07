@@ -11,6 +11,7 @@ import { gradeQuiz } from "@/lib/quiz";
 import { getLocale } from "@/lib/i18n";
 import { pickText } from "@/lib/content";
 import { assignDepartmentMembers } from "@/lib/assign";
+import { issueCertificate } from "@/lib/certificate";
 
 /**
  * Recompute an enrollment's progress from the learner's completed lessons in a
@@ -37,6 +38,10 @@ async function recomputeEnrollment(
       completedAt: update.completed ? new Date() : null,
     },
   });
+  // Award a completion certificate the moment the course is finished (idempotent).
+  if (update.completed) {
+    await issueCertificate(tx, tenantId, userId, programId);
+  }
 }
 
 const CreateProgramSchema = z.object({

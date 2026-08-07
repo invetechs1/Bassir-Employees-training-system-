@@ -30,6 +30,8 @@ future module builds on:
 | **Quizzes & question banks** | Quiz lessons carry a bilingual question bank; learners are graded and a quiz only completes when they pass (default 70%). Every shipped course ends with a knowledge check. |
 | **Starter curriculum library** | Bilingual (EN/AR) ready-made courses across **10 specialist tracks** — Accounting/Finance, HR, Project Management, Executive/COO, Sales, IT, HSE/Safety, Procurement & Supply Chain, Operations/Warehousing, Customer Service — installed automatically for every company. See [`docs/CURRICULUM.md`](docs/CURRICULUM.md). |
 | **Department auto-assignment** | Map each department to a training track (**Training → Department tracks**); new hires are auto-enrolled into that track's courses when they accept their invite, with an "Assign now" backfill for existing staff. |
+| **Completion certificates** | A branded, printable certificate (unique serial + score) is auto-issued when a learner finishes a course; managers can open and print any employee's certificate. |
+| **Monthly development KPI & reports** | **Training → Reports**: a per-employee monthly KPI (lessons×1 + quizzes×3 + courses×10) with an engagement band (High/Medium/Low/**Inactive**) — a month-end leaderboard of who is developing and who isn't, drill-down per employee. |
 | **Audit log** | Tenant-scoped audit trail (logins, program creation, …). |
 | **Seed** | Provisions the three launch customers: Alarrab Engineering Consultancy, Azoom United Contracting, Hadathah Logistics. |
 
