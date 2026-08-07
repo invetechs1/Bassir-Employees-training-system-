@@ -75,7 +75,7 @@ async function installProgram(
     });
     for (let li = 0; li < mod.lessons.length; li++) {
       const lesson = mod.lessons[li];
-      await tx.lesson.create({
+      const createdLesson = await tx.lesson.create({
         data: {
           tenantId,
           moduleId: module.id,
@@ -84,10 +84,39 @@ async function installProgram(
           type: lesson.type,
           content: lesson.content,
           contentAr: lesson.contentAr,
+          passMark: lesson.passMark ?? 70,
           durationMinutes: lesson.durationMinutes,
           orderIndex: li,
         },
       });
+      // Quiz lessons carry a question bank with options.
+      if (lesson.type === "QUIZ" && lesson.questions?.length) {
+        for (let qi = 0; qi < lesson.questions.length; qi++) {
+          const q = lesson.questions[qi];
+          const createdQuestion = await tx.question.create({
+            data: {
+              tenantId,
+              lessonId: createdLesson.id,
+              type: q.type ?? "SINGLE",
+              prompt: q.prompt,
+              promptAr: q.promptAr,
+              explanation: q.explanation ?? null,
+              explanationAr: q.explanationAr ?? null,
+              orderIndex: qi,
+            },
+          });
+          await tx.questionOption.createMany({
+            data: q.options.map((o, oi) => ({
+              tenantId,
+              questionId: createdQuestion.id,
+              text: o.text,
+              textAr: o.textAr,
+              isCorrect: Boolean(o.correct),
+              orderIndex: oi,
+            })),
+          });
+        }
+      }
       lessonsCreated++;
     }
   }

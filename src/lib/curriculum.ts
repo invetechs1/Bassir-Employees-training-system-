@@ -12,16 +12,35 @@
  * Content is written in Markdown (see src/lib/markdown.ts for the renderer).
  */
 
-export type CurriculumLessonType = "TEXT" | "VIDEO" | "RESOURCE";
+export type CurriculumLessonType = "TEXT" | "VIDEO" | "RESOURCE" | "QUIZ";
+
+export interface CurriculumQuestionOption {
+  text: string;
+  textAr: string;
+  correct?: boolean;
+}
+
+export interface CurriculumQuestion {
+  prompt: string;
+  promptAr: string;
+  type?: "SINGLE" | "TRUE_FALSE";
+  options: CurriculumQuestionOption[];
+  explanation?: string;
+  explanationAr?: string;
+}
 
 export interface CurriculumLesson {
   title: string;
   titleAr: string;
   type: CurriculumLessonType;
   durationMinutes: number;
-  /** Markdown body for TEXT; a URL for VIDEO/RESOURCE. */
+  /** Markdown body for TEXT; a URL for VIDEO/RESOURCE; "" for QUIZ. */
   content: string;
   contentAr: string;
+  /** Pass mark (%) for QUIZ lessons. */
+  passMark?: number;
+  /** Question bank for QUIZ lessons. */
+  questions?: CurriculumQuestion[];
 }
 
 export interface CurriculumModule {
@@ -917,6 +936,235 @@ A durable change sequence (after Kotter):
     ],
   },
 ];
+
+// ---------------------------------------------------------------------------
+// Knowledge-check quizzes — one graded assessment appended to each course.
+// Passing (>= passMark) completes the quiz lesson and counts toward progress.
+// ---------------------------------------------------------------------------
+const COURSE_QUIZZES: Record<string, CurriculumQuestion[]> = {
+  "acc-fundamentals": [
+    {
+      prompt: "What is the standard VAT rate in Saudi Arabia?",
+      promptAr: "ما نسبة ضريبة القيمة المضافة القياسية في السعودية؟",
+      options: [
+        { text: "5%", textAr: "٥٪" },
+        { text: "15%", textAr: "١٥٪", correct: true },
+        { text: "20%", textAr: "٢٠٪" },
+        { text: "0%", textAr: "٠٪" },
+      ],
+      explanation: "The standard VAT rate is 15%.",
+      explanationAr: "النسبة القياسية للضريبة هي ١٥٪.",
+    },
+    {
+      prompt: "The accounting equation states that Assets equal:",
+      promptAr: "تنص المعادلة المحاسبية على أن الأصول تساوي:",
+      options: [
+        { text: "Liabilities + Equity", textAr: "الالتزامات + حقوق الملكية", correct: true },
+        { text: "Revenue − Expenses", textAr: "الإيرادات − المصروفات" },
+        { text: "Cash + Inventory", textAr: "النقد + المخزون" },
+        { text: "Equity − Liabilities", textAr: "حقوق الملكية − الالتزامات" },
+      ],
+      explanation: "Assets = Liabilities + Equity — the balance sheet always balances.",
+      explanationAr: "الأصول = الالتزامات + حقوق الملكية — وتظل الميزانية متوازنة دائمًا.",
+    },
+    {
+      prompt: "Under ZATCA e-invoicing, a compliant tax invoice must include:",
+      promptAr: "وفق الفوترة الإلكترونية للهيئة، يجب أن تتضمن الفاتورة الضريبية المتوافقة:",
+      options: [
+        { text: "A handwritten signature only", textAr: "توقيعًا يدويًا فقط" },
+        { text: "A scannable QR code", textAr: "رمز استجابة سريعة QR قابلًا للمسح", correct: true },
+        { text: "No buyer details", textAr: "دون بيانات المشتري" },
+        { text: "Prices in USD only", textAr: "الأسعار بالدولار فقط" },
+      ],
+      explanation: "Compliant e-invoices carry the required fields and a scannable QR code.",
+      explanationAr: "تحمل الفواتير الإلكترونية المتوافقة الحقول المطلوبة ورمز QR قابلًا للمسح.",
+    },
+    {
+      prompt: "Under accrual accounting, revenue is recorded when:",
+      promptAr: "في محاسبة الاستحقاق، يُسجّل الإيراد عند:",
+      options: [
+        { text: "Cash is received", textAr: "استلام النقد" },
+        { text: "It is earned", textAr: "تحققه", correct: true },
+        { text: "The year ends", textAr: "نهاية السنة" },
+        { text: "The invoice is paid", textAr: "سداد الفاتورة" },
+      ],
+      explanation: "Accrual accounting records revenue when earned, not when cash moves.",
+      explanationAr: "تسجّل محاسبة الاستحقاق الإيراد عند تحققه لا عند حركة النقد.",
+    },
+  ],
+  "hr-essentials": [
+    {
+      prompt: "Overtime in Saudi Arabia is generally paid at what rate of the hourly wage?",
+      promptAr: "يُحتسب العمل الإضافي في السعودية عمومًا بأي نسبة من أجر الساعة؟",
+      options: [
+        { text: "100%", textAr: "١٠٠٪" },
+        { text: "125%", textAr: "١٢٥٪" },
+        { text: "150%", textAr: "١٥٠٪", correct: true },
+        { text: "200%", textAr: "٢٠٠٪" },
+      ],
+      explanation: "Overtime is paid at 150% of the hourly wage.",
+      explanationAr: "يُحتسب العمل الإضافي بنسبة ١٥٠٪ من أجر الساعة.",
+    },
+    {
+      prompt: "Nitaqat measures an establishment's:",
+      promptAr: "يقيس نطاقات لدى المنشأة:",
+      options: [
+        { text: "Share of Saudi employees", textAr: "نسبة الموظفين السعوديين", correct: true },
+        { text: "Annual revenue", textAr: "الإيراد السنوي" },
+        { text: "Number of branches", textAr: "عدد الفروع" },
+        { text: "Export volume", textAr: "حجم الصادرات" },
+      ],
+      explanation: "Nitaqat rates establishments on their share of Saudi employees.",
+      explanationAr: "يصنّف نطاقات المنشآت بناءً على نسبة الموظفين السعوديين.",
+    },
+    {
+      prompt: "The PDPL primarily governs:",
+      promptAr: "ينظّم نظام حماية البيانات الشخصية بشكل أساسي:",
+      options: [
+        { text: "Personal data collection and use", textAr: "جمع البيانات الشخصية واستخدامها", correct: true },
+        { text: "Corporate tax filing", textAr: "تقديم ضريبة الشركات" },
+        { text: "Import tariffs", textAr: "الرسوم الجمركية" },
+        { text: "Building safety codes", textAr: "أكواد سلامة المباني" },
+      ],
+      explanation: "PDPL governs how personal data is collected and used.",
+      explanationAr: "ينظّم النظام كيفية جمع البيانات الشخصية واستخدامها.",
+    },
+    {
+      prompt: "The end-of-service award is calculated based on:",
+      promptAr: "تُحتسب مكافأة نهاية الخدمة بناءً على:",
+      options: [
+        { text: "The final wage and years of service", textAr: "الأجر الأخير وسنوات الخدمة", correct: true },
+        { text: "The first month's salary only", textAr: "راتب الشهر الأول فقط" },
+        { text: "A fixed government amount", textAr: "مبلغ حكومي ثابت" },
+        { text: "The number of leave days", textAr: "عدد أيام الإجازة" },
+      ],
+      explanation: "The ESB accrues on the final wage, rising with years of service.",
+      explanationAr: "تُحتسب المكافأة على الأجر الأخير وتزداد مع سنوات الخدمة.",
+    },
+  ],
+  "pm-foundations": [
+    {
+      prompt: "The triple constraint of a project is:",
+      promptAr: "القيد الثلاثي للمشروع هو:",
+      options: [
+        { text: "Scope, Time, Cost", textAr: "النطاق والوقت والتكلفة", correct: true },
+        { text: "People, Process, Tools", textAr: "الناس والعملية والأدوات" },
+        { text: "Plan, Do, Review", textAr: "التخطيط والتنفيذ والمراجعة" },
+        { text: "Risk, Issue, Change", textAr: "الخطر والمشكلة والتغيير" },
+      ],
+      explanation: "Scope, time and cost — with quality at the center.",
+      explanationAr: "النطاق والوقت والتكلفة — والجودة في المركز.",
+    },
+    {
+      prompt: "The critical path is:",
+      promptAr: "المسار الحرج هو:",
+      options: [
+        { text: "The longest chain of dependent tasks", textAr: "أطول سلسلة مهام مترابطة", correct: true },
+        { text: "The cheapest set of tasks", textAr: "أرخص مجموعة مهام" },
+        { text: "Tasks with the most float", textAr: "المهام ذات الفائض الأكبر" },
+        { text: "Optional tasks", textAr: "المهام الاختيارية" },
+      ],
+      explanation: "The critical path is the longest dependent chain and has zero float.",
+      explanationAr: "المسار الحرج أطول سلسلة مترابطة وفائضه الزمني صفر.",
+    },
+    {
+      prompt: "A Cost Performance Index (CPI) below 1.0 means the project is:",
+      promptAr: "مؤشر أداء التكلفة (CPI) الأقل من ١٫٠ يعني أن المشروع:",
+      options: [
+        { text: "Over budget", textAr: "متجاوز للميزانية", correct: true },
+        { text: "Under budget", textAr: "ضمن الميزانية" },
+        { text: "Ahead of schedule", textAr: "متقدّم على الجدول" },
+        { text: "Exactly on plan", textAr: "مطابق للخطة تمامًا" },
+      ],
+      explanation: "CPI = EV / AC; below 1.0 means costs exceed the earned value.",
+      explanationAr: "CPI = EV / AC؛ وأقل من ١٫٠ يعني أن التكاليف تتجاوز القيمة المكتسبة.",
+    },
+    {
+      prompt: "The Work Breakdown Structure (WBS) is used to:",
+      promptAr: "يُستخدم هيكل تجزئة العمل (WBS) في:",
+      options: [
+        { text: "Decompose scope into work packages", textAr: "تجزئة النطاق إلى حزم عمل", correct: true },
+        { text: "Assign salaries", textAr: "تحديد الرواتب" },
+        { text: "Record risks", textAr: "تسجيل المخاطر" },
+        { text: "Approve invoices", textAr: "اعتماد الفواتير" },
+      ],
+      explanation: "The WBS decomposes scope into manageable work packages.",
+      explanationAr: "يُجزّئ الهيكل النطاق إلى حزم عمل يمكن إدارتها.",
+    },
+  ],
+  "exec-operational-leadership": [
+    {
+      prompt: "A leading indicator is one that:",
+      promptAr: "المؤشر القائد هو الذي:",
+      options: [
+        { text: "Predicts future performance", textAr: "يتنبأ بالأداء المستقبلي", correct: true },
+        { text: "Confirms past results", textAr: "يؤكّد النتائج الماضية" },
+        { text: "Only measures revenue", textAr: "يقيس الإيراد فقط" },
+        { text: "Is always financial", textAr: "يكون ماليًا دائمًا" },
+      ],
+      explanation: "Leading indicators (e.g. pipeline, training coverage) predict the future.",
+      explanationAr: "المؤشرات القائدة (كخط الفرص وتغطية التدريب) تتنبأ بالمستقبل.",
+    },
+    {
+      prompt: "In OKRs, Key Results should be:",
+      promptAr: "في الأهداف والنتائج (OKRs)، ينبغي أن تكون النتائج الرئيسية:",
+      options: [
+        { text: "Measurable", textAr: "قابلة للقياس", correct: true },
+        { text: "Vague and inspirational", textAr: "غامضة وملهمة" },
+        { text: "Secret", textAr: "سرّية" },
+        { text: "Set only once a decade", textAr: "تُحدّد مرة كل عقد" },
+      ],
+      explanation: "Objectives are qualitative; Key Results are measurable.",
+      explanationAr: "الأهداف نوعية، أما النتائج الرئيسية فقابلة للقياس.",
+    },
+    {
+      prompt: "According to the Theory of Constraints, to increase throughput you should focus on:",
+      promptAr: "وفق نظرية القيود، لزيادة الإنتاجية ينبغي التركيز على:",
+      options: [
+        { text: "The bottleneck", textAr: "الاختناق", correct: true },
+        { text: "Every step equally", textAr: "كل خطوة بالتساوي" },
+        { text: "The fastest step", textAr: "أسرع خطوة" },
+        { text: "Reducing headcount", textAr: "تقليل عدد الموظفين" },
+      ],
+      explanation: "Only improving the bottleneck increases total throughput.",
+      explanationAr: "تحسين الاختناق وحده هو ما يزيد الإنتاجية الكلية.",
+    },
+    {
+      prompt: "Reversible ('two-way door') decisions should generally be:",
+      promptAr: "القرارات القابلة للعكس ('الباب ذو الاتجاهين') ينبغي عمومًا أن:",
+      options: [
+        { text: "Made quickly", textAr: "تُتخذ بسرعة", correct: true },
+        { text: "Delayed until certain", textAr: "تؤجَّل حتى اليقين التام" },
+        { text: "Escalated to the board", textAr: "تُرفع إلى مجلس الإدارة" },
+        { text: "Avoided", textAr: "تُتجنَّب" },
+      ],
+      explanation: "Bias to action on reversible decisions; the cost of delay usually exceeds a correctable mistake.",
+      explanationAr: "مِل إلى الفعل في القرارات القابلة للعكس؛ فكلفة التأخير تفوق عادةً خطأً قابلًا للتصحيح.",
+    },
+  ],
+};
+
+// Append each course's quiz as a final "Knowledge Check" module.
+for (const program of CURRICULUM) {
+  const questions = COURSE_QUIZZES[program.key];
+  if (!questions) continue;
+  program.modules.push({
+    title: "Knowledge Check",
+    titleAr: "اختبار المعرفة",
+    lessons: [
+      {
+        title: "Course Quiz",
+        titleAr: "اختبار الدورة",
+        type: "QUIZ",
+        durationMinutes: 10,
+        content: "",
+        contentAr: "",
+        passMark: 70,
+        questions,
+      },
+    ],
+  });
+}
 
 /** Total lesson count across the whole starter library (used in docs/tests). */
 export function totalLessonCount(programs: CurriculumProgram[] = CURRICULUM): number {

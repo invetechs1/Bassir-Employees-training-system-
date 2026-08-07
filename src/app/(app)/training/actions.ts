@@ -2,10 +2,41 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
 import { enrollmentUpdateFor } from "@/lib/progress";
+import { gradeQuiz } from "@/lib/quiz";
+import { getLocale } from "@/lib/i18n";
+import { pickText } from "@/lib/content";
+
+/**
+ * Recompute an enrollment's progress from the learner's completed lessons in a
+ * program. Shared by the lesson toggle and the quiz submission.
+ */
+async function recomputeEnrollment(
+  tx: Prisma.TransactionClient,
+  tenantId: string,
+  programId: string,
+  userId: string
+): Promise<void> {
+  const [total, completed] = await Promise.all([
+    tx.lesson.count({ where: { module: { programId } } }),
+    tx.lessonCompletion.count({
+      where: { userId, lesson: { module: { programId } } },
+    }),
+  ]);
+  const update = enrollmentUpdateFor(completed, total);
+  await tx.enrollment.update({
+    where: { programId_userId: { programId, userId } },
+    data: {
+      progress: update.progress,
+      status: update.status,
+      completedAt: update.completed ? new Date() : null,
+    },
+  });
+}
 
 const CreateProgramSchema = z.object({
   title: z.string().trim().min(2, "Title is too short").max(160),
@@ -155,25 +186,124 @@ export async function toggleLessonAction(formData: FormData): Promise<void> {
     }
 
     // Recompute progress from completions across the whole program.
-    const [total, completed] = await Promise.all([
-      tx.lesson.count({ where: { module: { programId } } }),
-      tx.lessonCompletion.count({
-        where: { userId: session.userId, lesson: { module: { programId } } },
-      }),
-    ]);
-    const update = enrollmentUpdateFor(completed, total);
-    await tx.enrollment.update({
-      where: { programId_userId: { programId, userId: session.userId } },
-      data: {
-        progress: update.progress,
-        status: update.status,
-        completedAt: update.completed ? new Date() : null,
-      },
-    });
+    await recomputeEnrollment(tx, session.tenantId, programId, session.userId);
   });
 
   revalidatePath("/training");
   revalidatePath(`/training/${formData.get("programId") ?? ""}`);
+}
+
+export interface QuizSubmitState {
+  error?: string;
+  result?: {
+    score: number;
+    passed: boolean;
+    total: number;
+    correctCount: number;
+    passMark: number;
+    perQuestion: {
+      questionId: string;
+      correct: boolean;
+      correctOptionId: string;
+      explanation: string | null;
+    }[];
+  };
+}
+
+/**
+ * Grade a quiz submission, record the attempt, and — if the learner passed —
+ * complete the lesson and recompute the enrollment progress. Answers arrive as
+ * `answer_<questionId>` = optionId form fields.
+ */
+export async function submitQuizAction(
+  _prev: QuizSubmitState,
+  formData: FormData
+): Promise<QuizSubmitState> {
+  const session = await requireSession();
+  if (!can(session, "training.enroll.self")) {
+    return { error: "You cannot take this quiz." };
+  }
+  const locale = await getLocale();
+  const lessonId = String(formData.get("lessonId") ?? "");
+  if (!lessonId) return { error: "Missing quiz." };
+
+  return withTenant(session.tenantId, async (tx) => {
+    const lesson = await tx.lesson.findFirst({
+      where: { id: lessonId, type: "QUIZ" },
+      include: {
+        module: { select: { programId: true } },
+        questions: { include: { options: true } },
+      },
+    });
+    if (!lesson || lesson.questions.length === 0) {
+      return { error: "Quiz not found." };
+    }
+    const programId = lesson.module.programId;
+
+    const answers: Record<string, string> = {};
+    for (const q of lesson.questions) {
+      const chosen = formData.get(`answer_${q.id}`);
+      if (typeof chosen === "string" && chosen) answers[q.id] = chosen;
+    }
+
+    const gradable = lesson.questions.map((q) => ({
+      id: q.id,
+      correctOptionId: q.options.find((o) => o.isCorrect)?.id ?? "",
+    }));
+    const graded = gradeQuiz(gradable, answers, lesson.passMark);
+
+    await tx.quizAttempt.create({
+      data: {
+        tenantId: session.tenantId,
+        lessonId: lesson.id,
+        userId: session.userId,
+        score: graded.score,
+        passed: graded.passed,
+        answers: JSON.stringify(answers),
+      },
+    });
+
+    // Ensure enrollment exists; on pass, mark the lesson complete (idempotent).
+    await tx.enrollment.upsert({
+      where: { programId_userId: { programId, userId: session.userId } },
+      create: { tenantId: session.tenantId, programId, userId: session.userId },
+      update: {},
+    });
+    if (graded.passed) {
+      await tx.lessonCompletion.upsert({
+        where: {
+          lessonId_userId: { lessonId: lesson.id, userId: session.userId },
+        },
+        create: {
+          tenantId: session.tenantId,
+          lessonId: lesson.id,
+          userId: session.userId,
+        },
+        update: {},
+      });
+    }
+    await recomputeEnrollment(tx, session.tenantId, programId, session.userId);
+
+    const perQuestion = lesson.questions.map((q) => ({
+      questionId: q.id,
+      correct: graded.correctByQuestion[q.id] ?? false,
+      correctOptionId: q.options.find((o) => o.isCorrect)?.id ?? "",
+      explanation: pickText(q.explanation, q.explanationAr, locale) || null,
+    }));
+
+    revalidatePath("/training");
+    revalidatePath(`/training/${programId}`);
+    return {
+      result: {
+        score: graded.score,
+        passed: graded.passed,
+        total: graded.total,
+        correctCount: graded.correctCount,
+        passMark: lesson.passMark,
+        perQuestion,
+      },
+    };
+  });
 }
 
 const ProgressSchema = z.object({

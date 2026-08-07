@@ -79,6 +79,9 @@ model Tenant {
   trainingModules      TrainingModule[]
   lessons              Lesson[]
   lessonCompletions    LessonCompletion[]
+  questions            Question[]
+  questionOptions      QuestionOption[]
+  quizAttempts         QuizAttempt[]
   enrollments          Enrollment[]
   certifications       Certification[]
   certificationAwards  CertificationAward[]
@@ -201,6 +204,7 @@ model User {
   userRoles             UserRole[]
   enrollments           Enrollment[]
   lessonCompletions     LessonCompletion[]
+  quizAttempts          QuizAttempt[]
   authoredPrograms      TrainingProgram[]     @relation("ProgramAuthor")
   competencyRatings     CompetencyRating[]
   certificationAwards   CertificationAward[]
@@ -489,6 +493,7 @@ enum LessonType {
   TEXT // markdown article stored in `content`
   VIDEO // `content` is a video URL (embedded)
   RESOURCE // `content` is an external link / downloadable file URL
+  QUIZ // graded assessment; questions live in the `questions` relation
 }
 
 model Lesson {
@@ -500,18 +505,90 @@ model Lesson {
   type            LessonType @default(TEXT)
   content         String? // markdown body (TEXT) or a URL (VIDEO/RESOURCE)
   contentAr       String? // Arabic body; falls back to `content`
+  // Passing score (%) for QUIZ lessons; the lesson is only "complete" once the
+  // learner scores at or above this. Ignored for non-quiz lessons.
+  passMark        Int        @default(70)
   durationMinutes Int        @default(0)
   orderIndex      Int        @default(0)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 
-  tenant      Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  module      TrainingModule     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  completions LessonCompletion[]
+  tenant       Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  module       TrainingModule     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  completions  LessonCompletion[]
+  questions    Question[]
+  quizAttempts QuizAttempt[]
 
   @@index([tenantId])
   @@index([moduleId])
   @@map("lessons")
+}
+
+enum QuestionType {
+  SINGLE // one correct option (multiple choice)
+  TRUE_FALSE // two options, one correct
+}
+
+// A question in a quiz lesson's question bank.
+model Question {
+  id            String       @id @default(cuid())
+  tenantId      String
+  lessonId      String
+  type          QuestionType @default(SINGLE)
+  prompt        String
+  promptAr      String?
+  explanation   String? // shown after answering (why the answer is correct)
+  explanationAr String?
+  orderIndex    Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  tenant  Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  lesson  Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  options QuestionOption[]
+
+  @@index([tenantId])
+  @@index([lessonId])
+  @@map("questions")
+}
+
+model QuestionOption {
+  id         String  @id @default(cuid())
+  tenantId   String
+  questionId String
+  text       String
+  textAr     String?
+  isCorrect  Boolean @default(false)
+  orderIndex Int     @default(0)
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([questionId])
+  @@map("question_options")
+}
+
+// One graded attempt at a quiz lesson. `answers` is a JSON map of
+// questionId -> chosen optionId. The best passing attempt drives completion.
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  tenantId  String
+  lessonId  String
+  userId    String
+  score     Int // 0..100
+  passed    Boolean  @default(false)
+  answers   String // JSON: { [questionId]: optionId }
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([lessonId])
+  @@index([userId])
+  @@map("quiz_attempts")
 }
 
 // One row per (user, lesson) once the learner marks the lesson complete.

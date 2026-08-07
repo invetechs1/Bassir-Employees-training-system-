@@ -31,8 +31,13 @@ describe("starter curriculum", () => {
         expect(m.lessons.length).toBeGreaterThan(0);
         for (const l of m.lessons) {
           expect(l.titleAr.trim().length).toBeGreaterThan(0);
-          expect(l.contentAr.trim().length).toBeGreaterThan(0);
           expect(l.durationMinutes).toBeGreaterThan(0);
+          // Quiz lessons carry questions instead of a body.
+          if (l.type === "QUIZ") {
+            expect(l.questions && l.questions.length).toBeGreaterThan(0);
+          } else {
+            expect(l.contentAr.trim().length).toBeGreaterThan(0);
+          }
         }
       }
     }
@@ -54,6 +59,27 @@ describe("starter curriculum", () => {
         for (const l of m.lessons) {
           if (l.type === "RESOURCE" || l.type === "VIDEO") {
             expect(l.content).toMatch(/^https?:\/\//);
+          }
+        }
+      }
+    }
+  });
+
+  it("every course ends with a valid quiz (bilingual, exactly one correct option)", () => {
+    for (const p of CURRICULUM) {
+      const quizzes = p.modules
+        .flatMap((m) => m.lessons)
+        .filter((l) => l.type === "QUIZ");
+      expect(quizzes.length).toBeGreaterThan(0);
+      for (const quiz of quizzes) {
+        expect(quiz.questions && quiz.questions.length).toBeGreaterThanOrEqual(3);
+        for (const q of quiz.questions ?? []) {
+          expect(q.promptAr.trim().length).toBeGreaterThan(0);
+          expect(q.options.length).toBeGreaterThanOrEqual(2);
+          const correct = q.options.filter((o) => o.correct);
+          expect(correct.length).toBe(1); // exactly one correct answer
+          for (const o of q.options) {
+            expect(o.textAr.trim().length).toBeGreaterThan(0);
           }
         }
       }
