@@ -7,6 +7,7 @@ import { withTenant } from "@/lib/tenant-db";
 import { hashPassword } from "@/lib/password";
 import { hashInviteToken } from "@/lib/invite-token";
 import { createSessionToken, setSessionCookie } from "@/lib/session";
+import { assignDepartmentCourses } from "@/lib/assign";
 
 const Schema = z
   .object({
@@ -77,6 +78,9 @@ export async function acceptInviteAction(
         entityId: user.id,
       },
     });
+
+    // Auto-enroll the new hire into their department's training track (if set).
+    await assignDepartmentCourses(tx, tenant.id, user.id);
 
     return {
       userId: user.id,

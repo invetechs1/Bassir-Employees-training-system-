@@ -48,14 +48,24 @@ export default async function TrainingPage() {
           </h1>
           <p className="mt-1 text-sm text-slate-500">{t("training.subtitle")}</p>
         </div>
-        {canCreate ? (
-          <Link
-            href="/training/new"
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
-          >
-            {t("training.new")}
-          </Link>
-        ) : null}
+        <div className="flex items-center gap-2">
+          {can(session, "training.program.manage") ? (
+            <Link
+              href="/training/departments"
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              {t("dept.link")}
+            </Link>
+          ) : null}
+          {canCreate ? (
+            <Link
+              href="/training/new"
+              className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+            >
+              {t("training.new")}
+            </Link>
+          ) : null}
+        </div>
       </div>
 
       {/* My learning */}

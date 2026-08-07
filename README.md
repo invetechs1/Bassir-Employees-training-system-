@@ -29,6 +29,7 @@ future module builds on:
 | **Course content & lessons** | Programs hold ordered **modules → lessons** (reading/video/resource/**quiz**) with a lesson player; learner progress is **derived from completed lessons**. |
 | **Quizzes & question banks** | Quiz lessons carry a bilingual question bank; learners are graded and a quiz only completes when they pass (default 70%). Every shipped course ends with a knowledge check. |
 | **Starter curriculum library** | Bilingual (EN/AR) ready-made courses across **10 specialist tracks** — Accounting/Finance, HR, Project Management, Executive/COO, Sales, IT, HSE/Safety, Procurement & Supply Chain, Operations/Warehousing, Customer Service — installed automatically for every company. See [`docs/CURRICULUM.md`](docs/CURRICULUM.md). |
+| **Department auto-assignment** | Map each department to a training track (**Training → Department tracks**); new hires are auto-enrolled into that track's courses when they accept their invite, with an "Assign now" backfill for existing staff. |
 | **Audit log** | Tenant-scoped audit trail (logins, program creation, …). |
 | **Seed** | Provisions the three launch customers: Alarrab Engineering Consultancy, Azoom United Contracting, Hadathah Logistics. |
 
@@ -175,6 +176,7 @@ Each tenant also has `huda@…` (HR/L&D Manager), `faisal@…` (Line Manager),
 | `npm run db:migrate` | Create a migration (for production workflows) |
 | `npm run db:seed` | Seed tenants + sample data (installs the starter curriculum) |
 | `npm run seed:curriculum -- --slug <company>` | Install/refresh the bilingual starter curriculum for a company (`--all` for every tenant) |
+| `npm run assign:department-courses -- --slug <company>` | Backfill department-based course auto-assignment for existing employees (`--all` for every tenant) |
 | `npm run db:studio` | Open Prisma Studio |
 
 ## Testing & CI

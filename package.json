@@ -18,7 +18,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "provision": "tsx scripts/provision-tenant.ts",
-    "seed:curriculum": "tsx scripts/seed-curriculum.ts"
+    "seed:curriculum": "tsx scripts/seed-curriculum.ts",
+    "assign:department-courses": "tsx scripts/assign-department-courses.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

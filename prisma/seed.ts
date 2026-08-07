@@ -16,6 +16,19 @@ import { PrismaClient, type Industry } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { PERMISSIONS, SYSTEM_ROLES, type SystemRoleKey } from "../src/lib/rbac";
 import { installCurriculum } from "../src/lib/curriculum-install";
+import { assignDepartmentMembers } from "../src/lib/assign";
+
+/** Demo mapping from a department name to a starter-curriculum track. */
+function categoryForDept(name: string): string | null {
+  const n = name.toLowerCase();
+  if (n.includes("project management")) return "Project Management";
+  if (n.includes("hse") || n.includes("safety")) return "Health, Safety & Environment";
+  if (n.includes("procurement")) return "Procurement & Supply Chain";
+  if (n.includes("supply chain")) return "Procurement & Supply Chain";
+  if (n.includes("warehous")) return "Operations & Warehousing";
+  if (n.includes("fleet") || n.includes("operations")) return "Operations & Warehousing";
+  return null;
+}
 
 const prisma = new PrismaClient();
 
@@ -387,12 +400,27 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
       ],
     });
 
-    // Install the bilingual starter curriculum library (Accounting, HR, PM,
-    // Executive) so every demo tenant has real course content on day one.
+    // Install the bilingual starter curriculum library so every demo tenant has
+    // real course content on day one.
     const installed = await installCurriculum(tx, tenant.id, { authorId: admin.id });
     console.log(
       `  ↳ curriculum: +${installed.programsCreated} programs, ${installed.lessonsCreated} lessons`
     );
+
+    // Map departments to training tracks and auto-enroll their members, so the
+    // demo shows department-based auto-assignment working end to end.
+    let assigned = 0;
+    for (const dept of departments) {
+      const category = categoryForDept(dept.name);
+      if (!category) continue;
+      await tx.department.update({
+        where: { id: dept.id },
+        data: { trainingCategory: category },
+      });
+      const res = await assignDepartmentMembers(tx, tenant.id, dept.id);
+      assigned += res.enrollments;
+    }
+    if (assigned > 0) console.log(`  ↳ auto-assigned ${assigned} department enrollment(s)`);
   });
 
   console.log(`✔ Seeded tenant: ${spec.name} (${spec.slug})`);

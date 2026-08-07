@@ -10,6 +10,7 @@ import { enrollmentUpdateFor } from "@/lib/progress";
 import { gradeQuiz } from "@/lib/quiz";
 import { getLocale } from "@/lib/i18n";
 import { pickText } from "@/lib/content";
+import { assignDepartmentMembers } from "@/lib/assign";
 
 /**
  * Recompute an enrollment's progress from the learner's completed lessons in a
@@ -346,5 +347,64 @@ export async function updateProgressAction(formData: FormData): Promise<void> {
     });
   });
 
+  revalidatePath("/training");
+}
+
+const DeptTrackSchema = z.object({
+  departmentId: z.string().min(1),
+  category: z.string().max(120).optional().or(z.literal("")),
+});
+
+/**
+ * Map a department to a default training track (curriculum category), so new
+ * hires there are auto-enrolled. Admin / HR (training.program.manage) only.
+ */
+export async function setDepartmentTrackAction(formData: FormData): Promise<void> {
+  const session = await requireSession();
+  if (!can(session, "training.program.manage")) return;
+
+  const parsed = DeptTrackSchema.safeParse({
+    departmentId: formData.get("departmentId"),
+    category: formData.get("category"),
+  });
+  if (!parsed.success) return;
+  const { departmentId, category } = parsed.data;
+
+  await withTenant(session.tenantId, async (tx) => {
+    const dept = await tx.department.findFirst({ where: { id: departmentId } });
+    if (!dept) return;
+    await tx.department.update({
+      where: { id: departmentId },
+      data: { trainingCategory: category ? category : null },
+    });
+  });
+
+  revalidatePath("/training/departments");
+}
+
+const AssignNowSchema = z.object({ departmentId: z.string().min(1) });
+
+/**
+ * Enroll all active members of a department into its mapped track now
+ * (backfill for existing employees). Admin / HR only.
+ */
+export async function assignDepartmentNowAction(formData: FormData): Promise<void> {
+  const session = await requireSession();
+  if (!can(session, "training.program.manage")) return;
+
+  const parsed = AssignNowSchema.safeParse({
+    departmentId: formData.get("departmentId"),
+  });
+  if (!parsed.success) return;
+
+  await withTenant(session.tenantId, async (tx) => {
+    const dept = await tx.department.findFirst({
+      where: { id: parsed.data.departmentId },
+    });
+    if (!dept) return;
+    await assignDepartmentMembers(tx, session.tenantId, dept.id);
+  });
+
+  revalidatePath("/training/departments");
   revalidatePath("/training");
 }
