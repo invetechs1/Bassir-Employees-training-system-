@@ -35,6 +35,15 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // A user with a forced password change must set a new password before using
+  // the app — funnel every protected route to the change-password page.
+  if (
+    session.mustChangePassword &&
+    !(pathname === "/account/password" || pathname.startsWith("/account/password/"))
+  ) {
+    return NextResponse.redirect(new URL("/account/password", req.url));
+  }
+
   return NextResponse.next();
 }
 

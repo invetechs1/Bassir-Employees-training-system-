@@ -1,6 +1,14 @@
+import { createHash, timingSafeEqual } from "crypto";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
+/** Constant-time string comparison (hash to equal length first). */
+function safeEqual(a: string, b: string): boolean {
+  const ha = createHash("sha256").update(a).digest();
+  const hb = createHash("sha256").update(b).digest();
+  return timingSafeEqual(ha, hb);
+}
 
 /**
  * Platform-operator (vendor) authentication — completely separate from tenant
@@ -31,7 +39,10 @@ export function verifyPlatformCredentials(
   const e = process.env.PLATFORM_ADMIN_EMAIL;
   const p = process.env.PLATFORM_ADMIN_PASSWORD;
   if (!e || !p) return false;
-  return email.trim().toLowerCase() === e.toLowerCase() && password === p;
+  // Constant-time comparison to avoid leaking the credential via timing.
+  const emailOk = safeEqual(email.trim().toLowerCase(), e.toLowerCase());
+  const passOk = safeEqual(password, p);
+  return emailOk && passOk;
 }
 
 export interface PlatformSession {

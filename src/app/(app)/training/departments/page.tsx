@@ -26,7 +26,9 @@ export default async function DepartmentTracksPage() {
       });
       return {
         departments,
-        categories: cats.map((c) => c.category as string),
+        categories: cats
+          .map((c) => c.category)
+          .filter((c): c is string => c !== null),
       };
     }
   );

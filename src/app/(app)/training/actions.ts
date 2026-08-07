@@ -159,6 +159,10 @@ export async function toggleLessonAction(formData: FormData): Promise<void> {
       include: { module: { select: { programId: true } } },
     });
     if (!lesson) return;
+    // Quiz lessons are completed ONLY by passing the quiz (submitQuizAction).
+    // Never let the generic toggle mark a quiz complete — that would let a
+    // learner fake completion without answering a single question.
+    if (lesson.type === "QUIZ") return;
     const programId = lesson.module.programId;
 
     // Ensure the learner is enrolled (opening a course and completing a lesson
@@ -305,49 +309,6 @@ export async function submitQuizAction(
       },
     };
   });
-}
-
-const ProgressSchema = z.object({
-  enrollmentId: z.string().min(1),
-  progress: z.coerce.number().int().min(0).max(100),
-});
-
-export async function updateProgressAction(formData: FormData): Promise<void> {
-  const session = await requireSession();
-
-  const parsed = ProgressSchema.safeParse({
-    enrollmentId: formData.get("enrollmentId"),
-    progress: formData.get("progress"),
-  });
-  if (!parsed.success) return;
-  const { enrollmentId, progress } = parsed.data;
-
-  await withTenant(session.tenantId, async (tx) => {
-    const enrollment = await tx.enrollment.findFirst({
-      where: { id: enrollmentId },
-    });
-    if (!enrollment) return;
-
-    // Learners may only update their own enrollment; managers/HR may update any.
-    const ownsIt = enrollment.userId === session.userId;
-    if (!ownsIt && !can(session, "training.progress.manage")) return;
-
-    const completed = progress >= 100;
-    await tx.enrollment.update({
-      where: { id: enrollment.id },
-      data: {
-        progress,
-        status: completed
-          ? "COMPLETED"
-          : progress > 0
-            ? "IN_PROGRESS"
-            : "ENROLLED",
-        completedAt: completed ? new Date() : null,
-      },
-    });
-  });
-
-  revalidatePath("/training");
 }
 
 const DeptTrackSchema = z.object({

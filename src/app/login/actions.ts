@@ -92,6 +92,13 @@ export async function loginAction(
     redirect("/account/password");
   }
 
+  // Only allow same-origin relative paths. Reject protocol-relative ("//host")
+  // and backslash ("/\\host") forms that browsers treat as absolute URLs, to
+  // prevent an open redirect via ?next=.
   const next = parsed.data.next;
-  redirect(next && next.startsWith("/") ? next : "/dashboard");
+  const safeNext =
+    next && next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\")
+      ? next
+      : "/dashboard";
+  redirect(safeNext);
 }

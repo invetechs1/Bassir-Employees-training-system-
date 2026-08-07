@@ -50,7 +50,13 @@ export interface CurriculumModule {
 }
 
 export interface CurriculumProgram {
-  /** Stable key used for idempotent install (matched, never shown). */
+  /**
+   * Internal identifier for this course. Used to attach the knowledge-check
+   * quiz below and to keep programs distinct in this file. NOTE: idempotent
+   * install actually de-dupes by `title` (there is no key column on
+   * TrainingProgram), so keep titles stable — renaming a course's title will
+   * make a re-install create a new program instead of skipping it.
+   */
   key: string;
   title: string;
   titleAr: string;
