@@ -389,6 +389,7 @@ export async function installCurriculumAction(
   });
 
   revalidatePath("/training");
+  revalidatePath("/dashboard");
   return {
     installed: {
       programsCreated: result.programsCreated,

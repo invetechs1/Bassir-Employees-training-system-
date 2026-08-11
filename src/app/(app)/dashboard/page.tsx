@@ -1,6 +1,9 @@
+import Link from "next/link";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
 import { getLocale, translator } from "@/lib/i18n";
+import { InstallLibraryButton } from "../training/install-library-button";
 
 function StatCard({ label, value }: { label: string; value: number | string }) {
   return (
@@ -34,6 +37,30 @@ export default async function DashboardPage() {
         {t("dash.welcome")}, {session.name.split(" ")[0]}
       </h1>
       <p className="mt-1 text-sm text-slate-500">{t("dash.subtitle")}</p>
+
+      {stats.programs === 0 && can(session, "training.program.manage") ? (
+        <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50 p-5">
+          <h2 className="text-sm font-semibold text-brand-800">
+            {t("onboard.noContentTitle")}
+          </h2>
+          <p className="mt-1 max-w-2xl text-sm text-brand-700">
+            {t("training.installHint")}
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <InstallLibraryButton
+              label={t("training.installLibrary")}
+              pendingLabel={t("training.installing")}
+              doneLabel={t("training.installDone")}
+            />
+            <Link
+              href="/training"
+              className="text-sm font-medium text-brand-700 underline-offset-2 hover:underline"
+            >
+              {t("nav.Training Programs")}
+            </Link>
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label={t("dash.employees")} value={stats.employees} />
