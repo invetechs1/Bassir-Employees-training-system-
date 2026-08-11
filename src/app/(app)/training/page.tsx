@@ -5,12 +5,14 @@ import { withTenant } from "@/lib/tenant-db";
 import { getLocale, translator } from "@/lib/i18n";
 import { pickText } from "@/lib/content";
 import { enrollSelfAction } from "./actions";
+import { InstallLibraryButton } from "./install-library-button";
 
 export default async function TrainingPage() {
   const session = await requireSession();
   const locale = await getLocale();
   const t = translator(locale);
   const canCreate = can(session, "training.program.create");
+  const canManage = can(session, "training.program.manage");
   const trackLabel = (category: string | null) => {
     if (!category) return null;
     const key = `track.${category}`;
@@ -57,7 +59,15 @@ export default async function TrainingPage() {
               {t("report.link")}
             </Link>
           ) : null}
-          {can(session, "training.program.manage") ? (
+          {canManage && programs.length > 0 ? (
+            <InstallLibraryButton
+              label={t("training.installLibrary")}
+              pendingLabel={t("training.installing")}
+              doneLabel={t("training.installDone")}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+            />
+          ) : null}
+          {canManage ? (
             <Link
               href="/training/departments"
               className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
@@ -146,9 +156,27 @@ export default async function TrainingPage() {
           {t("training.catalog")}
         </h2>
         {programs.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
-            {t("training.noPrograms")}
-          </p>
+          canManage ? (
+            <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6">
+              <p className="text-sm font-medium text-slate-700">
+                {t("training.noPrograms")}
+              </p>
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
+                {t("training.installHint")}
+              </p>
+              <div className="mt-4">
+                <InstallLibraryButton
+                  label={t("training.installLibrary")}
+                  pendingLabel={t("training.installing")}
+                  doneLabel={t("training.installDone")}
+                />
+              </div>
+            </div>
+          ) : (
+            <p className="rounded-lg border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
+              {t("training.noPrograms")}
+            </p>
+          )
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {programs.map((p) => {

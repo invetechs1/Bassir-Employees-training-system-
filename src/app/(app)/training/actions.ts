@@ -12,6 +12,7 @@ import { getLocale } from "@/lib/i18n";
 import { pickText } from "@/lib/content";
 import { assignDepartmentMembers } from "@/lib/assign";
 import { issueCertificate } from "@/lib/certificate";
+import { installCurriculum } from "@/lib/curriculum-install";
 
 /**
  * Recompute an enrollment's progress from the learner's completed lessons in a
@@ -346,6 +347,54 @@ export async function setDepartmentTrackAction(formData: FormData): Promise<void
   });
 
   revalidatePath("/training/departments");
+}
+
+export interface InstallState {
+  error?: string;
+  installed?: { programsCreated: number; lessonsCreated: number };
+}
+
+/**
+ * Install (or refresh) the bilingual starter curriculum — the 10 specialist
+ * department tracks — into the current company. Idempotent: existing programs
+ * (matched by title) are skipped, so it is safe to click again after we ship
+ * more content. Admin / HR (training.program.manage) only.
+ *
+ * This is the in-app equivalent of `npm run seed:curriculum`, so a company that
+ * was created before the library existed can populate it without CLI access.
+ */
+export async function installCurriculumAction(
+  _prev: InstallState,
+  _formData: FormData
+): Promise<InstallState> {
+  const session = await requireSession();
+  if (!can(session, "training.program.manage")) {
+    return { error: "You do not have permission to install the library." };
+  }
+
+  const result = await withTenant(session.tenantId, async (tx) => {
+    const installed = await installCurriculum(tx, session.tenantId, {
+      authorId: session.userId,
+    });
+    await tx.auditLog.create({
+      data: {
+        tenantId: session.tenantId,
+        actorId: session.userId,
+        action: "training.curriculum.install",
+        entity: "Tenant",
+        entityId: session.tenantId,
+      },
+    });
+    return installed;
+  });
+
+  revalidatePath("/training");
+  return {
+    installed: {
+      programsCreated: result.programsCreated,
+      lessonsCreated: result.lessonsCreated,
+    },
+  };
 }
 
 const AssignNowSchema = z.object({ departmentId: z.string().min(1) });

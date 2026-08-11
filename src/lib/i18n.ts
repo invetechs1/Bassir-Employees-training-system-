@@ -179,6 +179,10 @@ export const DICT: Record<string, Entry> = {
   "training.markComplete": { en: "Complete", ar: "إتمام" },
   "training.noEnroll": { en: "You haven't enrolled in any programs yet. Pick one from the catalog below to start growing.", ar: "لم تسجّل في أي برنامج بعد. اختر برنامجًا من الدليل أدناه لتبدأ." },
   "training.noPrograms": { en: "No published programs yet.", ar: "لا توجد برامج منشورة بعد." },
+  "training.installLibrary": { en: "Install starter library", ar: "تثبيت المكتبة التأسيسية" },
+  "training.installing": { en: "Installing…", ar: "جارٍ التثبيت…" },
+  "training.installDone": { en: "Installed {n} courses. Refresh to see them.", ar: "تم تثبيت {n} برنامجًا. حدّث الصفحة لعرضها." },
+  "training.installHint": { en: "Populate this company with the ready-made bilingual courses for all 10 departments (Accounting, HR, Project Management, Executive, Sales, IT, Safety, Procurement, Operations, Customer Service).", ar: "املأ هذه الشركة بالبرامج الجاهزة ثنائية اللغة لجميع الأقسام العشرة (المحاسبة، الموارد البشرية، إدارة المشاريع، التنفيذي، المبيعات، تقنية المعلومات، السلامة، المشتريات، العمليات، خدمة العملاء)." },
   "training.hours": { en: "h", ar: "س" },
   "training.enrolledCount": { en: "enrolled", ar: "مُسجّل" },
   // Course content / lesson player
