@@ -17,6 +17,30 @@ export function programsToAssign(
     .map((p) => p.id);
 }
 
+/**
+ * Pure: which published programs an employee is allowed to SEE in the catalog —
+ * those belonging to their department's training track, PLUS any they were
+ * individually assigned (enrolled by name). Managers/HR bypass this and see the
+ * whole library. Returns the set of visible program ids.
+ */
+export function visibleProgramIds(
+  programs: { id: string; category: string | null }[],
+  departmentCategory: string | null,
+  enrolledProgramIds: Iterable<string>
+): Set<string> {
+  const enrolled = new Set(enrolledProgramIds);
+  const visible = new Set<string>();
+  for (const p of programs) {
+    if (
+      enrolled.has(p.id) ||
+      (departmentCategory !== null && p.category === departmentCategory)
+    ) {
+      visible.add(p.id);
+    }
+  }
+  return visible;
+}
+
 /** Published program ids in a category (empty for a null/unknown category). */
 async function programIdsForCategory(
   tx: Prisma.TransactionClient,
@@ -46,6 +70,36 @@ async function enrollUserInPrograms(
     skipDuplicates: true,
   });
   return res.count;
+}
+
+/**
+ * Whether an employee may access a specific program: it is in their
+ * department's training track, OR they are already enrolled (assigned to it by
+ * name). Managers / HR bypass this. Requires an active tenant context on `tx`.
+ */
+export async function canEmployeeAccessProgram(
+  tx: Prisma.TransactionClient,
+  userId: string,
+  program: { id: string; category: string | null }
+): Promise<boolean> {
+  const enrolled = await tx.enrollment.findFirst({
+    where: { programId: program.id, userId },
+    select: { id: true },
+  });
+  if (enrolled) return true;
+
+  const user = await tx.user.findFirst({
+    where: { id: userId },
+    select: { departmentId: true },
+  });
+  if (!user?.departmentId) return false;
+
+  const department = await tx.department.findFirst({
+    where: { id: user.departmentId },
+    select: { trainingCategory: true },
+  });
+  const category = department?.trainingCategory ?? null;
+  return category !== null && program.category === category;
 }
 
 /**

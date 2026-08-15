@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
 import { getLocale, translator } from "@/lib/i18n";
 import { pickText } from "@/lib/content";
+import { canEmployeeAccessProgram } from "@/lib/assign";
 import { enrollSelfAction } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +31,15 @@ export default async function ProgramDetailPage({
       },
     });
     if (!program) return null;
+
+    // Employees may only open courses in their department's track or ones
+    // assigned to them by name; managers / HR can open anything.
+    if (
+      !can(session, "training.program.manage") &&
+      !(await canEmployeeAccessProgram(tx, session.userId, program))
+    ) {
+      return null;
+    }
 
     const enrollment = await tx.enrollment.findFirst({
       where: { programId: program.id, userId: session.userId },

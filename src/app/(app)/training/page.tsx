@@ -4,6 +4,7 @@ import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
 import { getLocale, translator } from "@/lib/i18n";
 import { pickText } from "@/lib/content";
+import { visibleProgramIds } from "@/lib/assign";
 import { enrollSelfAction } from "./actions";
 import { InstallLibraryButton } from "./install-library-button";
 
@@ -20,10 +21,10 @@ export default async function TrainingPage() {
     return label === key ? category : label;
   };
 
-  const { programs, myEnrollments } = await withTenant(
+  const { programs, myEnrollments, departmentCategory } = await withTenant(
     session.tenantId,
     async (tx) => {
-      const [programs, myEnrollments] = await Promise.all([
+      const [programs, myEnrollments, me] = await Promise.all([
         tx.trainingProgram.findMany({
           where: { status: "PUBLISHED" },
           orderBy: { createdAt: "desc" },
@@ -34,12 +35,39 @@ export default async function TrainingPage() {
           include: { program: true },
           orderBy: { enrolledAt: "desc" },
         }),
+        tx.user.findFirst({
+          where: { id: session.userId },
+          select: { departmentId: true },
+        }),
       ]);
-      return { programs, myEnrollments };
+      // The employee's department decides which track they can browse.
+      let departmentCategory: string | null = null;
+      if (me?.departmentId) {
+        const dept = await tx.department.findFirst({
+          where: { id: me.departmentId },
+          select: { trainingCategory: true },
+        });
+        departmentCategory = dept?.trainingCategory ?? null;
+      }
+      return { programs, myEnrollments, departmentCategory };
     }
   );
 
   const enrolledProgramIds = new Set(myEnrollments.map((e) => e.programId));
+
+  // Employees see only their department's track + courses assigned to them by
+  // name; admins / HR (training.program.manage) see the whole library.
+  const seesWholeLibrary = canManage;
+  const catalog = seesWholeLibrary
+    ? programs
+    : (() => {
+        const visible = visibleProgramIds(
+          programs,
+          departmentCategory,
+          enrolledProgramIds
+        );
+        return programs.filter((p) => visible.has(p.id));
+      })();
 
   return (
     <div className="space-y-8">
@@ -153,9 +181,9 @@ export default async function TrainingPage() {
       {/* Catalog */}
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          {t("training.catalog")}
+          {seesWholeLibrary ? t("training.catalog") : t("training.myCatalog")}
         </h2>
-        {programs.length === 0 ? (
+        {catalog.length === 0 ? (
           canManage ? (
             <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6">
               <p className="text-sm font-medium text-slate-700">
@@ -174,12 +202,12 @@ export default async function TrainingPage() {
             </div>
           ) : (
             <p className="rounded-lg border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
-              {t("training.noPrograms")}
+              {t("training.noAssigned")}
             </p>
           )
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {programs.map((p) => {
+            {catalog.map((p) => {
               const enrolled = enrolledProgramIds.has(p.id);
               return (
                 <div

@@ -10,7 +10,7 @@ import { enrollmentUpdateFor } from "@/lib/progress";
 import { gradeQuiz } from "@/lib/quiz";
 import { getLocale } from "@/lib/i18n";
 import { pickText } from "@/lib/content";
-import { assignDepartmentMembers } from "@/lib/assign";
+import { assignDepartmentMembers, canEmployeeAccessProgram } from "@/lib/assign";
 import { issueCertificate } from "@/lib/certificate";
 import { installCurriculum } from "@/lib/curriculum-install";
 
@@ -123,6 +123,15 @@ export async function enrollSelfAction(formData: FormData): Promise<void> {
       where: { id: parsed.data.programId, status: "PUBLISHED" },
     });
     if (!program) return;
+
+    // Employees may only self-enroll into their department's track or courses
+    // assigned to them; managers / HR may enroll into anything.
+    if (
+      !can(session, "training.program.manage") &&
+      !(await canEmployeeAccessProgram(tx, session.userId, program))
+    ) {
+      return;
+    }
 
     await tx.enrollment.upsert({
       where: {

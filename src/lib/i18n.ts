@@ -179,6 +179,8 @@ export const DICT: Record<string, Entry> = {
   "training.markComplete": { en: "Complete", ar: "إتمام" },
   "training.noEnroll": { en: "You haven't enrolled in any programs yet. Pick one from the catalog below to start growing.", ar: "لم تسجّل في أي برنامج بعد. اختر برنامجًا من الدليل أدناه لتبدأ." },
   "training.noPrograms": { en: "No published programs yet.", ar: "لا توجد برامج منشورة بعد." },
+  "training.myCatalog": { en: "Courses for you", ar: "الدورات المخصصة لك" },
+  "training.noAssigned": { en: "No courses have been assigned to you yet. Your administrator assigns courses to your department, or adds you to a specific course.", ar: "لم يتم تعيين أي دورة لك بعد. يقوم المسؤول بتعيين الدورات لقسمك، أو بإضافتك إلى دورة معيّنة." },
   "training.installLibrary": { en: "Install starter library", ar: "تثبيت المكتبة التأسيسية" },
   "training.installing": { en: "Installing…", ar: "جارٍ التثبيت…" },
   "training.installDone": { en: "Installed {n} courses. Refresh to see them.", ar: "تم تثبيت {n} برنامجًا. حدّث الصفحة لعرضها." },
