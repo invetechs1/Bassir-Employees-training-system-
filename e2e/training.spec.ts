@@ -6,9 +6,10 @@ test("employee can browse the training catalog and enroll", async ({ page }) => 
   await page.getByRole("link", { name: /training programs/i }).click();
   await expect(page).toHaveURL(/\/training/);
 
-  // The catalog shows published programs.
+  // The catalog shows the courses available to this employee (their
+  // department's track); managers see the full "Program catalog".
   await expect(
-    page.getByRole("heading", { name: /program catalog/i })
+    page.getByRole("heading", { name: /courses for you|program catalog/i })
   ).toBeVisible();
 
   // Enroll in the first available program if not already enrolled.

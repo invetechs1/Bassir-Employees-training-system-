@@ -6,10 +6,11 @@ test("learner can open a seeded course, complete a lesson, and see progress", as
 }) => {
   await login(page, "alarrab", "omar@alarrab.bcap");
 
-  // Open the starter Accounting course from the catalog.
+  // Omar is in the Project Management department, so that track's course is the
+  // one available to him in the catalog. Open it.
   await page.goto("/training");
   await page
-    .getByRole("link", { name: /Financial Fundamentals for Accountants/i })
+    .getByRole("link", { name: /Project Management Foundations/i })
     .first()
     .click();
 
@@ -28,7 +29,7 @@ test("learner can open a seeded course, complete a lesson, and see progress", as
   ).toBeVisible();
 
   // Back on the program page, derived progress is now non-zero.
-  await page.getByRole("link", { name: /financial fundamentals/i }).click();
+  await page.getByRole("link", { name: /project management foundations/i }).click();
   await expect(page).toHaveURL(/\/training\/[^/]+$/);
   await expect(page.getByText(/\b[1-9]\d?%/).first()).toBeVisible();
 });
