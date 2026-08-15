@@ -15,6 +15,21 @@
 import { PrismaClient, type Industry } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { PERMISSIONS, SYSTEM_ROLES, type SystemRoleKey } from "../src/lib/rbac";
+import { installCurriculum } from "../src/lib/curriculum-install";
+import { assignDepartmentMembers } from "../src/lib/assign";
+import { issueCertificate } from "../src/lib/certificate";
+
+/** Demo mapping from a department name to a starter-curriculum track. */
+function categoryForDept(name: string): string | null {
+  const n = name.toLowerCase();
+  if (n.includes("project management")) return "Project Management";
+  if (n.includes("hse") || n.includes("safety")) return "Health, Safety & Environment";
+  if (n.includes("procurement")) return "Procurement & Supply Chain";
+  if (n.includes("supply chain")) return "Procurement & Supply Chain";
+  if (n.includes("warehous")) return "Operations & Warehousing";
+  if (n.includes("fleet") || n.includes("operations")) return "Operations & Warehousing";
+  return null;
+}
 
 const prisma = new PrismaClient();
 
@@ -234,30 +249,82 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
       return user;
     }
 
-    await makeUser("Admin", spec.name.split(" ")[0], "admin", {
+    // 9-box talent-grid placement per user index: [performance, potential] (1..3).
+    const NINE_BOX: [number, number][] = [
+      [3, 3],
+      [3, 2],
+      [2, 3],
+      [2, 2],
+      [1, 2],
+    ];
+    const admin = await makeUser("Admin", spec.name.split(" ")[0], "admin", {
       owner: true,
       jobTitle: "Platform Administrator",
     });
-    await makeUser("Huda", "Al-Otaibi", "hr_manager", {
+    const huda = await makeUser("Huda", "Al-Otaibi", "hr_manager", {
       jobTitle: "L&D Manager",
       deptIndex: 0,
     });
-    await makeUser("Faisal", "Al-Harbi", "manager", {
+    const faisal = await makeUser("Faisal", "Al-Harbi", "manager", {
       jobTitle: "Department Manager",
       deptIndex: 1,
     });
-    const learner1 = await makeUser("Sara", "Al-Qahtani", "learner", {
+    const sara = await makeUser("Sara", "Al-Qahtani", "learner", {
       jobTitle: "Engineer",
       deptIndex: 0,
     });
-    await makeUser("Omar", "Al-Ghamdi", "learner", {
+    const omar = await makeUser("Omar", "Al-Ghamdi", "learner", {
       jobTitle: "Specialist",
       deptIndex: 2,
     });
+    const users = [admin, huda, faisal, sara, omar];
 
-    // Programs (published) + one sample enrollment
+    // Set 9-box placement.
+    for (let ui = 0; ui < users.length; ui++) {
+      const [perf, pot] = NINE_BOX[ui] ?? [2, 2];
+      await tx.user.update({
+        where: { id: users[ui].id },
+        data: { performanceRating: perf, potentialRating: pot },
+      });
+    }
+
+    // Competency ratings (self / manager / current / target, levels 1..5).
+    const competencies = await tx.competency.findMany({
+      where: { tenantId: tenant.id },
+      orderBy: { createdAt: "asc" },
+    });
+    const currentByUserComp: Record<string, Record<string, number>> = {};
+    for (let ui = 0; ui < users.length; ui++) {
+      const u = users[ui];
+      currentByUserComp[u.id] = {};
+      const boost = u.isTenantOwner || u.id === huda.id ? 1 : 0;
+      for (let ci = 0; ci < competencies.length; ci++) {
+        const base = 2 + ((ui * 2 + ci) % 3);
+        const selfLevel = Math.min(5, base + (ci % 2) + boost);
+        const managerLevel = Math.min(5, Math.max(1, base - (ui % 2 === 0 ? 0 : 1)) + boost);
+        const currentLevel = Math.round((selfLevel + managerLevel) / 2);
+        const targetLevel = Math.min(5, Math.max(currentLevel, base) + 1);
+        currentByUserComp[u.id][competencies[ci].id] = currentLevel;
+        await tx.competencyRating.create({
+          data: {
+            tenantId: tenant.id,
+            userId: u.id,
+            competencyId: competencies[ci].id,
+            selfLevel,
+            managerLevel,
+            currentLevel,
+            targetLevel,
+          },
+        });
+      }
+    }
+
+    // Programs (published), linked to a competency + one sample enrollment.
     const createdPrograms = [];
-    for (const p of spec.programs) {
+    for (let pi = 0; pi < spec.programs.length; pi++) {
+      const p = spec.programs[pi];
+      const linked =
+        pi === 0 ? competencies[0] : competencies[competencies.length - 1];
       const program = await tx.trainingProgram.create({
         data: {
           tenantId: tenant.id,
@@ -266,6 +333,7 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
           level: p.level,
           durationHours: p.durationHours,
           status: "PUBLISHED",
+          competencyId: linked?.id ?? null,
         },
       });
       createdPrograms.push(program);
@@ -275,11 +343,128 @@ async function seedTenant(spec: TenantSpec, passwordHash: string) {
         data: {
           tenantId: tenant.id,
           programId: createdPrograms[0].id,
-          userId: learner1.id,
+          userId: sara.id,
           status: "IN_PROGRESS",
           progress: 50,
         },
       });
+    }
+
+    // Internal certifications from the top competencies + awards to proficient staff.
+    for (let ci = 0; ci < Math.min(3, competencies.length); ci++) {
+      const comp = competencies[ci];
+      const validityMonths = 24;
+      const cert = await tx.certification.create({
+        data: {
+          tenantId: tenant.id,
+          name: `${comp.name} Certification`,
+          competencyId: comp.id,
+          validityMonths,
+          status: ci === 1 ? "EXPIRING" : "ACTIVE",
+        },
+      });
+      let holders = users.filter(
+        (u) => (currentByUserComp[u.id][comp.id] ?? 0) >= 4
+      );
+      if (holders.length === 0) holders = [huda, sara];
+      for (const h of holders) {
+        const expiresAt = new Date();
+        expiresAt.setMonth(expiresAt.getMonth() + validityMonths);
+        await tx.certificationAward.create({
+          data: {
+            tenantId: tenant.id,
+            certificationId: cert.id,
+            userId: h.id,
+            expiresAt,
+          },
+        });
+      }
+    }
+
+    // Critical roles + succession pipelines.
+    const role1 = await tx.criticalRole.create({
+      data: { tenantId: tenant.id, title: faisal.jobTitle ?? "Manager", incumbentId: faisal.id },
+    });
+    await tx.successionCandidate.createMany({
+      data: [
+        { tenantId: tenant.id, criticalRoleId: role1.id, userId: sara.id, readiness: "READY_NOW", score: 82 },
+        { tenantId: tenant.id, criticalRoleId: role1.id, userId: omar.id, readiness: "ONE_TO_TWO_YEARS", score: 54 },
+      ],
+    });
+    const role2 = await tx.criticalRole.create({
+      data: { tenantId: tenant.id, title: huda.jobTitle ?? "Manager", incumbentId: huda.id },
+    });
+    await tx.successionCandidate.createMany({
+      data: [
+        { tenantId: tenant.id, criticalRoleId: role2.id, userId: omar.id, readiness: "ONE_TO_TWO_YEARS", score: 61 },
+        { tenantId: tenant.id, criticalRoleId: role2.id, userId: sara.id, readiness: "THREE_PLUS_YEARS", score: 38 },
+      ],
+    });
+
+    // Install the bilingual starter curriculum library so every demo tenant has
+    // real course content on day one.
+    const installed = await installCurriculum(tx, tenant.id, { authorId: admin.id });
+    console.log(
+      `  ↳ curriculum: +${installed.programsCreated} programs, ${installed.lessonsCreated} lessons`
+    );
+
+    // Map departments to training tracks and auto-enroll their members, so the
+    // demo shows department-based auto-assignment working end to end.
+    let assigned = 0;
+    for (const dept of departments) {
+      const category = categoryForDept(dept.name);
+      if (!category) continue;
+      await tx.department.update({
+        where: { id: dept.id },
+        data: { trainingCategory: category },
+      });
+      const res = await assignDepartmentMembers(tx, tenant.id, dept.id);
+      assigned += res.enrollments;
+    }
+    if (assigned > 0) console.log(`  ↳ auto-assigned ${assigned} department enrollment(s)`);
+
+    // Demo: one engaged employee fully completes a course this month (earns a
+    // certificate + development KPI). Others stay inactive, so the reports show
+    // the "who is developing vs. who is not" contrast the platform is built for.
+    const demoProgram = await tx.trainingProgram.findFirst({
+      where: { title: "Financial Fundamentals for Accountants" },
+      include: { modules: { include: { lessons: true } } },
+    });
+    if (demoProgram) {
+      const lessons = demoProgram.modules.flatMap((m) => m.lessons);
+      for (const l of lessons) {
+        if (l.type === "QUIZ") {
+          await tx.quizAttempt.create({
+            data: {
+              tenantId: tenant.id,
+              lessonId: l.id,
+              userId: sara.id,
+              score: 100,
+              passed: true,
+              answers: "{}",
+            },
+          });
+        }
+        await tx.lessonCompletion.upsert({
+          where: { lessonId_userId: { lessonId: l.id, userId: sara.id } },
+          create: { tenantId: tenant.id, lessonId: l.id, userId: sara.id },
+          update: {},
+        });
+      }
+      await tx.enrollment.upsert({
+        where: { programId_userId: { programId: demoProgram.id, userId: sara.id } },
+        create: {
+          tenantId: tenant.id,
+          programId: demoProgram.id,
+          userId: sara.id,
+          status: "COMPLETED",
+          progress: 100,
+          completedAt: new Date(),
+        },
+        update: { status: "COMPLETED", progress: 100, completedAt: new Date() },
+      });
+      await issueCertificate(tx, tenant.id, sara.id, demoProgram.id);
+      console.log(`  ↳ demo: ${sara.firstName} completed a course (+certificate)`);
     }
   });
 

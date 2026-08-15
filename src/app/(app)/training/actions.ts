@@ -2,9 +2,48 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 import { requireSession } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
+import { enrollmentUpdateFor } from "@/lib/progress";
+import { gradeQuiz } from "@/lib/quiz";
+import { getLocale } from "@/lib/i18n";
+import { pickText } from "@/lib/content";
+import { assignDepartmentMembers, canEmployeeAccessProgram } from "@/lib/assign";
+import { issueCertificate } from "@/lib/certificate";
+import { installCurriculum } from "@/lib/curriculum-install";
+
+/**
+ * Recompute an enrollment's progress from the learner's completed lessons in a
+ * program. Shared by the lesson toggle and the quiz submission.
+ */
+async function recomputeEnrollment(
+  tx: Prisma.TransactionClient,
+  tenantId: string,
+  programId: string,
+  userId: string
+): Promise<void> {
+  const [total, completed] = await Promise.all([
+    tx.lesson.count({ where: { module: { programId } } }),
+    tx.lessonCompletion.count({
+      where: { userId, lesson: { module: { programId } } },
+    }),
+  ]);
+  const update = enrollmentUpdateFor(completed, total);
+  await tx.enrollment.update({
+    where: { programId_userId: { programId, userId } },
+    data: {
+      progress: update.progress,
+      status: update.status,
+      completedAt: update.completed ? new Date() : null,
+    },
+  });
+  // Award a completion certificate the moment the course is finished (idempotent).
+  if (update.completed) {
+    await issueCertificate(tx, tenantId, userId, programId);
+  }
+}
 
 const CreateProgramSchema = z.object({
   title: z.string().trim().min(2, "Title is too short").max(160),
@@ -85,6 +124,15 @@ export async function enrollSelfAction(formData: FormData): Promise<void> {
     });
     if (!program) return;
 
+    // Employees may only self-enroll into their department's track or courses
+    // assigned to them; managers / HR may enroll into anything.
+    if (
+      !can(session, "training.program.manage") &&
+      !(await canEmployeeAccessProgram(tx, session.userId, program))
+    ) {
+      return;
+    }
+
     await tx.enrollment.upsert({
       where: {
         programId_userId: {
@@ -104,45 +152,284 @@ export async function enrollSelfAction(formData: FormData): Promise<void> {
   revalidatePath("/training");
 }
 
-const ProgressSchema = z.object({
-  enrollmentId: z.string().min(1),
-  progress: z.coerce.number().int().min(0).max(100),
-});
+const ToggleLessonSchema = z.object({ lessonId: z.string().min(1) });
 
-export async function updateProgressAction(formData: FormData): Promise<void> {
+/**
+ * Mark a lesson complete / incomplete for the current user. Enrollment is
+ * created on first completion, and the enrollment's progress is RECOMPUTED from
+ * the number of completed lessons in the program (never entered by hand).
+ */
+export async function toggleLessonAction(formData: FormData): Promise<void> {
   const session = await requireSession();
+  if (!can(session, "training.enroll.self")) return;
 
-  const parsed = ProgressSchema.safeParse({
-    enrollmentId: formData.get("enrollmentId"),
-    progress: formData.get("progress"),
+  const parsed = ToggleLessonSchema.safeParse({
+    lessonId: formData.get("lessonId"),
   });
   if (!parsed.success) return;
-  const { enrollmentId, progress } = parsed.data;
 
   await withTenant(session.tenantId, async (tx) => {
-    const enrollment = await tx.enrollment.findFirst({
-      where: { id: enrollmentId },
+    const lesson = await tx.lesson.findFirst({
+      where: { id: parsed.data.lessonId },
+      include: { module: { select: { programId: true } } },
     });
-    if (!enrollment) return;
+    if (!lesson) return;
+    // Quiz lessons are completed ONLY by passing the quiz (submitQuizAction).
+    // Never let the generic toggle mark a quiz complete — that would let a
+    // learner fake completion without answering a single question.
+    if (lesson.type === "QUIZ") return;
+    const programId = lesson.module.programId;
 
-    // Learners may only update their own enrollment; managers/HR may update any.
-    const ownsIt = enrollment.userId === session.userId;
-    if (!ownsIt && !can(session, "training.progress.manage")) return;
+    // Ensure the learner is enrolled (opening a course and completing a lesson
+    // implies enrollment).
+    await tx.enrollment.upsert({
+      where: { programId_userId: { programId, userId: session.userId } },
+      create: { tenantId: session.tenantId, programId, userId: session.userId },
+      update: {},
+    });
 
-    const completed = progress >= 100;
-    await tx.enrollment.update({
-      where: { id: enrollment.id },
-      data: {
-        progress,
-        status: completed
-          ? "COMPLETED"
-          : progress > 0
-            ? "IN_PROGRESS"
-            : "ENROLLED",
-        completedAt: completed ? new Date() : null,
+    const existing = await tx.lessonCompletion.findUnique({
+      where: {
+        lessonId_userId: { lessonId: lesson.id, userId: session.userId },
       },
+    });
+    if (existing) {
+      await tx.lessonCompletion.delete({ where: { id: existing.id } });
+    } else {
+      await tx.lessonCompletion.create({
+        data: {
+          tenantId: session.tenantId,
+          lessonId: lesson.id,
+          userId: session.userId,
+        },
+      });
+    }
+
+    // Recompute progress from completions across the whole program.
+    await recomputeEnrollment(tx, session.tenantId, programId, session.userId);
+  });
+
+  revalidatePath("/training");
+  revalidatePath(`/training/${formData.get("programId") ?? ""}`);
+}
+
+export interface QuizSubmitState {
+  error?: string;
+  result?: {
+    score: number;
+    passed: boolean;
+    total: number;
+    correctCount: number;
+    passMark: number;
+    perQuestion: {
+      questionId: string;
+      correct: boolean;
+      correctOptionId: string;
+      explanation: string | null;
+    }[];
+  };
+}
+
+/**
+ * Grade a quiz submission, record the attempt, and — if the learner passed —
+ * complete the lesson and recompute the enrollment progress. Answers arrive as
+ * `answer_<questionId>` = optionId form fields.
+ */
+export async function submitQuizAction(
+  _prev: QuizSubmitState,
+  formData: FormData
+): Promise<QuizSubmitState> {
+  const session = await requireSession();
+  if (!can(session, "training.enroll.self")) {
+    return { error: "You cannot take this quiz." };
+  }
+  const locale = await getLocale();
+  const lessonId = String(formData.get("lessonId") ?? "");
+  if (!lessonId) return { error: "Missing quiz." };
+
+  return withTenant(session.tenantId, async (tx) => {
+    const lesson = await tx.lesson.findFirst({
+      where: { id: lessonId, type: "QUIZ" },
+      include: {
+        module: { select: { programId: true } },
+        questions: { include: { options: true } },
+      },
+    });
+    if (!lesson || lesson.questions.length === 0) {
+      return { error: "Quiz not found." };
+    }
+    const programId = lesson.module.programId;
+
+    const answers: Record<string, string> = {};
+    for (const q of lesson.questions) {
+      const chosen = formData.get(`answer_${q.id}`);
+      if (typeof chosen === "string" && chosen) answers[q.id] = chosen;
+    }
+
+    const gradable = lesson.questions.map((q) => ({
+      id: q.id,
+      correctOptionId: q.options.find((o) => o.isCorrect)?.id ?? "",
+    }));
+    const graded = gradeQuiz(gradable, answers, lesson.passMark);
+
+    await tx.quizAttempt.create({
+      data: {
+        tenantId: session.tenantId,
+        lessonId: lesson.id,
+        userId: session.userId,
+        score: graded.score,
+        passed: graded.passed,
+        answers: JSON.stringify(answers),
+      },
+    });
+
+    // Ensure enrollment exists; on pass, mark the lesson complete (idempotent).
+    await tx.enrollment.upsert({
+      where: { programId_userId: { programId, userId: session.userId } },
+      create: { tenantId: session.tenantId, programId, userId: session.userId },
+      update: {},
+    });
+    if (graded.passed) {
+      await tx.lessonCompletion.upsert({
+        where: {
+          lessonId_userId: { lessonId: lesson.id, userId: session.userId },
+        },
+        create: {
+          tenantId: session.tenantId,
+          lessonId: lesson.id,
+          userId: session.userId,
+        },
+        update: {},
+      });
+    }
+    await recomputeEnrollment(tx, session.tenantId, programId, session.userId);
+
+    const perQuestion = lesson.questions.map((q) => ({
+      questionId: q.id,
+      correct: graded.correctByQuestion[q.id] ?? false,
+      correctOptionId: q.options.find((o) => o.isCorrect)?.id ?? "",
+      explanation: pickText(q.explanation, q.explanationAr, locale) || null,
+    }));
+
+    revalidatePath("/training");
+    revalidatePath(`/training/${programId}`);
+    return {
+      result: {
+        score: graded.score,
+        passed: graded.passed,
+        total: graded.total,
+        correctCount: graded.correctCount,
+        passMark: lesson.passMark,
+        perQuestion,
+      },
+    };
+  });
+}
+
+const DeptTrackSchema = z.object({
+  departmentId: z.string().min(1),
+  category: z.string().max(120).optional().or(z.literal("")),
+});
+
+/**
+ * Map a department to a default training track (curriculum category), so new
+ * hires there are auto-enrolled. Admin / HR (training.program.manage) only.
+ */
+export async function setDepartmentTrackAction(formData: FormData): Promise<void> {
+  const session = await requireSession();
+  if (!can(session, "training.program.manage")) return;
+
+  const parsed = DeptTrackSchema.safeParse({
+    departmentId: formData.get("departmentId"),
+    category: formData.get("category"),
+  });
+  if (!parsed.success) return;
+  const { departmentId, category } = parsed.data;
+
+  await withTenant(session.tenantId, async (tx) => {
+    const dept = await tx.department.findFirst({ where: { id: departmentId } });
+    if (!dept) return;
+    await tx.department.update({
+      where: { id: departmentId },
+      data: { trainingCategory: category ? category : null },
     });
   });
 
+  revalidatePath("/training/departments");
+}
+
+export interface InstallState {
+  error?: string;
+  installed?: { programsCreated: number; lessonsCreated: number };
+}
+
+/**
+ * Install (or refresh) the bilingual starter curriculum — the 10 specialist
+ * department tracks — into the current company. Idempotent: existing programs
+ * (matched by title) are skipped, so it is safe to click again after we ship
+ * more content. Admin / HR (training.program.manage) only.
+ *
+ * This is the in-app equivalent of `npm run seed:curriculum`, so a company that
+ * was created before the library existed can populate it without CLI access.
+ */
+export async function installCurriculumAction(
+  _prev: InstallState,
+  _formData: FormData
+): Promise<InstallState> {
+  const session = await requireSession();
+  if (!can(session, "training.program.manage")) {
+    return { error: "You do not have permission to install the library." };
+  }
+
+  const result = await withTenant(session.tenantId, async (tx) => {
+    const installed = await installCurriculum(tx, session.tenantId, {
+      authorId: session.userId,
+    });
+    await tx.auditLog.create({
+      data: {
+        tenantId: session.tenantId,
+        actorId: session.userId,
+        action: "training.curriculum.install",
+        entity: "Tenant",
+        entityId: session.tenantId,
+      },
+    });
+    return installed;
+  });
+
+  revalidatePath("/training");
+  revalidatePath("/dashboard");
+  return {
+    installed: {
+      programsCreated: result.programsCreated,
+      lessonsCreated: result.lessonsCreated,
+    },
+  };
+}
+
+const AssignNowSchema = z.object({ departmentId: z.string().min(1) });
+
+/**
+ * Enroll all active members of a department into its mapped track now
+ * (backfill for existing employees). Admin / HR only.
+ */
+export async function assignDepartmentNowAction(formData: FormData): Promise<void> {
+  const session = await requireSession();
+  if (!can(session, "training.program.manage")) return;
+
+  const parsed = AssignNowSchema.safeParse({
+    departmentId: formData.get("departmentId"),
+  });
+  if (!parsed.success) return;
+
+  await withTenant(session.tenantId, async (tx) => {
+    const dept = await tx.department.findFirst({
+      where: { id: parsed.data.departmentId },
+    });
+    if (!dept) return;
+    await assignDepartmentMembers(tx, session.tenantId, dept.id);
+  });
+
+  revalidatePath("/training/departments");
   revalidatePath("/training");
 }

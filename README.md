@@ -26,12 +26,84 @@ future module builds on:
 | **Org structure** | Companies → Branches → Departments → Users (with manager hierarchy). |
 | **Competency framework** | Competency categories & competencies (the differentiator vs. an LMS). |
 | **Training module (end-to-end)** | Create/publish programs, self-enroll, track progress to completion — the first vertical slice. |
+| **Course content & lessons** | Programs hold ordered **modules → lessons** (reading/video/resource/**quiz**) with a lesson player; learner progress is **derived from completed lessons**. |
+| **Quizzes & question banks** | Quiz lessons carry a bilingual question bank; learners are graded and a quiz only completes when they pass (default 70%). Every shipped course ends with a knowledge check. |
+| **Starter curriculum library** | Bilingual (EN/AR) ready-made courses across **10 specialist tracks** — Accounting/Finance, HR, Project Management, Executive/COO, Sales, IT, HSE/Safety, Procurement & Supply Chain, Operations/Warehousing, Customer Service — installed automatically for every company. See [`docs/CURRICULUM.md`](docs/CURRICULUM.md). |
+| **Department auto-assignment** | Map each department to a training track (**Training → Department tracks**); new hires are auto-enrolled into that track's courses when they accept their invite, with an "Assign now" backfill for existing staff. |
+| **Completion certificates** | A branded, printable certificate (unique serial + score) is auto-issued when a learner finishes a course; managers can open and print any employee's certificate. |
+| **Monthly development KPI & reports** | **Training → Reports**: a per-employee monthly KPI (lessons×1 + quizzes×3 + courses×10) with an engagement band (High/Medium/Low/**Inactive**) — a month-end leaderboard of who is developing and who isn't, drill-down per employee. |
 | **Audit log** | Tenant-scoped audit trail (logins, program creation, …). |
 | **Seed** | Provisions the three launch customers: Alarrab Engineering Consultancy, Azoom United Contracting, Hadathah Logistics. |
 
+## Status — Phase 2 (Talent modules)
+
+Built on the Phase 1 core, these modules are live end-to-end (schema + RLS +
+seed + UI), all tenant-scoped and permission-gated:
+
+| Module | Delivered |
+|--------|-----------|
+| **Competency assessments** | Per-employee self / manager / target levels (1–5), an interactive skill matrix (managers & HR click a cell to re-assess), and organization skill-gap analysis. |
+| **Certifications** | Internal corporate-university certifications with awards, holders, validity and status; managers issue certificates to employees. |
+| **Leadership & succession** | 9-box talent grid (performance × potential) and succession pipelines with successor readiness for critical roles. |
+| **Analytics** | Completion / active-learner / compliance donuts, enrollments-by-level, a 6-month trend and competency coverage. |
+| **AI insights** | Priority skill gaps, program recommendations that close the largest gaps, role-readiness scoring and a retention watch. |
+
+## Status — Phase 3 (Production readiness)
+
+The platform is ready to run for real employees:
+
+| Capability | Delivered |
+|-----------|-----------|
+| **Invite employees** | Admins & HR invite employees from **People** — pick a role and department; an **invitation email** with a secure link is sent (and the admin always gets the link to share manually). |
+| **Secure onboarding** | Invitees click the link, set their own password, and are signed in. Links are single-use and expire in 7 days; no password is ever emailed. |
+| **Manage access** | Reset an employee's password, disable/enable accounts (the owner and yourself are protected). |
+| **Self-service** | Anyone can change their own password from **Settings → Account security**. |
+| **Forgot password** | From the sign-in page, users request a reset link (**Forgot password?**). A one-time link (valid 60 min) is emailed — or shown in the server log when SMTP is unconfigured. The form gives the same response whether or not the email exists, so it can't be used to discover registered addresses. |
+| **Email verification** | Accepting an invite verifies the mailbox automatically; a dedicated confirmation link (single-use) is also supported for other flows. |
+| **Policy pages** | Public, bilingual (EN/AR, RTL) **Terms of Service** (`/legal/terms`) and **Privacy Policy** (`/legal/privacy`), aligned with Saudi **PDPL** concepts. Provided as review-ready templates — set `LEGAL_ENTITY_NAME` / `LEGAL_CONTACT_EMAIL` and have counsel review before launch. |
+| **Provision a company** | `npm run provision` stands up a new company + its first administrator (no demo data). |
+| **Deploy** | One-command **Docker Compose** stack (app + PostgreSQL) that auto-runs migrations, including Row-Level Security. |
+| **Hardened config** | Real Prisma migrations, security headers, `AUTH_SECRET` strength checks, secure cookies in production, non-superuser DB role. |
+
+### Deploy in one command
+
+```bash
+# 1. Set a strong AUTH_SECRET in docker-compose.yml  (openssl rand -base64 48)
+#    and change the database passwords.
+# 2. Build and start:
+docker compose up -d --build
+# 3. Create your company + admin:
+docker compose exec app npm run provision -- \
+  --name "Your Company" --slug yourco \
+  --industry CONSTRUCTION_CONTRACTING \
+  --admin-name "Your Name" --admin-email you@yourco.com \
+  --admin-password 'ChangeThisPassword1'
+# 4. Open http://localhost:3000 → sign in with company "yourco".
+```
+
+Then, as the admin, open **People → Invite employee** to onboard your team.
+If you've configured SMTP (see `.env.example`), each person receives an
+invitation email; otherwise share the link the app shows you. They click it,
+set their own password, and they're in.
+
+> Put the app behind HTTPS (a reverse proxy such as Caddy/Nginx, or a platform
+> like Vercel + managed Postgres) before going live — secure session cookies
+> require it.
+
+## Status — Phase 5–8 (Commercial & enterprise)
+
+| Capability | Delivered |
+|-----------|-----------|
+| **Subscription plans** | Starter / Growth / Enterprise with seat limits and per-feature access; premium modules gated, seat limits enforced on invites, self-serve plan changes on the Billing page. |
+| **Per-company branding** | Company logo + brand color applied to the workspace and to branded invitation emails, editable in Settings. |
+| **Arabic / RTL** | Bilingual English/Arabic with a locale toggle and right-to-left layout across the app shell, dashboard and login (extensible dictionary in `src/lib/i18n.ts`). |
+| **Single sign-on** | Per-company OpenID Connect SSO (Google, Microsoft Entra, Okta, Auth0, …) with discovery, ID-token verification and just-in-time provisioning. Enterprise plan. |
+
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design and the
-[roadmap](docs/ARCHITECTURE.md#roadmap) of upcoming modules (leadership &
-succession, certifications, AI workforce insights, billing, …).
+[roadmap](docs/ARCHITECTURE.md#roadmap) of remaining work (payment processing,
+platform-admin plane, deep per-page Arabic coverage, …). For running BCAP in
+production — health checks (`GET /api/health`), database backups & disaster
+recovery, and monitoring/error tracking — see [`docs/OPERATIONS.md`](docs/OPERATIONS.md).
 
 ---
 
@@ -101,10 +173,23 @@ Each tenant also has `huda@…` (HR/L&D Manager), `faisal@…` (Line Manager),
 | `npm run dev` | Start the dev server |
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run typecheck` | TypeScript check |
+| `npm test` | Run the unit test suite (Vitest) |
 | `npm run db:push` | Sync schema to the database |
 | `npm run db:migrate` | Create a migration (for production workflows) |
-| `npm run db:seed` | Seed tenants + sample data |
+| `npm run db:seed` | Seed tenants + sample data (installs the starter curriculum) |
+| `npm run seed:curriculum -- --slug <company>` | Install/refresh the bilingual starter curriculum for a company (`--all` for every tenant) |
+| `npm run assign:department-courses -- --slug <company>` | Backfill department-based course auto-assignment for existing employees (`--all` for every tenant) |
 | `npm run db:studio` | Open Prisma Studio |
+
+## Testing & CI
+
+- **Unit tests** (`npm test`, Vitest) cover the core logic: RBAC permissions,
+  plan/feature entitlements, Stripe plan↔price mapping, invite-token hashing,
+  password hashing, branding validation and OIDC auth-URL building.
+- **GitHub Actions** (`.github/workflows/ci.yml`) runs on every push/PR:
+  typecheck → tests → production build, plus a job that spins up PostgreSQL,
+  applies the full migration chain and asserts Row-Level Security is enabled
+  on tenant tables.
 
 ---
 

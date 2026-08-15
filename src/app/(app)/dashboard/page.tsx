@@ -1,5 +1,9 @@
+import Link from "next/link";
 import { requireSession } from "@/lib/auth";
+import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
+import { getLocale, translator } from "@/lib/i18n";
+import { InstallLibraryButton } from "../training/install-library-button";
 
 function StatCard({ label, value }: { label: string; value: number | string }) {
   return (
@@ -12,6 +16,7 @@ function StatCard({ label, value }: { label: string; value: number | string }) {
 
 export default async function DashboardPage() {
   const session = await requireSession();
+  const t = translator(await getLocale());
 
   const stats = await withTenant(session.tenantId, async (tx) => {
     const [employees, programs, activeEnrollments, completions] =
@@ -29,25 +34,46 @@ export default async function DashboardPage() {
   return (
     <div>
       <h1 className="text-xl font-semibold text-slate-900">
-        Welcome back, {session.name.split(" ")[0]}
+        {t("dash.welcome")}, {session.name.split(" ")[0]}
       </h1>
-      <p className="mt-1 text-sm text-slate-500">
-        Here is how your academy is performing.
-      </p>
+      <p className="mt-1 text-sm text-slate-500">{t("dash.subtitle")}</p>
+
+      {stats.programs === 0 && can(session, "training.program.manage") ? (
+        <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50 p-5">
+          <h2 className="text-sm font-semibold text-brand-800">
+            {t("onboard.noContentTitle")}
+          </h2>
+          <p className="mt-1 max-w-2xl text-sm text-brand-700">
+            {t("training.installHint")}
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <InstallLibraryButton
+              label={t("training.installLibrary")}
+              pendingLabel={t("training.installing")}
+              doneLabel={t("training.installDone")}
+            />
+            <Link
+              href="/training"
+              className="text-sm font-medium text-brand-700 underline-offset-2 hover:underline"
+            >
+              {t("nav.Training Programs")}
+            </Link>
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Active employees" value={stats.employees} />
-        <StatCard label="Training programs" value={stats.programs} />
-        <StatCard label="Active enrollments" value={stats.activeEnrollments} />
-        <StatCard label="Completions" value={stats.completions} />
+        <StatCard label={t("dash.employees")} value={stats.employees} />
+        <StatCard label={t("dash.trainingPrograms")} value={stats.programs} />
+        <StatCard
+          label={t("dash.activeEnrollments")}
+          value={stats.activeEnrollments}
+        />
+        <StatCard label={t("dash.completions")} value={stats.completions} />
       </div>
 
       <div className="mt-8 rounded-xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500">
-        More modules — competency growth, leadership pipelines, succession
-        planning and AI workforce insights — plug into this dashboard as they
-        come online. Head to{" "}
-        <span className="font-medium text-brand-700">Training Programs</span> to
-        see the first module end-to-end.
+        {t("dash.more")}
       </div>
     </div>
   );
