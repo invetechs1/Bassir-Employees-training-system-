@@ -70,11 +70,20 @@ export async function verifySessionToken(
   }
 }
 
+// The Secure attribute must reflect the transport the app is actually served
+// over, not the build mode — a production build can still be served over
+// plain HTTP (e.g. no TLS-terminating proxy in front of it yet), and a
+// Secure cookie set in that case is silently dropped by the browser, making
+// the session appear to log the user out on the very next navigation.
+function isServedOverHttps(): boolean {
+  return (process.env.APP_BASE_URL ?? "").startsWith("https://");
+}
+
 export async function setSessionCookie(token: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isServedOverHttps(),
     sameSite: "lax",
     path: "/",
     maxAge: TTL_SECONDS,

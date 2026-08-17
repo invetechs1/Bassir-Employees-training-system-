@@ -35,6 +35,8 @@ COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/next.config.js ./next.config.js
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/scripts ./scripts
+COPY --from=build /app/src ./src
+COPY --from=build /app/tsconfig.json ./tsconfig.json
 COPY docker/entrypoint.sh ./docker/entrypoint.sh
 RUN chmod +x ./docker/entrypoint.sh
 
