@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { avatarColor, initials } from "@/lib/talent";
 import {
@@ -17,11 +18,25 @@ export interface PersonRow {
   email: string;
   jobTitle: string;
   department: string;
+  position: string;
   roleKey: string;
   roleLabel: string;
   status: "ACTIVE" | "INVITED" | "DISABLED";
   isTenantOwner: boolean;
   mustChangePassword: boolean;
+}
+
+export interface PositionOption {
+  id: string;
+  title: string;
+  // The courses mapped to this position — used to pre-select the course picker
+  // when the admin chooses this position for a new employee.
+  programIds: string[];
+}
+
+export interface ProgramOption {
+  id: string;
+  title: string;
 }
 
 interface Credential {
@@ -44,6 +59,11 @@ export interface ModalLabels {
   jobTitle: string;
   role: string;
   department: string;
+  position: string;
+  positionNone: string;
+  courses: string;
+  coursesHint: string;
+  coursesNone: string;
   send: string;
   sending: string;
   cancel: string;
@@ -70,9 +90,11 @@ export interface PeopleLabels {
   subManage: string;
   subView: string;
   add: string;
+  managePositions: string;
   thName: string;
   thEmail: string;
   thDept: string;
+  thPosition: string;
   thRole: string;
   thStatus: string;
   thActions: string;
@@ -89,6 +111,8 @@ export interface PeopleLabels {
 export function PeopleClient({
   rows,
   departments,
+  positions,
+  programs,
   canManage,
   isOwner,
   currentUserId,
@@ -96,6 +120,8 @@ export function PeopleClient({
 }: {
   rows: PersonRow[];
   departments: { id: string; name: string }[];
+  positions: PositionOption[];
+  programs: ProgramOption[];
   canManage: boolean;
   isOwner: boolean;
   currentUserId: string;
@@ -115,13 +141,21 @@ export function PeopleClient({
           </p>
         </div>
         {canManage ? (
-          <button
-            onClick={() => setInviteOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
-            {labels.add}
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/people/positions"
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              {labels.managePositions}
+            </Link>
+            <button
+              onClick={() => setInviteOpen(true)}
+              className="flex items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+              {labels.add}
+            </button>
+          </div>
         ) : null}
       </div>
 
@@ -133,6 +167,7 @@ export function PeopleClient({
                 <th className="px-4 py-3">{labels.thName}</th>
                 <th className="px-4 py-3">{labels.thEmail}</th>
                 <th className="px-4 py-3">{labels.thDept}</th>
+                <th className="px-4 py-3">{labels.thPosition}</th>
                 <th className="px-4 py-3">{labels.thRole}</th>
                 <th className="px-4 py-3">{labels.thStatus}</th>
                 {canManage ? (
@@ -163,6 +198,7 @@ export function PeopleClient({
                   </td>
                   <td className="px-4 py-3 text-slate-600">{u.email}</td>
                   <td className="px-4 py-3 text-slate-600">{u.department || "—"}</td>
+                  <td className="px-4 py-3 text-slate-600">{u.position || "—"}</td>
                   <td className="px-4 py-3">
                     {u.isTenantOwner ? (
                       <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-700">
@@ -199,6 +235,8 @@ export function PeopleClient({
       {inviteOpen ? (
         <InviteModal
           departments={departments}
+          positions={positions}
+          programs={programs}
           isOwner={isOwner}
           m={labels.m}
           onClose={() => setInviteOpen(false)}
@@ -333,12 +371,16 @@ const initialInvite: InviteState = {};
 
 function InviteModal({
   departments,
+  positions,
+  programs,
   isOwner,
   m,
   onClose,
   onCreated,
 }: {
   departments: { id: string; name: string }[];
+  positions: PositionOption[];
+  programs: ProgramOption[];
   isOwner: boolean;
   m: ModalLabels;
   onClose: () => void;
@@ -348,6 +390,31 @@ function InviteModal({
     inviteUserAction,
     initialInvite
   );
+
+  // Course selection = what will be displayed to this employee. Choosing a
+  // position pre-fills it with that position's courses; the admin can then
+  // add/remove courses for this one person before sending.
+  const [positionId, setPositionId] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  const onPositionChange = (id: string) => {
+    setPositionId(id);
+    const pos = positions.find((p) => p.id === id);
+    // Only pre-select courses that still exist in the published catalog.
+    const available = new Set(programs.map((p) => p.id));
+    setSelected(
+      new Set((pos?.programIds ?? []).filter((pid) => available.has(pid)))
+    );
+  };
+
+  const toggleCourse = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (state.ok && state.createdEmail && state.inviteLink) {
@@ -366,7 +433,7 @@ function InviteModal({
         <h3 className="text-base font-semibold text-slate-900">{m.inviteTitle}</h3>
         <p className="mt-0.5 text-sm text-slate-500">{m.inviteHint}</p>
       </div>
-      <form action={formAction} className="px-5 py-4">
+      <form action={formAction} className="max-h-[70vh] overflow-y-auto px-5 py-4">
         <div className="grid grid-cols-2 gap-3">
           <Field name="firstName" label={m.firstName} required />
           <Field name="lastName" label={m.lastName} required />
@@ -406,6 +473,56 @@ function InviteModal({
               ))}
             </select>
           </div>
+        </div>
+
+        <div className="mt-3">
+          <label className="mb-1 block text-sm font-medium text-slate-700">
+            {m.position}
+          </label>
+          <select
+            name="positionId"
+            value={positionId}
+            onChange={(e) => onPositionChange(e.target.value)}
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          >
+            <option value="">{m.positionNone}</option>
+            {positions.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mt-3">
+          <label className="mb-1 block text-sm font-medium text-slate-700">
+            {m.courses}
+          </label>
+          <p className="mb-2 text-xs text-slate-400">{m.coursesHint}</p>
+          {programs.length === 0 ? (
+            <p className="rounded-lg border border-dashed border-slate-300 px-3 py-2 text-sm text-slate-400">
+              {m.coursesNone}
+            </p>
+          ) : (
+            <div className="max-h-44 space-y-1 overflow-y-auto rounded-lg border border-slate-200 p-2">
+              {programs.map((pr) => (
+                <label
+                  key={pr.id}
+                  className="flex items-center gap-2 rounded-md px-2 py-1 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  <input
+                    type="checkbox"
+                    name="programIds"
+                    value={pr.id}
+                    checked={selected.has(pr.id)}
+                    onChange={() => toggleCourse(pr.id)}
+                    className="h-4 w-4 rounded border-slate-300 text-brand-600"
+                  />
+                  <span className="truncate">{pr.title}</span>
+                </label>
+              ))}
+            </div>
+          )}
         </div>
 
         {state.error ? (

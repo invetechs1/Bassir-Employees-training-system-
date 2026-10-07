@@ -28,6 +28,10 @@ const InviteSchema = z.object({
   jobTitle: z.string().trim().max(120).optional().or(z.literal("")),
   roleKey: z.enum(ASSIGNABLE_ROLES),
   departmentId: z.string().optional().or(z.literal("")),
+  positionId: z.string().optional().or(z.literal("")),
+  // Course ids to display/assign to this employee (defaults to the position's
+  // mapped courses in the UI, but can be adjusted per employee).
+  programIds: z.array(z.string().min(1)).optional().default([]),
 });
 
 export interface InviteState {
@@ -56,6 +60,8 @@ export async function inviteUserAction(
     jobTitle: formData.get("jobTitle"),
     roleKey: formData.get("roleKey"),
     departmentId: formData.get("departmentId"),
+    positionId: formData.get("positionId"),
+    programIds: formData.getAll("programIds").map(String),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
@@ -96,6 +102,17 @@ export async function inviteUserAction(
     const role = await tx.role.findFirst({ where: { key: data.roleKey } });
     if (!role) return { err: "That role does not exist." as string };
 
+    // Validate the chosen position belongs to this tenant (RLS already scopes
+    // the lookup; a bad id simply resolves to null and is ignored).
+    let positionId: string | null = null;
+    if (data.positionId) {
+      const position = await tx.position.findFirst({
+        where: { id: data.positionId },
+        select: { id: true },
+      });
+      positionId = position?.id ?? null;
+    }
+
     try {
       const user = await tx.user.create({
         data: {
@@ -106,6 +123,7 @@ export async function inviteUserAction(
           lastName: data.lastName,
           jobTitle: data.jobTitle || null,
           departmentId: data.departmentId || null,
+          positionId,
           status: "INVITED",
           mustChangePassword: false,
           inviteTokenHash: hashInviteToken(rawToken),
@@ -113,6 +131,27 @@ export async function inviteUserAction(
         },
       });
       await tx.userRole.create({ data: { userId: user.id, roleId: role.id } });
+
+      // Enroll the employee into the selected courses (what will be displayed to
+      // them). Only PUBLISHED programs in this tenant are enrollable; anything
+      // else in the submitted list is silently dropped.
+      if (data.programIds.length > 0) {
+        const publishable = await tx.trainingProgram.findMany({
+          where: { id: { in: data.programIds }, status: "PUBLISHED" },
+          select: { id: true },
+        });
+        if (publishable.length > 0) {
+          await tx.enrollment.createMany({
+            data: publishable.map((p) => ({
+              tenantId: session.tenantId,
+              programId: p.id,
+              userId: user.id,
+            })),
+            skipDuplicates: true,
+          });
+        }
+      }
+
       await tx.auditLog.create({
         data: {
           tenantId: session.tenantId,
@@ -120,6 +159,10 @@ export async function inviteUserAction(
           action: "user.invite",
           entity: "User",
           entityId: user.id,
+          metadata: {
+            positionId,
+            enrolledPrograms: data.programIds.length,
+          },
         },
       });
       return { ok: true as const };

@@ -30,6 +30,8 @@ DECLARE
   tenant_tables text[] := ARRAY[
     'branches',
     'departments',
+    'positions',
+    'position_programs',
     'users',
     'roles',
     'competency_categories',

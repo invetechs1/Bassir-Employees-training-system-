@@ -2,29 +2,49 @@ import { requirePermission } from "@/lib/auth";
 import { can } from "@/lib/rbac";
 import { withTenant } from "@/lib/tenant-db";
 import { getLocale, translator } from "@/lib/i18n";
-import { PeopleClient, type PersonRow } from "./people-client";
+import { pickText } from "@/lib/content";
+import {
+  PeopleClient,
+  type PersonRow,
+  type PositionOption,
+  type ProgramOption,
+} from "./people-client";
 
 export default async function PeoplePage() {
+  const locale = await getLocale();
   const session = await requirePermission("user.read");
-  const t = translator(await getLocale());
+  const t = translator(locale);
   const canManage = can(session, "user.manage");
 
-  const { users, departments } = await withTenant(session.tenantId, async (tx) => {
-    const [users, departments] = await Promise.all([
-      tx.user.findMany({
-        orderBy: { createdAt: "asc" },
-        include: {
-          department: { select: { name: true } },
-          userRoles: { include: { role: { select: { key: true } } } },
-        },
-      }),
-      tx.department.findMany({
-        orderBy: { name: "asc" },
-        select: { id: true, name: true },
-      }),
-    ]);
-    return { users, departments };
-  });
+  const { users, departments, positions, programs } = await withTenant(
+    session.tenantId,
+    async (tx) => {
+      const [users, departments, positions, programs] = await Promise.all([
+        tx.user.findMany({
+          orderBy: { createdAt: "asc" },
+          include: {
+            department: { select: { name: true } },
+            position: { select: { title: true, titleAr: true } },
+            userRoles: { include: { role: { select: { key: true } } } },
+          },
+        }),
+        tx.department.findMany({
+          orderBy: { name: "asc" },
+          select: { id: true, name: true },
+        }),
+        tx.position.findMany({
+          orderBy: { title: "asc" },
+          include: { programs: { select: { programId: true } } },
+        }),
+        tx.trainingProgram.findMany({
+          where: { status: "PUBLISHED" },
+          orderBy: { createdAt: "desc" },
+          select: { id: true, title: true, titleAr: true },
+        }),
+      ]);
+      return { users, departments, positions, programs };
+    }
+  );
 
   const rows: PersonRow[] = users.map((u) => {
     const roleKey = u.userRoles[0]?.role.key ?? "learner";
@@ -35,6 +55,7 @@ export default async function PeoplePage() {
       email: u.email,
       jobTitle: u.jobTitle ?? "",
       department: u.department?.name ?? "",
+      position: u.position ? pickText(u.position.title, u.position.titleAr, locale) : "",
       roleKey,
       roleLabel: t(`role.${roleKey}`),
       status: u.status,
@@ -43,10 +64,23 @@ export default async function PeoplePage() {
     };
   });
 
+  const positionOptions: PositionOption[] = positions.map((p) => ({
+    id: p.id,
+    title: pickText(p.title, p.titleAr, locale),
+    programIds: p.programs.map((pp) => pp.programId),
+  }));
+
+  const programOptions: ProgramOption[] = programs.map((p) => ({
+    id: p.id,
+    title: pickText(p.title, p.titleAr, locale),
+  }));
+
   return (
     <PeopleClient
       rows={rows}
       departments={departments}
+      positions={positionOptions}
+      programs={programOptions}
       canManage={canManage}
       isOwner={session.isTenantOwner}
       currentUserId={session.userId}
@@ -55,9 +89,11 @@ export default async function PeoplePage() {
         subManage: t("people.subManage"),
         subView: t("people.subView"),
         add: t("people.add"),
+        managePositions: t("people.managePositions"),
         thName: t("people.th.name"),
         thEmail: t("people.th.email"),
         thDept: t("people.th.dept"),
+        thPosition: t("people.th.position"),
         thRole: t("people.th.role"),
         thStatus: t("people.th.status"),
         thActions: t("people.th.actions"),
@@ -77,6 +113,11 @@ export default async function PeoplePage() {
           jobTitle: t("pm.jobTitle"),
           role: t("pm.role"),
           department: t("pm.department"),
+          position: t("pm.position"),
+          positionNone: t("pm.positionNone"),
+          courses: t("pm.courses"),
+          coursesHint: t("pm.coursesHint"),
+          coursesNone: t("pm.coursesNone"),
           send: t("pm.send"),
           sending: t("pm.sending"),
           cancel: t("pm.cancel"),
