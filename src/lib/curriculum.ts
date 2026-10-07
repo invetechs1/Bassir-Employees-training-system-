@@ -83,6 +83,9 @@ export const TRACKS = [
   { key: "Procurement & Supply Chain", en: "Procurement & Supply Chain", ar: "المشتريات وسلسلة الإمداد" },
   { key: "Operations & Warehousing", en: "Operations & Warehousing", ar: "العمليات والمستودعات" },
   { key: "Customer Service", en: "Customer Service", ar: "خدمة العملاء" },
+  { key: "Construction & Contracting", en: "Construction & Contracting", ar: "الإنشاء والمقاولات" },
+  { key: "Engineering & Design", en: "Engineering & Design", ar: "الهندسة والتصميم" },
+  { key: "Logistics & Transportation", en: "Logistics & Transportation", ar: "الخدمات اللوجستية والنقل" },
 ] as const;
 
 export const CURRICULUM: CurriculumProgram[] = [
@@ -2049,6 +2052,682 @@ The **service recovery paradox**: a problem handled brilliantly can leave a cust
                 ],
                 explanation: "A brilliant recovery can leave a customer more loyal than before.",
                 explanationAr: "الاسترداد الرائع قد يترك العميل أكثر ولاءً من قبل.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 11) CONSTRUCTION & CONTRACTING
+  // =========================================================================
+  {
+    key: "construction-site-delivery",
+    title: "Construction Project Delivery & Site Safety",
+    titleAr: "تنفيذ مشاريع الإنشاء وسلامة الموقع",
+    description:
+      "Deliver construction projects on time and safely — project phases, planning and progress control, quality against the Saudi Building Code, and site safety with permit-to-work.",
+    descriptionAr:
+      "نفّذ مشاريع الإنشاء في الوقت المحدد وبأمان — مراحل المشروع والتخطيط وضبط التقدّم والجودة وفق كود البناء السعودي وسلامة الموقع بنظام تصريح العمل.",
+    category: "Construction & Contracting",
+    level: "INTERMEDIATE",
+    competency: "Construction Management",
+    competencyAr: "إدارة الإنشاء",
+    modules: [
+      {
+        title: "Delivering the Project",
+        titleAr: "تنفيذ المشروع",
+        lessons: [
+          {
+            title: "Project Phases & the Construction Team",
+            titleAr: "مراحل المشروع وفريق الإنشاء",
+            type: "TEXT",
+            durationMinutes: 15,
+            content: `## How a construction project flows
+
+A project moves through predictable **phases**, and each hand-off must be clean:
+
+1. **Feasibility & design** — the client's brief becomes drawings and specifications.
+2. **Tendering & award** — contractors price the work; a contract is signed.
+3. **Mobilization** — site setup, access, utilities, and the site office.
+4. **Construction** — groundworks, structure, MEP (mechanical, electrical, plumbing), finishes.
+5. **Handover & closeout** — testing, snagging, as-built drawings, and the defects-liability period.
+
+### Who does what
+
+- **Client / owner** — pays for and will use the asset.
+- **Consultant / engineer** — designs and supervises on the client's behalf.
+- **Main contractor** — builds the works and manages subcontractors.
+- **Subcontractors** — specialist trades (steel, HVAC, electrical).
+
+> Most delays and disputes start at the hand-offs. Confirm scope, drawings and approvals before each phase begins.`,
+            contentAr: `## كيف ينساب مشروع الإنشاء
+
+يمرّ المشروع عبر **مراحل** متوقَّعة، ويجب أن يكون كل تسليم بينها نظيفًا:
+
+1. **الجدوى والتصميم** — يتحوّل مطلب العميل إلى مخططات ومواصفات.
+2. **المناقصة والترسية** — يسعّر المقاولون العمل ويُوقَّع العقد.
+3. **التجهيز** — تهيئة الموقع والوصول والمرافق ومكتب الموقع.
+4. **التنفيذ** — الأعمال الترابية والهيكل والأعمال الميكانيكية والكهربائية والصحية والتشطيبات.
+5. **التسليم والإغلاق** — الاختبارات ومعالجة الملاحظات والمخططات كما نُفِّذت وفترة ضمان العيوب.
+
+### من يفعل ماذا
+
+- **العميل / المالك** — يموّل الأصل وسيستخدمه.
+- **الاستشاري / المهندس** — يصمّم ويشرف نيابةً عن العميل.
+- **المقاول الرئيسي** — ينفّذ الأعمال ويدير مقاولي الباطن.
+- **مقاولو الباطن** — تخصّصات فنية (الحديد، التكييف، الكهرباء).
+
+> معظم التأخيرات والنزاعات تبدأ عند نقاط التسليم. أكّد النطاق والمخططات والاعتمادات قبل بدء كل مرحلة.`,
+          },
+          {
+            title: "Planning, Scheduling & Progress Control",
+            titleAr: "التخطيط والجدولة وضبط التقدّم",
+            type: "TEXT",
+            durationMinutes: 16,
+            content: `## Plan the work, then work the plan
+
+- **Work Breakdown Structure (WBS)** — split the project into manageable packages.
+- **Critical path** — the longest chain of dependent activities; a delay here delays the whole project.
+- **Baseline programme** — the approved schedule you measure reality against.
+- **Look-ahead** — a rolling 2–3 week plan that turns the programme into this week's tasks.
+
+### Measuring progress honestly
+
+- Compare **planned vs. actual** progress each week (an S-curve makes slippage obvious).
+- Track **productivity** (output per crew-day) and the causes of lost time.
+- Raise **early warnings** the moment the critical path is threatened — not after the milestone is missed.
+
+> A schedule nobody updates is decoration. Short, frequent reviews keep the project recoverable.`,
+            contentAr: `## خطّط للعمل ثم نفّذ الخطة
+
+- **هيكل تجزئة العمل (WBS)** — قسّم المشروع إلى حِزم قابلة للإدارة.
+- **المسار الحرج** — أطول سلسلة من الأنشطة المترابطة؛ وأي تأخير فيها يؤخّر المشروع كله.
+- **البرنامج الأساسي** — الجدول المعتمد الذي تقيس الواقع مقابله.
+- **خطة الاستباق** — خطة متجدّدة لأسبوعين إلى ثلاثة تحوّل البرنامج إلى مهام هذا الأسبوع.
+
+### قياس التقدّم بصدق
+
+- قارن **المخطَّط مقابل الفعلي** أسبوعيًا (منحنى S يُظهر الانحراف بوضوح).
+- تابِع **الإنتاجية** (المُخرَج لكل يوم عمل لطاقم) وأسباب الوقت الضائع.
+- أطلِق **الإنذارات المبكرة** فور تهديد المسار الحرج — لا بعد فوات المعلم.
+
+> الجدول الذي لا يُحدِّثه أحد مجرّد زينة. المراجعات القصيرة المتكررة تُبقي المشروع قابلًا للإنقاذ.`,
+          },
+        ],
+      },
+      {
+        title: "Quality & Site Safety",
+        titleAr: "الجودة وسلامة الموقع",
+        lessons: [
+          {
+            title: "Quality Control & the Saudi Building Code",
+            titleAr: "ضبط الجودة وكود البناء السعودي",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## Build it right the first time
+
+- **Specifications & the Saudi Building Code (SBC)** set the required standards for materials and workmanship.
+- **Inspection & Test Plan (ITP)** — defines what is checked, when, and who signs off.
+- **Request for Inspection (RFI)** — the contractor calls the consultant to approve work *before* it is covered up.
+- **Material approval** — submit samples/data sheets for approval before ordering in bulk.
+
+### Catching defects early
+
+A defect found in a wall before plastering costs little; the same defect found after handover is expensive and damages trust. Use **hold points** (work cannot proceed until inspected) for critical activities like rebar and concrete pours.
+
+> Quality is cheaper than rework. Inspect before you cover, not after you finish.`,
+            contentAr: `## نفّذ بشكل صحيح من أول مرة
+
+- **المواصفات وكود البناء السعودي (SBC)** تحدّد المعايير المطلوبة للمواد والصنعة.
+- **خطة الفحص والاختبار (ITP)** — تحدّد ما يُفحَص ومتى ومَن يعتمده.
+- **طلب الفحص (RFI)** — يستدعي المقاول الاستشاري لاعتماد العمل *قبل* أن يُغطّى.
+- **اعتماد المواد** — قدّم العيّنات/بيانات المواد للاعتماد قبل الطلب بكميات كبيرة.
+
+### اكتشاف العيوب مبكرًا
+
+العيب المكتشَف في جدار قبل اللياسة يكلّف قليلًا؛ ونفس العيب بعد التسليم مكلف ويضرّ بالثقة. استخدم **نقاط التوقّف** (لا يتقدّم العمل حتى يُفحَص) للأنشطة الحرجة مثل التسليح وصبّ الخرسانة.
+
+> الجودة أرخص من إعادة العمل. افحص قبل التغطية لا بعد الانتهاء.`,
+          },
+          {
+            title: "Site Safety & Permit-to-Work",
+            titleAr: "سلامة الموقع وتصريح العمل",
+            type: "TEXT",
+            durationMinutes: 15,
+            content: `## Everyone goes home safe
+
+Construction is high-risk. The biggest killers are the **"Fatal Four"**: falls from height, being struck by objects, caught-in/between, and electrocution.
+
+### Core controls
+
+- **Risk assessment & method statement (RAMS)** before high-risk work begins.
+- **Permit-to-Work** for hot work, confined spaces, excavation and working at height — a documented authorization with specific controls.
+- **PPE** — hard hat, safety boots, high-visibility vest, and task-specific gear (harness, goggles).
+- **Toolbox talks** — short daily briefings on the day's hazards.
+- **Scaffolding & edge protection** inspected and tagged before use.
+
+> Stop-work authority belongs to everyone. If it is not safe, it does not proceed — no matter the deadline.`,
+            contentAr: `## الجميع يعود إلى بيته سالمًا
+
+الإنشاء عالي المخاطر. وأكبر المسبّبات للوفاة هي **"الأربعة القاتلة"**: السقوط من علوّ، والاصطدام بالأجسام، والانحشار، والصعق الكهربائي.
+
+### الضوابط الأساسية
+
+- **تقييم المخاطر وبيان الطريقة (RAMS)** قبل بدء الأعمال عالية الخطورة.
+- **تصريح العمل** للأعمال الساخنة والأماكن المحصورة والحفر والعمل على ارتفاع — تفويض موثّق بضوابط محدّدة.
+- **معدّات الوقاية الشخصية** — خوذة وحذاء سلامة وسترة عاكسة ومعدّات حسب المهمة (حزام، نظارات).
+- **محادثات السلامة اليومية** — إحاطات قصيرة عن مخاطر اليوم.
+- **السقالات وحماية الحواف** تُفحَص وتُوسَم قبل الاستخدام.
+
+> صلاحية إيقاف العمل حقّ للجميع. إن لم يكن آمنًا فلا يتقدّم — مهما كان الموعد النهائي.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "On a construction schedule, the 'critical path' is:",
+                promptAr: "في جدول الإنشاء، 'المسار الحرج' هو:",
+                options: [
+                  { text: "The longest chain of dependent activities — a delay here delays the whole project", textAr: "أطول سلسلة من الأنشطة المترابطة — وأي تأخير فيها يؤخّر المشروع كله", correct: true },
+                  { text: "The most expensive activity on site", textAr: "أغلى نشاط في الموقع" },
+                  { text: "The route trucks take into the site", textAr: "المسار الذي تسلكه الشاحنات إلى الموقع" },
+                  { text: "Any task done by subcontractors", textAr: "أي مهمة ينفّذها مقاولو الباطن" },
+                ],
+                explanation: "The critical path is the longest dependent sequence; slipping it slips the project.",
+                explanationAr: "المسار الحرج أطول تسلسل مترابط؛ وانزلاقه يؤخّر المشروع.",
+              },
+              {
+                prompt: "A Request for Inspection (RFI) is raised so that work is approved:",
+                promptAr: "يُرفع طلب الفحص (RFI) ليُعتمَد العمل:",
+                options: [
+                  { text: "Before it is covered up", textAr: "قبل أن يُغطّى", correct: true },
+                  { text: "Only after handover", textAr: "بعد التسليم فقط" },
+                  { text: "At the end of the defects-liability period", textAr: "في نهاية فترة ضمان العيوب" },
+                  { text: "After the client pays the final invoice", textAr: "بعد سداد العميل للفاتورة النهائية" },
+                ],
+                explanation: "You inspect before covering work up — catching defects early is far cheaper.",
+                explanationAr: "تُفحَص الأعمال قبل تغطيتها — فاكتشاف العيوب مبكرًا أرخص بكثير.",
+              },
+              {
+                prompt: "Which activity typically requires a Permit-to-Work?",
+                promptAr: "أي نشاط يتطلّب عادةً تصريح عمل؟",
+                options: [
+                  { text: "Hot work, confined-space entry, excavation or working at height", textAr: "الأعمال الساخنة ودخول الأماكن المحصورة والحفر والعمل على ارتفاع", correct: true },
+                  { text: "Reading drawings in the site office", textAr: "قراءة المخططات في مكتب الموقع" },
+                  { text: "Attending a progress meeting", textAr: "حضور اجتماع متابعة التقدّم" },
+                  { text: "Updating the schedule on a laptop", textAr: "تحديث الجدول على حاسب محمول" },
+                ],
+                explanation: "High-risk activities need a documented permit with specific controls before they start.",
+                explanationAr: "الأنشطة عالية الخطورة تحتاج تصريحًا موثّقًا بضوابط محدّدة قبل بدئها.",
+              },
+              {
+                prompt: "The Saudi Building Code (SBC) primarily defines:",
+                promptAr: "كود البناء السعودي (SBC) يحدّد بشكل أساسي:",
+                options: [
+                  { text: "The required standards for materials and workmanship", textAr: "المعايير المطلوبة للمواد والصنعة", correct: true },
+                  { text: "The contractor's profit margin", textAr: "هامش ربح المقاول" },
+                  { text: "Employee salaries on site", textAr: "رواتب الموظفين في الموقع" },
+                  { text: "The colour of safety helmets", textAr: "لون خوذ السلامة" },
+                ],
+                explanation: "The SBC sets mandatory technical standards for building works.",
+                explanationAr: "يضع كود البناء السعودي المعايير الفنية الإلزامية لأعمال البناء.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 12) ENGINEERING & DESIGN
+  // =========================================================================
+  {
+    key: "engineering-design-delivery",
+    title: "Engineering Design & Project Delivery",
+    titleAr: "التصميم الهندسي وتنفيذ المشاريع",
+    description:
+      "Produce sound, standards-compliant engineering — the design process, codes and standards, calculations and design reviews, drawings and BIM, and professional ethics under the Saudi Council of Engineers.",
+    descriptionAr:
+      "أنتج أعمالًا هندسية سليمة ومتوافقة مع المعايير — عملية التصميم والأكواد والمعايير والحسابات ومراجعات التصميم والمخططات ونمذجة معلومات البناء وأخلاقيات المهنة وفق الهيئة السعودية للمهندسين.",
+    category: "Engineering & Design",
+    level: "INTERMEDIATE",
+    competency: "Engineering Practice",
+    competencyAr: "الممارسة الهندسية",
+    modules: [
+      {
+        title: "The Engineering Design Process",
+        titleAr: "عملية التصميم الهندسي",
+        lessons: [
+          {
+            title: "From Brief to Design: Codes & Standards",
+            titleAr: "من المتطلبات إلى التصميم: الأكواد والمعايير",
+            type: "TEXT",
+            durationMinutes: 15,
+            content: `## Good engineering starts with the requirements
+
+- **Capture requirements** — function, loads, environment, budget, and the client's real need.
+- **Design basis** — the agreed assumptions, loads and criteria the whole design rests on.
+- **Codes & standards** — design to the applicable code (e.g. the Saudi Building Code SBC, ASHRAE, IEC, ISO). Codes encode hard-won safety lessons.
+- **Factor of safety** — deliberately design capacity above the expected load to cover uncertainty.
+
+### Concept → detail
+
+Move from **concept** (options and feasibility) to **detailed design** (sized elements, specifications and drawings). Decisions get more expensive to change as you go, so resolve the big choices early.
+
+> An elegant design that ignores the code or the brief is a failed design. Fit-for-purpose beats clever.`,
+            contentAr: `## الهندسة الجيدة تبدأ من المتطلبات
+
+- **التقاط المتطلبات** — الوظيفة والأحمال والبيئة والميزانية والحاجة الحقيقية للعميل.
+- **أساس التصميم** — الافتراضات والأحمال والمعايير المتفق عليها التي يقوم عليها التصميم كله.
+- **الأكواد والمعايير** — صمّم وفق الكود المعمول به (مثل كود البناء السعودي SBC وASHRAE وIEC وISO). الأكواد تختزن دروس سلامة مكلفة.
+- **معامل الأمان** — صمّم السعة عمدًا فوق الحمل المتوقَّع لتغطية عدم اليقين.
+
+### من المفهوم إلى التفصيل
+
+انتقل من **التصميم المفاهيمي** (الخيارات والجدوى) إلى **التصميم التفصيلي** (عناصر محسوبة ومواصفات ومخططات). تزداد كلفة تغيير القرارات كلما تقدّمت، لذا احسم الخيارات الكبرى مبكرًا.
+
+> التصميم الأنيق الذي يتجاهل الكود أو المتطلبات تصميم فاشل. المناسب للغرض يتفوّق على الذكي.`,
+          },
+          {
+            title: "Calculations, Tolerances & Design Reviews",
+            titleAr: "الحسابات والتفاوتات ومراجعات التصميم",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## Trust, but verify
+
+- **Calculations** must be traceable: stated assumptions, units, and a method a peer can follow.
+- **Tolerances** — nothing is built perfectly; specify the allowable range so parts fit and perform.
+- **Checking** — an independent engineer checks the design. The author and the checker are never the same person.
+- **Design review** — a structured meeting to challenge assumptions before issue (constructability, safety, cost, maintainability).
+
+### Manage change
+
+When a requirement changes, update the **design basis**, re-check the affected calculations, and re-issue drawings with a clear revision. Uncontrolled change is how errors reach site.
+
+> "Looks about right" is not engineering. Show the numbers, state the units, and get it checked.`,
+            contentAr: `## ثِق ولكن تحقّق
+
+- **الحسابات** يجب أن تكون قابلة للتتبّع: افتراضات معلنة ووحدات وطريقة يستطيع زميل اتّباعها.
+- **التفاوتات** — لا شيء يُبنى بكمالٍ تام؛ حدّد المدى المسموح لتتناسب الأجزاء وتؤدّي وظيفتها.
+- **التدقيق** — يدقّق مهندس مستقل التصميم. ولا يكون المؤلّف والمدقّق الشخص نفسه أبدًا.
+- **مراجعة التصميم** — اجتماع منظَّم لتحدّي الافتراضات قبل الإصدار (قابلية التنفيذ والسلامة والتكلفة وقابلية الصيانة).
+
+### أدِر التغيير
+
+عند تغيّر أي متطلب، حدّث **أساس التصميم**، وأعِد تدقيق الحسابات المتأثّرة، وأعِد إصدار المخططات بترقيم تعديل واضح. التغيير غير المنضبط هو كيف تصل الأخطاء إلى الموقع.
+
+> "يبدو صحيحًا تقريبًا" ليست هندسة. أظهِر الأرقام، واذكر الوحدات، ودع غيرك يدقّقها.`,
+          },
+        ],
+      },
+      {
+        title: "Delivering Engineering Work",
+        titleAr: "تسليم الأعمال الهندسية",
+        lessons: [
+          {
+            title: "Drawings, BIM & Document Control",
+            titleAr: "المخططات ونمذجة معلومات البناء وضبط الوثائق",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## The drawing is the contract with the builder
+
+- **Clear drawings** — correct scale, dimensions, notes and a complete title block (project, discipline, revision, date).
+- **BIM (Building Information Modelling)** — a shared 3D model that coordinates disciplines and catches **clashes** (e.g. a duct through a beam) before they reach site.
+- **Document control** — one controlled master; superseded revisions are withdrawn so nobody builds from an old drawing.
+- **Revisions** — every change gets a new revision letter/number and a recorded reason.
+
+> The most expensive clash is the one discovered on site. Coordinate in the model, not in concrete.`,
+            contentAr: `## المخطط هو العقد مع المنفّذ
+
+- **مخططات واضحة** — مقياس صحيح وأبعاد وملاحظات ومربّع عنوان كامل (المشروع، التخصص، التعديل، التاريخ).
+- **نمذجة معلومات البناء (BIM)** — نموذج ثلاثي الأبعاد مشترك ينسّق التخصّصات ويكتشف **التعارضات** (مثل مجرى هواء يخترق جسرًا) قبل وصولها إلى الموقع.
+- **ضبط الوثائق** — نسخة رئيسية واحدة مضبوطة؛ وتُسحَب التعديلات المُلغاة حتى لا يبني أحد من مخطط قديم.
+- **التعديلات** — كل تغيير يأخذ حرف/رقم تعديل جديدًا وسببًا مسجَّلًا.
+
+> أغلى تعارض هو ما يُكتشَف في الموقع. نسّق في النموذج لا في الخرسانة.`,
+          },
+          {
+            title: "Professional Ethics & the Saudi Council of Engineers",
+            titleAr: "أخلاقيات المهنة والهيئة السعودية للمهندسين",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Engineering is a public trust
+
+- **Public safety first** — an engineer's primary duty is the safety and welfare of the public, above schedule or profit.
+- **Competence** — only stamp or sign off work within your area of competence.
+- **Honesty** — report findings truthfully; never hide a defect or sign off work you have not verified.
+- **Professional registration** — in Saudi Arabia, engineers are accredited by the **Saudi Council of Engineers (SCE)**; accreditation carries ethical obligations.
+
+### Conflicts of interest
+
+Declare any interest that could bias your judgement. Integrity is the profession's foundation — one dishonest sign-off can cost lives and a career.
+
+> You may be overruled on cost or time, but never on safety. If pressured to cut a safety margin, escalate in writing.`,
+            contentAr: `## الهندسة أمانة عامة
+
+- **سلامة الجمهور أولًا** — الواجب الأول للمهندس هو سلامة الجمهور ورفاهه، فوق الجدول أو الربح.
+- **الكفاءة** — لا تعتمد أو توقّع إلا على عمل ضمن مجال كفاءتك.
+- **الصدق** — أبلِغ عن النتائج بصدق؛ ولا تُخفِ عيبًا أو توقّع على عمل لم تتحقّق منه.
+- **التسجيل المهني** — في السعودية يُعتمَد المهندسون من **الهيئة السعودية للمهندسين (SCE)**؛ والاعتماد يحمل التزامات أخلاقية.
+
+### تضارب المصالح
+
+أفصِح عن أي مصلحة قد تحيّز حكمك. النزاهة أساس المهنة — وتوقيع واحد غير أمين قد يكلّف أرواحًا ومسيرة مهنية.
+
+> قد يُتجاوَز رأيك في التكلفة أو الوقت، لكن ليس في السلامة أبدًا. وإن ضُغِط عليك لخفض هامش أمان، فصعّد الأمر كتابةً.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "The 'design basis' of an engineering project is:",
+                promptAr: "'أساس التصميم' لمشروع هندسي هو:",
+                options: [
+                  { text: "The agreed assumptions, loads and criteria the whole design rests on", textAr: "الافتراضات والأحمال والمعايير المتفق عليها التي يقوم عليها التصميم كله", correct: true },
+                  { text: "The final invoice to the client", textAr: "الفاتورة النهائية للعميل" },
+                  { text: "The site access road", textAr: "طريق الوصول إلى الموقع" },
+                  { text: "The contractor's staff list", textAr: "قائمة موظفي المقاول" },
+                ],
+                explanation: "The design basis is the foundation set of assumptions and criteria for the design.",
+                explanationAr: "أساس التصميم هو مجموعة الافتراضات والمعايير التي يُبنى عليها التصميم.",
+              },
+              {
+                prompt: "Independent checking of a design means:",
+                promptAr: "التدقيق المستقل للتصميم يعني:",
+                options: [
+                  { text: "A different engineer, not the author, verifies the design", textAr: "مهندس مختلف غير المؤلّف يتحقّق من التصميم", correct: true },
+                  { text: "The author checks their own work twice", textAr: "يدقّق المؤلّف عمله مرتين" },
+                  { text: "The client approves the budget", textAr: "يعتمد العميل الميزانية" },
+                  { text: "The drawing is printed in colour", textAr: "يُطبَع المخطط بالألوان" },
+                ],
+                explanation: "The checker and the author are never the same person.",
+                explanationAr: "لا يكون المدقّق والمؤلّف الشخص نفسه أبدًا.",
+              },
+              {
+                prompt: "In BIM, a 'clash' is:",
+                promptAr: "في نمذجة معلومات البناء، 'التعارض' هو:",
+                options: [
+                  { text: "Two elements occupying the same space, e.g. a duct through a beam", textAr: "عنصران يشغلان الحيّز نفسه، مثل مجرى هواء يخترق جسرًا", correct: true },
+                  { text: "A disagreement between two engineers", textAr: "خلاف بين مهندسين" },
+                  { text: "A delay in the schedule", textAr: "تأخير في الجدول" },
+                  { text: "A missing signature", textAr: "توقيع مفقود" },
+                ],
+                explanation: "Clash detection finds physical conflicts in the model before they reach site.",
+                explanationAr: "كشف التعارضات يجد التعارضات المادية في النموذج قبل وصولها للموقع.",
+              },
+              {
+                prompt: "An engineer's primary professional duty is to:",
+                promptAr: "الواجب المهني الأول للمهندس هو:",
+                options: [
+                  { text: "The safety and welfare of the public", textAr: "سلامة الجمهور ورفاهه", correct: true },
+                  { text: "Finishing ahead of schedule at any cost", textAr: "الإنهاء قبل الموعد بأي ثمن" },
+                  { text: "Maximising the contractor's profit", textAr: "تعظيم ربح المقاول" },
+                  { text: "Using the newest software", textAr: "استخدام أحدث البرمجيات" },
+                ],
+                explanation: "Public safety comes before schedule or profit — a core engineering ethic.",
+                explanationAr: "سلامة الجمهور تسبق الجدول أو الربح — وهي من صميم أخلاقيات الهندسة.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 13) LOGISTICS & TRANSPORTATION
+  // =========================================================================
+  {
+    key: "logistics-transportation",
+    title: "Logistics & Transportation Management",
+    titleAr: "إدارة الخدمات اللوجستية والنقل",
+    description:
+      "Move goods reliably and cost-effectively — transport modes and route planning, fleet management and delivery performance, Incoterms and shipping documents, and Saudi customs clearance (FASAH).",
+    descriptionAr:
+      "انقل البضائع بموثوقية وكفاءة في التكلفة — وسائط النقل وتخطيط المسارات وإدارة الأسطول وأداء التسليم وإنكوترمز ومستندات الشحن والتخليص الجمركي السعودي (فسح).",
+    category: "Logistics & Transportation",
+    level: "FOUNDATION",
+    competency: "Logistics Management",
+    competencyAr: "إدارة اللوجستيات",
+    modules: [
+      {
+        title: "Transport & Fleet",
+        titleAr: "النقل والأسطول",
+        lessons: [
+          {
+            title: "Transport Modes & Route Planning",
+            titleAr: "وسائط النقل وتخطيط المسارات",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Choosing how goods move
+
+Each mode trades **cost, speed and reach**:
+
+- **Road** — flexible, door-to-door, ideal within the Kingdom and the GCC.
+- **Sea** — cheapest per tonne for large volumes; slow; via ports such as Jeddah and Dammam.
+- **Air** — fastest; most expensive; for urgent or high-value goods.
+- **Rail** — efficient for heavy bulk over long land distances.
+
+### Planning routes
+
+- **Consolidate** loads to fill vehicles and cut cost per delivery.
+- Plan for **drive-time rules, traffic and delivery windows**.
+- Build routes that minimise empty running (the return leg still costs fuel and hours).
+
+> The cheapest mode on paper is not always cheapest overall — factor in handling, delay risk and inventory cost in transit.`,
+            contentAr: `## اختيار كيفية نقل البضائع
+
+كل وسيط يوازن بين **التكلفة والسرعة والوصول**:
+
+- **البرّي** — مرن ومن الباب إلى الباب، ومثالي داخل المملكة ودول الخليج.
+- **البحري** — الأرخص للطن للكميات الكبيرة؛ وبطيء؛ عبر موانئ مثل جدة والدمام.
+- **الجوّي** — الأسرع؛ والأغلى؛ للبضائع العاجلة أو عالية القيمة.
+- **السككي** — فعّال للبضائع الثقيلة السائبة عبر مسافات برّية طويلة.
+
+### تخطيط المسارات
+
+- **ادمج** الأحمال لملء المركبات وخفض التكلفة لكل تسليم.
+- خطّط لـ **ساعات القيادة والازدحام ونوافذ التسليم**.
+- ابنِ مسارات تقلّل التشغيل الفارغ (رحلة العودة تظل تكلّف وقودًا وساعات).
+
+> الوسيط الأرخص على الورق ليس دائمًا الأرخص إجمالًا — احسب المناولة ومخاطر التأخير وتكلفة المخزون أثناء النقل.`,
+          },
+          {
+            title: "Fleet Management & Delivery Performance",
+            titleAr: "إدارة الأسطول وأداء التسليم",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Keep the fleet running and the promises kept
+
+- **Preventive maintenance** — service on a schedule to avoid breakdowns that strand loads.
+- **Driver management** — licences, hours, safety and conduct; the driver represents the company at the customer's door.
+- **Telematics / GPS** — track location, fuel and driving behaviour to cut cost and improve safety.
+
+### Measuring delivery performance
+
+- **On-Time In-Full (OTIF)** — delivered on time *and* complete and undamaged.
+- **Cost per delivery / per km** — the efficiency of the operation.
+- **Proof of Delivery (POD)** — signed confirmation the customer received the goods.
+
+> On-time-but-wrong is still a failed delivery. OTIF measures the promise the customer actually cares about.`,
+            contentAr: `## أبقِ الأسطول يعمل والوعود محفوظة
+
+- **الصيانة الوقائية** — الصيانة وفق جدول لتفادي الأعطال التي تُعطّل الأحمال.
+- **إدارة السائقين** — الرخص والساعات والسلامة والسلوك؛ فالسائق يمثّل الشركة عند باب العميل.
+- **أنظمة التتبّع / GPS** — تتبّع الموقع والوقود وسلوك القيادة لخفض التكلفة وتحسين السلامة.
+
+### قياس أداء التسليم
+
+- **التسليم في الوقت وبالكامل (OTIF)** — مُسلَّم في الوقت *و* كاملًا وسليمًا.
+- **التكلفة لكل تسليم / لكل كيلومتر** — كفاءة التشغيل.
+- **إثبات التسليم (POD)** — تأكيد موقَّع باستلام العميل للبضائع.
+
+> التسليم في الوقت لكنه خاطئ يظل تسليمًا فاشلًا. ومقياس OTIF يقيس الوعد الذي يهتمّ به العميل فعلًا.`,
+          },
+        ],
+      },
+      {
+        title: "Freight, Incoterms & Customs",
+        titleAr: "الشحن وإنكوترمز والجمارك",
+        lessons: [
+          {
+            title: "Incoterms & Shipping Documentation",
+            titleAr: "إنكوترمز ومستندات الشحن",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Who is responsible, and until where?
+
+**Incoterms** are international rules that define, for each shipment, where the seller's responsibility ends and the buyer's begins — covering cost, risk and insurance. Common terms:
+
+- **EXW (Ex Works)** — buyer collects from the seller's premises and bears almost everything.
+- **FOB (Free On Board)** — seller's risk ends once goods are on the vessel.
+- **CIF (Cost, Insurance, Freight)** — seller pays freight and insurance to the destination port.
+- **DDP (Delivered Duty Paid)** — seller delivers cleared through customs; maximum seller responsibility.
+
+### Key documents
+
+- **Commercial invoice**, **packing list**, **bill of lading** (sea) or **air waybill** (air), and the **certificate of origin**.
+
+> Agree the Incoterm in writing before shipping. Most freight disputes are really arguments about who owned the risk at the moment something went wrong.`,
+            contentAr: `## من المسؤول، وإلى أين؟
+
+**إنكوترمز** قواعد دولية تحدّد، لكل شحنة، أين تنتهي مسؤولية البائع وأين تبدأ مسؤولية المشتري — شاملةً التكلفة والمخاطرة والتأمين. من أشهرها:
+
+- **تسليم أرض المصنع (EXW)** — يستلم المشتري من مقرّ البائع ويتحمّل كل شيء تقريبًا.
+- **التسليم على ظهر السفينة (FOB)** — تنتهي مخاطرة البائع بمجرد وضع البضائع على السفينة.
+- **التكلفة والتأمين والشحن (CIF)** — يدفع البائع الشحن والتأمين حتى ميناء الوصول.
+- **التسليم خالص الرسوم (DDP)** — يسلّم البائع البضاعة مخلَّصة جمركيًا؛ وهي أقصى مسؤولية على البائع.
+
+### المستندات الأساسية
+
+- **الفاتورة التجارية** و**قائمة التعبئة** و**بوليصة الشحن** (بحري) أو **بوليصة الشحن الجوي** (جوي) و**شهادة المنشأ**.
+
+> اتّفق على شرط إنكوترمز كتابةً قبل الشحن. فمعظم نزاعات الشحن هي في الحقيقة خلاف حول من كان يملك المخاطرة لحظة حدوث الخطأ.`,
+          },
+          {
+            title: "Saudi Customs Clearance (FASAH)",
+            titleAr: "التخليص الجمركي السعودي (فسح)",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Clearing goods into the Kingdom
+
+Imports into Saudi Arabia are processed through **FASAH**, the national single-window platform linking importers, customs and other authorities.
+
+- **Accurate declaration** — the **HS code** (tariff classification), value and origin must be correct; errors cause delays, fines and inspections.
+- **Duties & VAT** — customs duty plus VAT are assessed on import; budget and document them.
+- **Required approvals** — some goods need approval from bodies such as **SFDA** (food/drugs) or **SASO/SABER** (product conformity) before release.
+- **Clear paperwork** — a clean invoice, packing list and certificate of origin speed release.
+
+### Avoiding demurrage
+
+Containers left at the port beyond the free period incur **demurrage** charges. Prepare documents *before* arrival so clearance starts immediately.
+
+> Customs delays are usually document problems, not customs problems. Get the declaration and approvals right the first time.`,
+            contentAr: `## تخليص البضائع إلى المملكة
+
+تُعالَج الواردات إلى السعودية عبر **فسح**، منصّة النافذة الواحدة الوطنية التي تربط المستوردين والجمارك والجهات الأخرى.
+
+- **إقرار دقيق** — يجب أن يكون **رمز النظام المنسّق (HS)** (التصنيف الجمركي) والقيمة والمنشأ صحيحة؛ فالأخطاء تسبّب تأخيرًا وغرامات وتفتيشًا.
+- **الرسوم وضريبة القيمة المضافة** — تُحتسَب الرسوم الجمركية وضريبة القيمة المضافة عند الاستيراد؛ فخطّط لها ووثّقها.
+- **الاعتمادات المطلوبة** — بعض السلع تحتاج موافقة جهات مثل **الغذاء والدواء (SFDA)** أو **المواصفات (SASO/سابر)** قبل الإفراج.
+- **مستندات واضحة** — فاتورة نظيفة وقائمة تعبئة وشهادة منشأ تُسرِّع الإفراج.
+
+### تفادي أرضيات التأخير
+
+الحاويات المتروكة في الميناء بعد الفترة المجانية تتكبّد رسوم **أرضيات (demurrage)**. جهّز المستندات *قبل* الوصول ليبدأ التخليص فورًا.
+
+> تأخيرات الجمارك عادةً مشكلات مستندات لا مشكلات جمارك. اضبط الإقرار والاعتمادات من أول مرة.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "Which transport mode is usually cheapest per tonne for large-volume shipments?",
+                promptAr: "أي وسيط نقل عادةً الأرخص للطن في الشحنات كبيرة الحجم؟",
+                options: [
+                  { text: "Sea freight", textAr: "الشحن البحري", correct: true },
+                  { text: "Air freight", textAr: "الشحن الجوي" },
+                  { text: "Express courier", textAr: "البريد السريع" },
+                  { text: "Motorcycle delivery", textAr: "التوصيل بالدرّاجة النارية" },
+                ],
+                explanation: "Sea is the lowest cost per tonne for large volumes, at the cost of speed.",
+                explanationAr: "البحري هو الأقل تكلفة للطن للكميات الكبيرة، على حساب السرعة.",
+              },
+              {
+                prompt: "The delivery metric 'OTIF' stands for:",
+                promptAr: "مقياس التسليم 'OTIF' يعني:",
+                options: [
+                  { text: "On-Time In-Full — delivered on time, complete and undamaged", textAr: "في الوقت وبالكامل — مُسلَّم في الوقت وكاملًا وسليمًا", correct: true },
+                  { text: "Over-Time In Fleet", textAr: "وقت إضافي في الأسطول" },
+                  { text: "Order Tracking Internal Form", textAr: "نموذج تتبّع الطلب الداخلي" },
+                  { text: "On The Internal Floor", textAr: "على الأرضية الداخلية" },
+                ],
+                explanation: "OTIF = On-Time In-Full: the complete, undamaged, on-time delivery the customer wants.",
+                explanationAr: "OTIF تعني التسليم في الوقت وبالكامل: تسليم كامل وسليم وفي الوقت كما يريد العميل.",
+              },
+              {
+                prompt: "Under the Incoterm DDP (Delivered Duty Paid):",
+                promptAr: "وفق شرط إنكوترمز DDP (التسليم خالص الرسوم):",
+                options: [
+                  { text: "The seller delivers the goods cleared through customs — maximum seller responsibility", textAr: "يسلّم البائع البضائع مخلَّصة جمركيًا — أقصى مسؤولية على البائع", correct: true },
+                  { text: "The buyer collects from the seller's factory", textAr: "يستلم المشتري من مصنع البائع" },
+                  { text: "Risk passes once goods are on the vessel", textAr: "تنتقل المخاطرة بمجرد وضع البضائع على السفينة" },
+                  { text: "The buyer pays all freight and insurance", textAr: "يدفع المشتري كل الشحن والتأمين" },
+                ],
+                explanation: "DDP puts the most responsibility on the seller, including customs clearance at destination.",
+                explanationAr: "يضع DDP أكبر مسؤولية على البائع، بما فيها التخليص الجمركي في الوجهة.",
+              },
+              {
+                prompt: "In Saudi import clearance, what most commonly causes delays?",
+                promptAr: "في التخليص الجمركي السعودي، ما الذي يسبّب التأخير غالبًا؟",
+                options: [
+                  { text: "Incorrect declarations or missing documents/approvals (e.g. HS code, SFDA/SABER)", textAr: "الإقرارات غير الصحيحة أو نقص المستندات/الاعتمادات (مثل رمز HS وSFDA/سابر)", correct: true },
+                  { text: "Using the FASAH single-window platform", textAr: "استخدام منصّة فسح للنافذة الواحدة" },
+                  { text: "Paying VAT on import", textAr: "سداد ضريبة القيمة المضافة عند الاستيراد" },
+                  { text: "Providing a certificate of origin", textAr: "تقديم شهادة المنشأ" },
+                ],
+                explanation: "Most customs delays are document/declaration problems — get the HS code and approvals right.",
+                explanationAr: "معظم تأخيرات الجمارك مشكلات مستندات/إقرار — اضبط رمز HS والاعتمادات.",
               },
             ],
           },
