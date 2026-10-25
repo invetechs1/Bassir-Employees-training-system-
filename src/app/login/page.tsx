@@ -1,12 +1,24 @@
 import Link from "next/link";
+import { getLocale, translator } from "@/lib/i18n";
 import { LoginForm } from "./login-form";
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; err?: string }>;
 }) {
-  const { next } = await searchParams;
+  const { next, err } = await searchParams;
+  const t = translator(await getLocale());
+
+  const errorMessage = err
+    ? err === "sso_nouser"
+      ? t("login.err.sso_nouser")
+      : err === "disabled"
+        ? t("login.err.disabled")
+        : err.startsWith("sso")
+          ? t("login.err.sso")
+          : null
+    : null;
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
@@ -16,21 +28,44 @@ export default async function LoginPage({
             B
           </div>
           <h1 className="text-xl font-semibold text-slate-900">
-            Sign in to BCAP
+            {t("login.title")}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Bassir Corporate Academy Platform
-          </p>
+          <p className="mt-1 text-sm text-slate-500">{t("login.subtitle")}</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <LoginForm next={next} />
+          {errorMessage ? (
+            <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+              {errorMessage}
+            </p>
+          ) : null}
+          <LoginForm
+            next={next}
+            labels={{
+              company: t("login.company"),
+              email: t("login.email"),
+              password: t("login.password"),
+              signIn: t("login.signIn"),
+              signingIn: t("login.signingIn"),
+              sso: t("login.sso"),
+              forgot: t("login.forgot"),
+            }}
+          />
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">
-          Powered by Bassir Technology ·{" "}
+          {t("poweredByBcap")} ·{" "}
           <Link href="/" className="underline hover:text-slate-600">
-            Back to home
+            {t("login.back")}
+          </Link>
+        </p>
+        <p className="mt-2 text-center text-xs text-slate-400">
+          <Link href="/legal/terms" className="hover:text-slate-600">
+            {t("legal.terms")}
+          </Link>{" "}
+          ·{" "}
+          <Link href="/legal/privacy" className="hover:text-slate-600">
+            {t("legal.privacy")}
           </Link>
         </p>
       </div>

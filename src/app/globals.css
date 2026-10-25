@@ -9,3 +9,16 @@
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
 }
+
+/* ---- Right-to-left (Arabic) adjustments ---- */
+/* Table cells default to logical start; keep them aligned to the reading side. */
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+/* Progress/skill bars fill from the reading side in RTL. */
+[dir="rtl"] .bar-fill {
+  margin-left: auto;
+  margin-right: 0;
+}
+

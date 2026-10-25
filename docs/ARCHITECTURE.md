@@ -186,9 +186,17 @@ same tenancy + RBAC core:
 
 ## 8. Operational notes
 
-- **Migrations:** Phase 1 uses `prisma db push` + `rls.sql` for speed. For
-  production, switch to `prisma migrate` and include the RLS statements as a SQL
-  migration so policies are versioned with the schema.
+- **Migrations:** production uses versioned Prisma migrations under
+  `prisma/migrations` — an `init` migration for the schema and a dedicated
+  `rls` migration that enables Row-Level Security. `prisma migrate deploy`
+  (run automatically by the Docker entrypoint) applies both, so policies are
+  versioned with the schema. `prisma/rls.sql` remains as the readable source
+  for the RLS migration.
+- **Deployment:** `docker-compose.yml` runs the app + PostgreSQL. Postgres is
+  initialised with a non-superuser `bcap_app` role (so RLS is enforced), the
+  app runs `migrate deploy` on boot, and `npm run provision` creates a real
+  company + first admin. Employees are onboarded in-app (People → Add employee)
+  with temporary passwords and a forced first-login password change.
 - **Connection pooling:** because tenant context is transaction-local, BCAP is
   safe behind PgBouncer in transaction mode.
 - **Backups & isolation upgrades:** the `withTenant` abstraction means moving a

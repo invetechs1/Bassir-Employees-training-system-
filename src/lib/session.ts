@@ -12,12 +12,32 @@ export interface SessionData {
   name: string;
   roles: string[]; // role keys
   isTenantOwner: boolean;
+  mustChangePassword: boolean;
 }
+
+const INSECURE_DEFAULTS = new Set([
+  "change-me-to-a-long-random-string",
+  "local-dev-secret-please-change-in-production-0123456789abcdef",
+]);
 
 function getSecret(): Uint8Array {
   const secret = process.env.AUTH_SECRET;
   if (!secret) {
-    throw new Error("AUTH_SECRET is not set");
+    throw new Error(
+      "AUTH_SECRET is not set. Generate one with `openssl rand -base64 48`."
+    );
+  }
+  if (process.env.NODE_ENV === "production") {
+    if (secret.length < 32) {
+      throw new Error(
+        "AUTH_SECRET is too short for production (use 32+ characters)."
+      );
+    }
+    if (INSECURE_DEFAULTS.has(secret)) {
+      throw new Error(
+        "AUTH_SECRET is still set to an example value. Set a unique secret before deploying."
+      );
+    }
   }
   return new TextEncoder().encode(secret);
 }
@@ -43,6 +63,7 @@ export async function verifySessionToken(
       name: String(payload.name),
       roles: Array.isArray(payload.roles) ? (payload.roles as string[]) : [],
       isTenantOwner: Boolean(payload.isTenantOwner),
+      mustChangePassword: Boolean(payload.mustChangePassword),
     };
   } catch {
     return null;

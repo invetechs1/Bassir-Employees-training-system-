@@ -1,0 +1,127 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Typecheck, test & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run typecheck
+      - run: npm test
+      - name: Build
+        run: npm run build
+        env:
+          # Build renders only dynamic pages, so no live DB is needed; these
+          # satisfy env lookups during the build.
+          DATABASE_URL: "postgresql://bcap:bcap@localhost:5432/bcap?schema=public"
+          AUTH_SECRET: "ci-build-secret-not-used-at-build-time-0123456789"
+          NEXT_TELEMETRY_DISABLED: "1"
+
+  migrations:
+    name: Migrations + Row-Level Security
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bcap
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # The app connects as a NON-superuser so RLS is enforced.
+      DATABASE_URL: "postgresql://bcap_app:bcap_app_password@localhost:5432/bcap?schema=public"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Create non-superuser app role
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -d bcap -c "CREATE ROLE bcap_app WITH LOGIN PASSWORD 'bcap_app_password' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+          psql -h localhost -U postgres -d bcap -c "GRANT ALL ON DATABASE bcap TO bcap_app;"
+          psql -h localhost -U postgres -d bcap -c "GRANT CREATE, USAGE ON SCHEMA public TO bcap_app;"
+      - name: Apply migrations (schema + RLS)
+        run: npx prisma migrate deploy
+      - name: Verify Row-Level Security is enforced
+        env:
+          PGPASSWORD: bcap_app_password
+        run: |
+          echo "Row-Level Security should be enabled on tenant tables:"
+          psql -h localhost -U bcap_app -d bcap -tAc \
+            "SELECT relname||'='||relrowsecurity FROM pg_class WHERE relname IN ('users','training_programs','competency_ratings') ORDER BY relname;"
+          # Fail if any of these tables does NOT have RLS enabled.
+          COUNT=$(psql -h localhost -U bcap_app -d bcap -tAc \
+            "SELECT count(*) FROM pg_class WHERE relname IN ('users','training_programs','competency_ratings') AND relrowsecurity=false;")
+          if [ "$COUNT" != "0" ]; then echo "RLS not enabled on all tenant tables"; exit 1; fi
+          echo "With no tenant context, users must be invisible (RLS):"
+          VISIBLE=$(psql -h localhost -U bcap_app -d bcap -tAc "SELECT count(*) FROM users;")
+          echo "users visible without context: $VISIBLE"
+
+  e2e:
+    name: End-to-end (Playwright)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bcap
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: "postgresql://bcap_app:bcap_app_password@localhost:5432/bcap?schema=public"
+      AUTH_SECRET: "e2e-ci-secret-please-change-0123456789abcdefghij"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Create non-superuser app role
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -d bcap -c "CREATE ROLE bcap_app WITH LOGIN PASSWORD 'bcap_app_password' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+          psql -h localhost -U postgres -d bcap -c "GRANT ALL ON DATABASE bcap TO bcap_app;"
+          psql -h localhost -U postgres -d bcap -c "GRANT CREATE, USAGE ON SCHEMA public TO bcap_app;"
+      - run: npx prisma generate
+      - name: Apply migrations + seed demo tenants
+        run: |
+          npx prisma migrate deploy
+          npm run db:seed
+      - run: npm run build
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E tests
+        run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
