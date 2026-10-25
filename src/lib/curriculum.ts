@@ -2735,6 +2735,1192 @@ Containers left at the port beyond the free period incur **demurrage** charges. 
       },
     ],
   },
+
+  // =========================================================================
+  // 14) CONSTRUCTION & CONTRACTING — COST / QUANTITY SURVEYING
+  // =========================================================================
+  {
+    key: "construction-cost-qs",
+    title: "Construction Cost Estimation & Quantity Surveying",
+    titleAr: "تقدير التكاليف ومسح الكميات في الإنشاء",
+    description:
+      "Price construction work accurately and control cost on site — taking off quantities, building the BOQ, pricing, variations, interim valuations and value engineering.",
+    descriptionAr:
+      "سعّر أعمال الإنشاء بدقة واضبط التكلفة في الموقع — حصر الكميات وبناء جدول الكميات والتسعير والتغييرات والمستخلصات الدورية والهندسة القيمية.",
+    category: "Construction & Contracting",
+    level: "INTERMEDIATE",
+    competency: "Quantity Surveying",
+    competencyAr: "مسح الكميات",
+    modules: [
+      {
+        title: "Estimating & the BOQ",
+        titleAr: "التقدير وجدول الكميات",
+        lessons: [
+          {
+            title: "Taking Off Quantities & the BOQ",
+            titleAr: "حصر الكميات وجدول الكميات (BOQ)",
+            type: "TEXT",
+            durationMinutes: 15,
+            content: `## Measure before you price
+
+A **Bill of Quantities (BOQ)** lists every item of work with a measured quantity, so contractors price the same scope on the same basis.
+
+- **Taking off** — measure quantities from the drawings (concrete m³, blockwork m², rebar tonnes).
+- **Standard method of measurement** — a consistent set of rules so everyone measures the same way.
+- **Units matter** — m, m², m³, tonne, number (No.); a wrong unit wrecks the price.
+
+> Garbage in, garbage out: a BOQ built on careless take-off produces a price nobody can trust.`,
+            contentAr: `## قِس قبل أن تسعّر
+
+**جدول الكميات (BOQ)** يسرد كل بند عمل بكمية مقيسة، ليسعّر المقاولون النطاق نفسه على الأساس نفسه.
+
+- **الحصر** — قِس الكميات من المخططات (خرسانة م³، بلوك م²، حديد بالأطنان).
+- **طريقة القياس المعيارية** — مجموعة قواعد موحّدة ليقيس الجميع بالطريقة نفسها.
+- **الوحدات مهمة** — م، م²، م³، طن، عدد؛ والوحدة الخاطئة تُفسد السعر.
+
+> مدخلات رديئة تعني مخرجات رديئة: جدول كميات مبني على حصر غير دقيق يُنتج سعرًا لا يثق به أحد.`,
+          },
+          {
+            title: "Pricing: Direct, Indirect & Contingency",
+            titleAr: "التسعير: المباشر وغير المباشر والطوارئ",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## Build the rate from its parts
+
+A unit rate is built from:
+
+- **Direct costs** — materials, labour and plant/equipment for that item.
+- **Indirect costs (preliminaries/overheads)** — site setup, supervision, insurance, head-office costs.
+- **Risk & contingency** — an allowance for the unknowns.
+- **Profit** — the margin the business needs.
+
+### Don't forget wastage
+
+Material take-off must add a **wastage allowance** (e.g. cutting losses). Under-pricing wins the job and loses money.
+
+> Price the whole cost of doing the work, not just the shelf price of the material.`,
+            contentAr: `## ابنِ السعر من مكوّناته
+
+يُبنى سعر الوحدة من:
+
+- **التكاليف المباشرة** — المواد والعمالة والمعدات لذلك البند.
+- **التكاليف غير المباشرة (التمهيدية/العامة)** — تجهيز الموقع والإشراف والتأمين وتكاليف المكتب الرئيسي.
+- **المخاطر والطوارئ** — مخصّص للمجهول.
+- **الربح** — الهامش الذي يحتاجه العمل.
+
+### لا تنسَ الهدر
+
+يجب أن يضيف حصر المواد **مخصّص هدر** (مثل فاقد القص). فالتسعير المنخفض يربح العطاء ويخسر المال.
+
+> سعّر كامل كلفة تنفيذ العمل، لا سعر رفّ المادة فقط.`,
+          },
+        ],
+      },
+      {
+        title: "Controlling Cost on Site",
+        titleAr: "ضبط التكلفة في الموقع",
+        lessons: [
+          {
+            title: "Variations & Interim Payment Valuations",
+            titleAr: "التغييرات والمستخلصات الدورية",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Get paid for what you build
+
+- **Variation** — an instructed change to the scope; it must be valued and agreed, ideally before the work is done.
+- **Interim valuation / payment certificate** — a periodic measure of work done to date, so the contractor is paid progressively.
+- **Measure what is built** — value actual progress, not the programme's plan.
+
+> Unpriced variations and late valuations are how contractors fund projects out of their own pocket. Document and value changes promptly.`,
+            contentAr: `## خُذ مستحقّك عمّا تنفّذه
+
+- **التغيير (Variation)** — تعديل مُوجَّه للنطاق؛ ويجب تقييمه والاتفاق عليه، ويفضَّل قبل تنفيذ العمل.
+- **المستخلص الدوري / شهادة الدفع** — قياس دوري للعمل المنجز حتى تاريخه، ليُدفع للمقاول تدريجيًا.
+- **قِس ما نُفِّذ** — قيّم التقدّم الفعلي لا خطة البرنامج.
+
+> التغييرات غير المسعّرة والمستخلصات المتأخرة هي كيف يموّل المقاولون المشاريع من جيوبهم. وثّق التغييرات وقيّمها فورًا.`,
+          },
+          {
+            title: "Cost Control & Value Engineering",
+            titleAr: "ضبط التكلفة والهندسة القيمية",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Spend money where it adds value
+
+- **Cost control** — compare actual cost against the budget continuously; investigate variances early.
+- **Cash flow** — a project can be profitable on paper yet fail from poor cash timing.
+- **Value engineering (VE)** — systematically improve value: deliver the required function at a lower whole-life cost, without cutting quality or safety.
+
+> Cutting cost blindly is not VE. VE keeps the function and removes the waste around it.`,
+            contentAr: `## أنفق المال حيث يضيف قيمة
+
+- **ضبط التكلفة** — قارن التكلفة الفعلية بالميزانية باستمرار؛ وحقّق في الانحرافات مبكرًا.
+- **التدفق النقدي** — قد يكون المشروع رابحًا على الورق لكنه يفشل بسبب سوء توقيت النقد.
+- **الهندسة القيمية (VE)** — تحسين القيمة منهجيًا: تحقيق الوظيفة المطلوبة بأقل كلفة طوال العمر دون المساس بالجودة أو السلامة.
+
+> خفض التكلفة الأعمى ليس هندسة قيمية. فالهندسة القيمية تُبقي الوظيفة وتزيل الهدر حولها.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "A Bill of Quantities (BOQ) mainly exists so that:",
+                promptAr: "جدول الكميات (BOQ) موجود أساسًا لكي:",
+                options: [
+                  { text: "Contractors price the same measured scope on the same basis", textAr: "يسعّر المقاولون النطاق المقيس نفسه على الأساس نفسه", correct: true },
+                  { text: "The client can choose paint colours", textAr: "يختار العميل ألوان الدهان" },
+                  { text: "Workers record their attendance", textAr: "يسجّل العمال حضورهم" },
+                  { text: "The site office tracks the weather", textAr: "يتابع مكتب الموقع الطقس" },
+                ],
+                explanation: "A BOQ lists measured quantities so every bidder prices an identical scope.",
+                explanationAr: "يسرد جدول الكميات كميات مقيسة ليسعّر كل متنافس نطاقًا مطابقًا.",
+              },
+              {
+                prompt: "Which is a DIRECT cost in a unit rate?",
+                promptAr: "أيٌّ مما يلي تكلفة مباشرة في سعر الوحدة؟",
+                options: [
+                  { text: "Materials, labour and plant for that item", textAr: "المواد والعمالة والمعدات لذلك البند", correct: true },
+                  { text: "Head-office rent", textAr: "إيجار المكتب الرئيسي" },
+                  { text: "Company-wide insurance", textAr: "تأمين الشركة بالكامل" },
+                  { text: "The profit margin", textAr: "هامش الربح" },
+                ],
+                explanation: "Direct costs are the materials, labour and plant consumed by the item itself.",
+                explanationAr: "التكاليف المباشرة هي المواد والعمالة والمعدات التي يستهلكها البند نفسه.",
+              },
+              {
+                prompt: "An interim payment valuation is used to:",
+                promptAr: "يُستخدم المستخلص الدوري لـ:",
+                options: [
+                  { text: "Pay the contractor progressively for work done to date", textAr: "دفع مستحقات المقاول تدريجيًا عن العمل المنجز حتى تاريخه", correct: true },
+                  { text: "Fire underperforming workers", textAr: "فصل العمال ضعيفي الأداء" },
+                  { text: "Order materials in bulk", textAr: "طلب المواد بكميات كبيرة" },
+                  { text: "Close the project permanently", textAr: "إغلاق المشروع نهائيًا" },
+                ],
+                explanation: "Interim valuations measure progress so the contractor is paid as the work proceeds.",
+                explanationAr: "تقيس المستخلصات الدورية التقدّم ليُدفع للمقاول مع سير العمل.",
+              },
+              {
+                prompt: "Value engineering (VE) aims to:",
+                promptAr: "تهدف الهندسة القيمية (VE) إلى:",
+                options: [
+                  { text: "Deliver the required function at a lower whole-life cost without cutting quality or safety", textAr: "تحقيق الوظيفة المطلوبة بأقل كلفة طوال العمر دون المساس بالجودة أو السلامة", correct: true },
+                  { text: "Always choose the cheapest material regardless of function", textAr: "اختيار الأرخص دائمًا بغضّ النظر عن الوظيفة" },
+                  { text: "Increase the contingency allowance", textAr: "زيادة مخصّص الطوارئ" },
+                  { text: "Remove the safety budget", textAr: "إلغاء ميزانية السلامة" },
+                ],
+                explanation: "VE preserves the required function while removing cost that adds no value.",
+                explanationAr: "تُبقي الهندسة القيمية الوظيفة المطلوبة وتزيل الكلفة التي لا تضيف قيمة.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 15) CONSTRUCTION & CONTRACTING — CONTRACTS & CLAIMS
+  // =========================================================================
+  {
+    key: "construction-contracts-claims",
+    title: "Construction Contracts & Claims Management",
+    titleAr: "إدارة عقود الإنشاء والمطالبات",
+    description:
+      "Understand construction contracts and protect your entitlement — contract types and risk, FIDIC roles and clauses, variations, extensions of time, claims and dispute resolution.",
+    descriptionAr:
+      "افهم عقود الإنشاء واحمِ استحقاقك — أنواع العقود والمخاطر وأدوار فيديك وبنوده والتغييرات وتمديد المدة والمطالبات وتسوية النزاعات.",
+    category: "Construction & Contracting",
+    level: "ADVANCED",
+    competency: "Contract Management",
+    competencyAr: "إدارة العقود",
+    modules: [
+      {
+        title: "Contracts & FIDIC",
+        titleAr: "العقود وفيديك",
+        lessons: [
+          {
+            title: "Contract Types & Risk Allocation",
+            titleAr: "أنواع العقود وتوزيع المخاطر",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## Who carries which risk?
+
+The contract type decides how risk is shared:
+
+- **Lump sum** — a fixed price for a defined scope; the contractor carries most of the quantity/productivity risk.
+- **Remeasurement (unit price)** — paid on actual measured quantities; suits uncertain quantities.
+- **Cost-plus** — actual cost plus a fee; the client carries more risk, used when scope is unclear.
+
+### Read the conditions
+
+The **conditions of contract** define obligations, payment, time, variations and dispute routes. Price and perform to the contract you signed — not the one you assumed.
+
+> The cheapest-looking contract can be the most expensive if the risk sits with the wrong party.`,
+            contentAr: `## من يتحمّل أي مخاطرة؟
+
+يحدّد نوع العقد كيفية تقاسم المخاطر:
+
+- **المقطوعية (Lump sum)** — سعر ثابت لنطاق محدّد؛ ويتحمّل المقاول معظم مخاطر الكميات/الإنتاجية.
+- **إعادة القياس (سعر الوحدة)** — يُدفع على الكميات الفعلية المقيسة؛ ويناسب الكميات غير المؤكدة.
+- **التكلفة زائد (Cost-plus)** — التكلفة الفعلية زائد أتعاب؛ ويتحمّل العميل مخاطرة أكبر، ويُستخدم حين يكون النطاق غير واضح.
+
+### اقرأ الشروط
+
+تحدّد **شروط العقد** الالتزامات والدفع والمدة والتغييرات ومسارات النزاع. سعّر ونفّذ وفق العقد الذي وقّعته — لا الذي افترضته.
+
+> العقد الأرخص مظهرًا قد يكون الأغلى إن وقعت المخاطرة على الطرف الخطأ.`,
+          },
+          {
+            title: "FIDIC Roles & Key Clauses",
+            titleAr: "أدوار فيديك والبنود الرئيسية",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## A common language for contracts
+
+**FIDIC** publishes standard conditions of contract used widely across the GCC. Core ideas:
+
+- **The Engineer** administers the contract, certifies payment and determines claims fairly between the parties.
+- **Notices** — many rights are lost if the required notice is not given **within the time bar** in the contract.
+- **Key clauses** — variations, payment, extension of time, and claims procedures.
+
+> In FIDIC, a valid entitlement with no timely notice can become no entitlement at all. Notice first, argue later.`,
+            contentAr: `## لغة مشتركة للعقود
+
+تنشر **فيديك (FIDIC)** شروط عقد قياسية تُستخدم على نطاق واسع في الخليج. الأفكار الأساسية:
+
+- **المهندس** يدير العقد ويعتمد الدفعات ويبتّ في المطالبات بإنصاف بين الطرفين.
+- **الإخطارات** — تُفقَد حقوق كثيرة إن لم يُقدَّم الإخطار المطلوب **ضمن المهلة الزمنية** في العقد.
+- **البنود الرئيسية** — التغييرات والدفع وتمديد المدة وإجراءات المطالبات.
+
+> في فيديك، قد يتحوّل الاستحقاق الصحيح دون إخطار في الوقت إلى لا استحقاق. أخطِر أولًا وجادِل لاحقًا.`,
+          },
+        ],
+      },
+      {
+        title: "Claims & Disputes",
+        titleAr: "المطالبات والنزاعات",
+        lessons: [
+          {
+            title: "Variations, Extension of Time & Claims",
+            titleAr: "التغييرات وتمديد المدة والمطالبات",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## Entitlement must be proven, not asserted
+
+- **Extension of Time (EOT)** — more time when a delay is caused by the client/employer or a listed risk event; it protects the contractor from liquidated damages.
+- **Prolongation cost** — the extra cost of staying on site longer (only where the contract allows).
+- **Records win claims** — dated progress records, correspondence, site diaries and photos are the evidence that turns an argument into an entitlement.
+
+> A claim is a demonstration of cause, effect and entitlement — backed by records. Opinion without evidence is not a claim.`,
+            contentAr: `## الاستحقاق يُثبَت لا يُدّعى
+
+- **تمديد المدة (EOT)** — وقت إضافي عندما ينشأ التأخير من العميل/صاحب العمل أو حدث مخاطرة مدرَج؛ ويحمي المقاول من غرامات التأخير.
+- **تكلفة الإطالة** — الكلفة الإضافية للبقاء في الموقع مدة أطول (حيث يسمح العقد فقط).
+- **السجلات تكسب المطالبات** — سجلات التقدّم المؤرَّخة والمراسلات ويوميات الموقع والصور هي الدليل الذي يحوّل الجدال إلى استحقاق.
+
+> المطالبة إثبات للسبب والأثر والاستحقاق — مدعومة بالسجلات. والرأي دون دليل ليس مطالبة.`,
+          },
+          {
+            title: "Dispute Resolution & Avoidance",
+            titleAr: "تسوية النزاعات وتفاديها",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Settle early, settle cheap
+
+Disputes escalate through a ladder, each step slower and costlier:
+
+1. **Negotiation** — the parties resolve it directly.
+2. **Mediation / adjudication** — a neutral helps or gives an interim decision.
+3. **Arbitration / litigation** — a binding, formal (and expensive) outcome.
+
+### Avoidance beats resolution
+
+Clear scope, prompt notices, agreed variations and good records prevent most disputes. The best dispute is the one that never forms.
+
+> Every step up the ladder costs more and damages the relationship. Solve it at the lowest rung you can.`,
+            contentAr: `## سَوِّ مبكرًا تُسوِّ بأقل كلفة
+
+تتصاعد النزاعات عبر سُلّم، كل درجة أبطأ وأكثر كلفة:
+
+1. **التفاوض** — يحلّه الطرفان مباشرةً.
+2. **الوساطة / الفصل المؤقت** — يساعد محايد أو يصدر قرارًا مؤقتًا.
+3. **التحكيم / التقاضي** — نتيجة ملزِمة ورسمية (ومكلفة).
+
+### التفادي خير من التسوية
+
+النطاق الواضح والإخطارات الفورية والتغييرات المتفق عليها والسجلات الجيدة تمنع معظم النزاعات. وأفضل نزاع ما لا ينشأ أصلًا.
+
+> كل درجة أعلى في السلّم تكلّف أكثر وتضرّ بالعلاقة. حُلّه عند أدنى درجة ممكنة.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "Under a lump-sum contract, who generally carries the quantity/productivity risk?",
+                promptAr: "في عقد المقطوعية، من يتحمّل عمومًا مخاطرة الكميات/الإنتاجية؟",
+                options: [
+                  { text: "The contractor", textAr: "المقاول", correct: true },
+                  { text: "The client only", textAr: "العميل فقط" },
+                  { text: "The material supplier", textAr: "مورّد المواد" },
+                  { text: "The end user", textAr: "المستخدم النهائي" },
+                ],
+                explanation: "A fixed price for a defined scope puts most quantity/productivity risk on the contractor.",
+                explanationAr: "السعر الثابت لنطاق محدّد يضع معظم مخاطرة الكميات/الإنتاجية على المقاول.",
+              },
+              {
+                prompt: "In FIDIC contracts, failing to give a required notice within the time bar can mean:",
+                promptAr: "في عقود فيديك، عدم تقديم الإخطار المطلوب ضمن المهلة قد يعني:",
+                options: [
+                  { text: "Losing an otherwise valid entitlement", textAr: "فقدان استحقاق صحيح لولا ذلك", correct: true },
+                  { text: "Automatically doubling the claim", textAr: "مضاعفة المطالبة تلقائيًا" },
+                  { text: "The Engineer being replaced", textAr: "استبدال المهندس" },
+                  { text: "Immediate termination of the client", textAr: "إنهاء تعاقد العميل فورًا" },
+                ],
+                explanation: "Time-bar clauses can extinguish a valid claim if notice is late.",
+                explanationAr: "بنود المهلة الزمنية قد تُسقِط مطالبة صحيحة إذا تأخّر الإخطار.",
+              },
+              {
+                prompt: "An Extension of Time (EOT) primarily protects the contractor from:",
+                promptAr: "تمديد المدة (EOT) يحمي المقاول أساسًا من:",
+                options: [
+                  { text: "Liquidated damages for delay it is not responsible for", textAr: "غرامات التأخير عن تأخير ليس مسؤولًا عنه", correct: true },
+                  { text: "Paying its own workers", textAr: "دفع أجور عمّاله" },
+                  { text: "Buying materials", textAr: "شراء المواد" },
+                  { text: "Training its staff", textAr: "تدريب موظفيه" },
+                ],
+                explanation: "An EOT shifts the time risk for excusable delays and avoids unfair delay damages.",
+                explanationAr: "يمنح تمديد المدة غطاءً زمنيًا للتأخيرات المعذورة ويتجنّب غرامات تأخير غير عادلة.",
+              },
+              {
+                prompt: "What most reliably turns a delay argument into a successful claim?",
+                promptAr: "ما الذي يحوّل جدال التأخير إلى مطالبة ناجحة بأكثر موثوقية؟",
+                options: [
+                  { text: "Dated records: progress, correspondence, site diaries and photos", textAr: "سجلات مؤرَّخة: التقدّم والمراسلات ويوميات الموقع والصور", correct: true },
+                  { text: "A strongly worded verbal complaint", textAr: "شكوى شفهية بعبارات قوية" },
+                  { text: "Waiting until the end of the project", textAr: "الانتظار حتى نهاية المشروع" },
+                  { text: "A larger workforce", textAr: "عمالة أكبر" },
+                ],
+                explanation: "Contemporaneous records prove cause, effect and entitlement.",
+                explanationAr: "السجلات الآنية تُثبت السبب والأثر والاستحقاق.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 16) ENGINEERING & DESIGN — STRUCTURAL FUNDAMENTALS
+  // =========================================================================
+  {
+    key: "engineering-structural-fundamentals",
+    title: "Structural Engineering Fundamentals",
+    titleAr: "أساسيات الهندسة الإنشائية",
+    description:
+      "Understand how structures carry load safely — types of loads, load paths and structural systems, concrete and steel behaviour, and limit-state design with factors of safety.",
+    descriptionAr:
+      "افهم كيف تحمل المنشآت الأحمال بأمان — أنواع الأحمال ومساراتها والأنظمة الإنشائية وسلوك الخرسانة والفولاذ والتصميم بحالات الحد ومعاملات الأمان.",
+    category: "Engineering & Design",
+    level: "INTERMEDIATE",
+    competency: "Structural Design",
+    competencyAr: "التصميم الإنشائي",
+    modules: [
+      {
+        title: "Loads & Load Paths",
+        titleAr: "الأحمال ومساراتها",
+        lessons: [
+          {
+            title: "Types of Loads",
+            titleAr: "أنواع الأحمال",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## What a structure must resist
+
+- **Dead load** — the permanent weight of the structure itself (slabs, beams, walls).
+- **Live (imposed) load** — movable loads: people, furniture, stored goods.
+- **Environmental loads** — wind, seismic (earthquake), and temperature effects.
+
+### Combinations
+
+Codes require loads to be combined (e.g. dead + live + wind) because the worst case rarely comes from a single load acting alone.
+
+> Design for the realistic worst combination, not the average day.`,
+            contentAr: `## ما الذي يجب أن تقاومه المنشأة
+
+- **الحمل الميت** — الوزن الدائم للمنشأة نفسها (البلاطات والجسور والجدران).
+- **الحمل الحي (المفروض)** — الأحمال المتحركة: الأشخاص والأثاث والبضائع المخزّنة.
+- **الأحمال البيئية** — الرياح والزلازل وتأثيرات الحرارة.
+
+### التوافيق
+
+تتطلّب الأكواد دمج الأحمال (مثل الميت + الحي + الرياح) لأن الحالة الأسوأ نادرًا ما تنتج عن حمل واحد منفردًا.
+
+> صمّم للحالة الأسوأ الواقعية لا ليومٍ متوسط.`,
+          },
+          {
+            title: "Load Paths & Structural Systems",
+            titleAr: "مسارات الأحمال والأنظمة الإنشائية",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Every load must reach the ground
+
+A **load path** traces how force travels from where it is applied down to the foundations:
+
+**Slab → Beam → Column → Foundation → Soil**
+
+- **Beams** carry loads in bending to their supports.
+- **Columns** carry axial load down.
+- **Foundations** spread the load safely into the soil.
+- **Lateral systems** (shear walls, bracing, frames) resist wind and seismic forces.
+
+> A structure is only as strong as its weakest link in the load path. Break the path and it collapses — however strong the other members are.`,
+            contentAr: `## كل حمل يجب أن يصل إلى الأرض
+
+يتتبّع **مسار الحمل** كيف تنتقل القوة من موضع تطبيقها نزولًا إلى الأساسات:
+
+**البلاطة ← الجسر ← العمود ← الأساس ← التربة**
+
+- **الجسور** تحمل الأحمال بالانحناء إلى مساندها.
+- **الأعمدة** تنقل الحمل المحوري نزولًا.
+- **الأساسات** توزّع الحمل بأمان في التربة.
+- **الأنظمة الجانبية** (جدران القص والتربيط والإطارات) تقاوم قوى الرياح والزلازل.
+
+> قوة المنشأة بقوة أضعف حلقة في مسار الحمل. اقطع المسار تنهَر — مهما كانت بقية العناصر قوية.`,
+          },
+        ],
+      },
+      {
+        title: "Materials & Safety",
+        titleAr: "المواد والأمان",
+        lessons: [
+          {
+            title: "Concrete & Steel Behaviour",
+            titleAr: "سلوك الخرسانة والفولاذ",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Two materials, opposite strengths
+
+- **Concrete** is strong in **compression** but weak in **tension**.
+- **Steel** is strong in **tension**.
+- **Reinforced concrete** places steel bars where tension occurs (e.g. the bottom of a simply-supported beam), so the two work together.
+
+### Detailing matters
+
+Correct **cover** (concrete over the rebar) protects steel from corrosion; correct bar size, spacing and anchorage make the design real on site.
+
+> A perfect calculation with poor rebar detailing still fails. The drawing and the bar schedule carry the design.`,
+            contentAr: `## مادتان بقوّتين متعاكستين
+
+- **الخرسانة** قوية في **الانضغاط** وضعيفة في **الشدّ**.
+- **الفولاذ** قوي في **الشدّ**.
+- **الخرسانة المسلّحة** تضع قضبان الفولاذ حيث يحدث الشدّ (مثل أسفل جسر بسيط الإسناد)، فتعمل المادتان معًا.
+
+### التفاصيل مهمة
+
+**الغطاء الخرساني** الصحيح فوق التسليح يحمي الفولاذ من الصدأ؛ والمقاس والتباعد والتماسك الصحيح يجعل التصميم واقعيًا في الموقع.
+
+> الحساب المثالي مع تفاصيل تسليح رديئة يفشل أيضًا. فالمخطط وجدول التسليح يحملان التصميم.`,
+          },
+          {
+            title: "Limit States & Factor of Safety",
+            titleAr: "حالات الحد ومعامل الأمان",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Design for strength and for service
+
+Modern codes use **limit-state design**:
+
+- **Ultimate Limit State (ULS)** — the structure must not collapse; loads are factored up and material strengths factored down.
+- **Serviceability Limit State (SLS)** — the structure must remain usable: deflection, cracking and vibration stay within limits.
+
+### Why factors of safety
+
+Factors cover real uncertainty: variable material quality, heavier-than-expected loads, and construction tolerances.
+
+> Safety factors are not waste — they are the margin between "stands up" and "falls down" when reality differs from the calculation.`,
+            contentAr: `## صمّم للقوة وللخدمة
+
+تستخدم الأكواد الحديثة **التصميم بحالات الحد**:
+
+- **حالة الحد الأقصى (ULS)** — يجب ألا تنهار المنشأة؛ تُضخَّم الأحمال وتُخفَّض مقاومات المواد بمعاملات.
+- **حالة حد الخدمة (SLS)** — يجب أن تبقى المنشأة قابلة للاستخدام: الهبوط والتشقّق والاهتزاز ضمن الحدود.
+
+### لماذا معاملات الأمان
+
+تغطّي المعاملات عدم اليقين الحقيقي: تباين جودة المواد، وأحمال أثقل من المتوقَّع، وتفاوتات التنفيذ.
+
+> معاملات الأمان ليست هدرًا — بل الهامش بين "تصمد" و"تنهار" حين يختلف الواقع عن الحساب.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "The permanent self-weight of the structure is called the:",
+                promptAr: "الوزن الدائم للمنشأة نفسها يُسمّى:",
+                options: [
+                  { text: "Dead load", textAr: "الحمل الميت", correct: true },
+                  { text: "Live load", textAr: "الحمل الحي" },
+                  { text: "Wind load", textAr: "حمل الرياح" },
+                  { text: "Seismic load", textAr: "الحمل الزلزالي" },
+                ],
+                explanation: "Dead load is the permanent weight of the structure itself.",
+                explanationAr: "الحمل الميت هو الوزن الدائم للمنشأة نفسها.",
+              },
+              {
+                prompt: "A typical vertical load path in a building is:",
+                promptAr: "مسار الحمل الرأسي النموذجي في مبنى هو:",
+                options: [
+                  { text: "Slab → beam → column → foundation → soil", textAr: "البلاطة ← الجسر ← العمود ← الأساس ← التربة", correct: true },
+                  { text: "Soil → column → slab → roof", textAr: "التربة ← العمود ← البلاطة ← السقف" },
+                  { text: "Foundation → beam → soil → column", textAr: "الأساس ← الجسر ← التربة ← العمود" },
+                  { text: "Column → slab → beam → air", textAr: "العمود ← البلاطة ← الجسر ← الهواء" },
+                ],
+                explanation: "Load flows from slabs through beams and columns to the foundation and soil.",
+                explanationAr: "ينتقل الحمل من البلاطات عبر الجسور والأعمدة إلى الأساس والتربة.",
+              },
+              {
+                prompt: "In reinforced concrete, steel reinforcement is placed mainly to resist:",
+                promptAr: "في الخرسانة المسلّحة، يُوضع التسليح الفولاذي أساسًا لمقاومة:",
+                options: [
+                  { text: "Tension, where concrete is weak", textAr: "الشدّ، حيث تكون الخرسانة ضعيفة", correct: true },
+                  { text: "Compression, where concrete is weak", textAr: "الانضغاط، حيث تكون الخرسانة ضعيفة" },
+                  { text: "The colour of the concrete", textAr: "لون الخرسانة" },
+                  { text: "The curing temperature only", textAr: "حرارة المعالجة فقط" },
+                ],
+                explanation: "Concrete is weak in tension, so steel is placed where tension occurs.",
+                explanationAr: "الخرسانة ضعيفة في الشدّ، لذا يُوضع الفولاذ حيث يحدث الشدّ.",
+              },
+              {
+                prompt: "The Ultimate Limit State (ULS) is primarily concerned with:",
+                promptAr: "حالة الحد الأقصى (ULS) تُعنى أساسًا بـ:",
+                options: [
+                  { text: "Preventing collapse / loss of strength", textAr: "منع الانهيار / فقدان المقاومة", correct: true },
+                  { text: "Keeping the paint fresh", textAr: "إبقاء الدهان جديدًا" },
+                  { text: "Minor deflection comfort only", textAr: "راحة الهبوط البسيط فقط" },
+                  { text: "The project's cash flow", textAr: "التدفق النقدي للمشروع" },
+                ],
+                explanation: "ULS guards against collapse; serviceability (SLS) handles deflection/cracking.",
+                explanationAr: "تحمي حالة الحد الأقصى من الانهيار؛ بينما تعالج حالة الخدمة الهبوط/التشقّق.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 17) ENGINEERING & DESIGN — MEP ESSENTIALS
+  // =========================================================================
+  {
+    key: "engineering-mep-essentials",
+    title: "MEP Engineering Essentials",
+    titleAr: "أساسيات هندسة الميكانيكا والكهرباء والصحية",
+    description:
+      "The building services that make a building work — HVAC fundamentals, electrical systems and loads, water supply and drainage, and MEP coordination to avoid clashes.",
+    descriptionAr:
+      "خدمات المبنى التي تجعله يعمل — أساسيات التكييف والتهوية والأنظمة الكهربائية والأحمال والتغذية بالمياه والصرف وتنسيق MEP لتفادي التعارضات.",
+    category: "Engineering & Design",
+    level: "INTERMEDIATE",
+    competency: "MEP Engineering",
+    competencyAr: "هندسة الميكانيكا والكهرباء والصحية",
+    modules: [
+      {
+        title: "Mechanical & Electrical",
+        titleAr: "الميكانيكا والكهرباء",
+        lessons: [
+          {
+            title: "HVAC Fundamentals",
+            titleAr: "أساسيات التكييف والتهوية",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Comfort, air quality and energy
+
+**HVAC** = Heating, Ventilation and Air Conditioning. In the Gulf climate, cooling and fresh-air ventilation dominate.
+
+- **Cooling load** — the heat a space gains (people, equipment, solar, outdoor air) that the system must remove.
+- **Ventilation** — fresh air for health and air quality.
+- **Efficiency** — chillers, duct sizing and controls drive a building's biggest energy bill.
+
+> Oversize and you waste energy and money; undersize and the space never cools. Size to the real load.`,
+            contentAr: `## الراحة وجودة الهواء والطاقة
+
+**HVAC** = التدفئة والتهوية وتكييف الهواء. وفي مناخ الخليج يغلب التبريد والتهوية بالهواء النقي.
+
+- **حمل التبريد** — الحرارة التي يكتسبها الحيّز (الأشخاص والأجهزة والإشعاع الشمسي والهواء الخارجي) ويجب أن يزيلها النظام.
+- **التهوية** — هواء نقي للصحة وجودة الهواء.
+- **الكفاءة** — المبرّدات وتحجيم المجاري وأنظمة التحكّم تحرّك أكبر فاتورة طاقة في المبنى.
+
+> التحجيم الزائد يهدر الطاقة والمال؛ والناقص لا يبرّد الحيّز أبدًا. حجّم وفق الحمل الحقيقي.`,
+          },
+          {
+            title: "Electrical Systems & Loads",
+            titleAr: "الأنظمة الكهربائية والأحمال",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Power delivered safely
+
+- **Load estimation** — add up the connected load, apply diversity (not everything runs at once) to size cables and boards.
+- **Distribution** — main board → sub-boards → final circuits, each protected by the right breaker.
+- **Protection & earthing** — circuit breakers, earthing and bonding protect people and equipment from faults.
+- **Backup** — generators/UPS keep critical systems running.
+
+> Undersized cables overheat; missing earthing kills. Protection and correct sizing are not optional extras.`,
+            contentAr: `## طاقة تُوصَّل بأمان
+
+- **تقدير الأحمال** — اجمع الحمل الموصَّل، وطبّق معامل التنوّع (لا يعمل كل شيء دفعةً واحدة) لتحجيم الكابلات واللوحات.
+- **التوزيع** — اللوحة الرئيسية ← اللوحات الفرعية ← الدوائر النهائية، كلٌّ محميّة بالقاطع المناسب.
+- **الحماية والتأريض** — القواطع والتأريض والربط تحمي الأشخاص والأجهزة من الأعطال.
+- **الاحتياطي** — المولّدات/UPS تُبقي الأنظمة الحرجة تعمل.
+
+> الكابلات الأصغر من اللازم تسخن؛ وغياب التأريض يقتل. فالحماية والتحجيم الصحيح ليسا إضافات اختيارية.`,
+          },
+        ],
+      },
+      {
+        title: "Plumbing & Coordination",
+        titleAr: "الصحية والتنسيق",
+        lessons: [
+          {
+            title: "Water Supply & Drainage",
+            titleAr: "التغذية بالمياه والصرف",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Clean in, dirty out — never mixed
+
+- **Water supply** — sized for adequate pressure and flow at every outlet, with no cross-connection to foul water.
+- **Drainage** — relies on gradients (falls), traps and vents so waste flows away and smells stay out.
+- **Hot water** — storage and distribution sized for demand.
+
+> Plumbing has one golden rule: clean water and foul water must never meet. Backflow prevention protects public health.`,
+            contentAr: `## نظيف داخلًا وملوّث خارجًا — دون اختلاط
+
+- **التغذية بالمياه** — تُحجَّم لضغط وتدفّق كافيين عند كل مخرج، دون أي ربط عكسي بمياه الصرف.
+- **الصرف** — يعتمد على الميول والسيفونات والتهوية لتصريف الفضلات ومنع الروائح.
+- **الماء الساخن** — تخزين وتوزيع يُحجَّم حسب الطلب.
+
+> للصحية قاعدة ذهبية: يجب ألا يلتقي الماء النظيف بمياه الصرف أبدًا. ومنع الارتداد يحمي الصحة العامة.`,
+          },
+          {
+            title: "MEP Coordination & Clash Avoidance",
+            titleAr: "تنسيق MEP وتفادي التعارضات",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Many services, one ceiling void
+
+Mechanical ducts, electrical trays, water and drainage pipes all compete for the same space above the ceiling.
+
+- **Coordinate in a BIM model** — resolve **clashes** (a duct through a beam, two pipes in one spot) before site.
+- **Priority rules** — gravity drainage has little flexibility and usually routes first; flexible cabling bends around it.
+- **Access & maintenance** — leave room to reach valves, dampers and junctions later.
+
+> An uncoordinated ceiling means cutting, rework and delay on site. Solve the geometry in the model first.`,
+            contentAr: `## خدمات كثيرة وفراغ سقف واحد
+
+تتنافس مجاري الميكانيكا وأحواض الكهرباء وأنابيب المياه والصرف على الحيّز نفسه فوق السقف.
+
+- **نسّق في نموذج BIM** — عالِج **التعارضات** (مجرى يخترق جسرًا، أنبوبان في موضع واحد) قبل الموقع.
+- **قواعد الأولوية** — صرف الجاذبية قليل المرونة ويُوجَّه عادةً أولًا؛ والكابلات المرنة تلتفّ حوله.
+- **الوصول والصيانة** — اترك حيّزًا للوصول إلى المحابس والخوانق والوصلات لاحقًا.
+
+> السقف غير المنسّق يعني قصًّا وإعادة عمل وتأخيرًا في الموقع. حُلّ الهندسة في النموذج أولًا.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "In the Gulf climate, the dominant HVAC concern for most buildings is:",
+                promptAr: "في مناخ الخليج، الاهتمام الغالب في التكييف لمعظم المباني هو:",
+                options: [
+                  { text: "Cooling and fresh-air ventilation", textAr: "التبريد والتهوية بالهواء النقي", correct: true },
+                  { text: "Snow loading on ducts", textAr: "حمل الثلوج على المجاري" },
+                  { text: "Heating only", textAr: "التدفئة فقط" },
+                  { text: "Preventing frozen pipes", textAr: "منع تجمّد الأنابيب" },
+                ],
+                explanation: "The hot climate makes cooling load and ventilation the main HVAC drivers.",
+                explanationAr: "المناخ الحار يجعل حمل التبريد والتهوية المحرّكين الرئيسيين للتكييف.",
+              },
+              {
+                prompt: "Applying 'diversity' when estimating electrical load means:",
+                promptAr: "تطبيق 'معامل التنوّع' عند تقدير الحمل الكهربائي يعني:",
+                options: [
+                  { text: "Allowing that not all equipment runs at full load at the same time", textAr: "مراعاة أن ليست كل الأجهزة تعمل بكامل حملها في الوقت نفسه", correct: true },
+                  { text: "Using cables of different colours", textAr: "استخدام كابلات بألوان مختلفة" },
+                  { text: "Hiring diverse contractors", textAr: "توظيف مقاولين متنوّعين" },
+                  { text: "Doubling every circuit", textAr: "مضاعفة كل دائرة" },
+                ],
+                explanation: "Diversity recognises that peak loads don't all coincide, so boards/cables are sized realistically.",
+                explanationAr: "يراعي معامل التنوّع أن الأحمال القصوى لا تتزامن كلها، فتُحجَّم اللوحات/الكابلات واقعيًا.",
+              },
+              {
+                prompt: "The golden rule of plumbing is that:",
+                promptAr: "القاعدة الذهبية للأعمال الصحية هي أن:",
+                options: [
+                  { text: "Clean water and foul water must never cross-connect", textAr: "يجب ألا يُربط الماء النظيف بمياه الصرف إطلاقًا", correct: true },
+                  { text: "All pipes must be copper", textAr: "يجب أن تكون كل الأنابيب نحاسية" },
+                  { text: "Drainage flows uphill", textAr: "يسري الصرف إلى أعلى" },
+                  { text: "Hot and cold pipes must touch", textAr: "يجب أن يتلامس أنبوبا الحار والبارد" },
+                ],
+                explanation: "Preventing cross-connection/backflow protects drinking water and public health.",
+                explanationAr: "منع الربط العكسي/الارتداد يحمي مياه الشرب والصحة العامة.",
+              },
+              {
+                prompt: "MEP coordination in a BIM model is done mainly to:",
+                promptAr: "يُجرى تنسيق MEP في نموذج BIM أساسًا لـ:",
+                options: [
+                  { text: "Resolve clashes between services before they reach site", textAr: "حلّ التعارضات بين الخدمات قبل وصولها إلى الموقع", correct: true },
+                  { text: "Decide the paint colour", textAr: "تحديد لون الدهان" },
+                  { text: "Set worker salaries", textAr: "تحديد رواتب العمال" },
+                  { text: "Choose the project name", textAr: "اختيار اسم المشروع" },
+                ],
+                explanation: "Clash detection in the model avoids costly cutting and rework on site.",
+                explanationAr: "كشف التعارضات في النموذج يتجنّب القصّ وإعادة العمل المكلفين في الموقع.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 18) LOGISTICS & TRANSPORTATION — SUPPLY CHAIN PLANNING
+  // =========================================================================
+  {
+    key: "logistics-supply-planning",
+    title: "Supply Chain Planning & Inventory Optimization",
+    titleAr: "تخطيط سلسلة الإمداد وتحسين المخزون",
+    description:
+      "Plan supply to meet demand at the right cost — demand forecasting, sales & operations planning, and inventory optimization with reorder points, safety stock and ABC analysis.",
+    descriptionAr:
+      "خطّط الإمداد لتلبية الطلب بالتكلفة المناسبة — التنبؤ بالطلب وتخطيط المبيعات والعمليات وتحسين المخزون بنقاط إعادة الطلب والمخزون الأماني وتحليل ABC.",
+    category: "Logistics & Transportation",
+    level: "INTERMEDIATE",
+    competency: "Supply Chain Planning",
+    competencyAr: "تخطيط سلسلة الإمداد",
+    modules: [
+      {
+        title: "Demand & Planning",
+        titleAr: "الطلب والتخطيط",
+        lessons: [
+          {
+            title: "Demand Forecasting",
+            titleAr: "التنبؤ بالطلب",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Plan for what you will sell
+
+- **Forecast** future demand from history, trend and seasonality — plus known events (promotions, Ramadan, Hajj season).
+- **No forecast is exact** — measure error (e.g. bias and accuracy) and improve it over time.
+- **Bullwhip effect** — small swings in customer demand amplify upstream, causing wild over- and under-stocking. Share real demand data to dampen it.
+
+> A forecast is a plan, not a prophecy. Track the error and adjust — don't trust a single number blindly.`,
+            contentAr: `## خطّط لما ستبيعه
+
+- **تنبّأ** بالطلب المستقبلي من التاريخ والاتجاه والموسمية — إضافةً إلى الأحداث المعروفة (العروض، رمضان، موسم الحج).
+- **لا تنبؤ دقيق تمامًا** — قِس الخطأ (مثل التحيّز والدقة) وحسّنه مع الوقت.
+- **أثر السوط (Bullwhip)** — تتضخّم التقلّبات الصغيرة في طلب العميل صعودًا في السلسلة، مسبّبةً إفراطًا ونقصًا حادّين في المخزون. شارِك بيانات الطلب الحقيقية لتخفيفه.
+
+> التنبؤ خطة لا نبوءة. تابِع الخطأ وعدّل — ولا تثق برقم واحد بشكل أعمى.`,
+          },
+          {
+            title: "Sales & Operations Planning (S&OP)",
+            titleAr: "تخطيط المبيعات والعمليات (S&OP)",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## One plan everyone agrees on
+
+**S&OP** is a monthly cycle that aligns demand (sales/marketing) with supply (operations/procurement) and finance into a single agreed plan.
+
+- **Balance** expected demand against capacity and inventory.
+- **Decide** trade-offs: build ahead, add capacity, or manage demand.
+- **One set of numbers** — sales, operations and finance stop working from different spreadsheets.
+
+> Without S&OP, sales promises what operations can't deliver. One agreed plan beats three private ones.`,
+            contentAr: `## خطة واحدة يتفق عليها الجميع
+
+**S&OP** دورة شهرية تُواءم بين الطلب (المبيعات/التسويق) والإمداد (العمليات/المشتريات) والمالية في خطة واحدة متفق عليها.
+
+- **وازِن** الطلب المتوقَّع مقابل الطاقة والمخزون.
+- **قرّر** المفاضلات: البناء مسبقًا، أو زيادة الطاقة، أو إدارة الطلب.
+- **مجموعة أرقام واحدة** — تتوقف المبيعات والعمليات والمالية عن العمل بجداول مختلفة.
+
+> بدون S&OP تَعِد المبيعات بما لا تستطيع العمليات تسليمه. خطة واحدة متفق عليها خير من ثلاث خطط منفصلة.`,
+          },
+        ],
+      },
+      {
+        title: "Inventory Optimization",
+        titleAr: "تحسين المخزون",
+        lessons: [
+          {
+            title: "Reorder Point, EOQ & Safety Stock",
+            titleAr: "نقطة إعادة الطلب وكمية الطلب الاقتصادية والمخزون الأماني",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## How much to order, and when
+
+- **Reorder point** — the stock level that triggers a new order, set to cover demand during the **lead time**.
+- **Economic Order Quantity (EOQ)** — the order size that balances ordering cost against holding cost.
+- **Safety stock** — a buffer for demand and lead-time variability, so a normal fluctuation doesn't cause a stockout.
+
+### The balance
+
+Too much stock ties up cash and risks obsolescence; too little causes stockouts and lost sales. Optimization finds the middle.
+
+> Inventory is frozen cash. Hold enough to serve customers — and not one riyal more than you must.`,
+            contentAr: `## كم تطلب ومتى
+
+- **نقطة إعادة الطلب** — مستوى المخزون الذي يُطلِق طلبًا جديدًا، ويُضبَط لتغطية الطلب خلال **مدة التوريد**.
+- **كمية الطلب الاقتصادية (EOQ)** — حجم الطلب الذي يوازن بين كلفة الطلب وكلفة الاحتفاظ.
+- **المخزون الأماني** — مخزون احتياطي لتقلّب الطلب ومدة التوريد، كي لا يسبّب تقلّبٌ عاديّ نفادًا.
+
+### التوازن
+
+المخزون الزائد يجمّد النقد ويخاطر بالتقادم؛ والقليل يسبّب نفادًا ومبيعات ضائعة. والتحسين يجد الوسط.
+
+> المخزون نقد مجمَّد. احتفظ بما يكفي لخدمة العملاء — ولا ريالًا واحدًا فوق ما يلزم.`,
+          },
+          {
+            title: "ABC Analysis & Service Levels",
+            titleAr: "تحليل ABC ومستويات الخدمة",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Focus effort where it matters
+
+- **ABC analysis** — classify items by value/impact: **A** items (few items, most of the value) get tight control; **C** items (many, low value) get simple rules.
+- **Service level** — the target probability of not running out; higher service needs more safety stock.
+- **Pareto (80/20)** — roughly 80% of value often comes from 20% of items.
+
+> You cannot manage every SKU with equal attention. Guard the A items closely; keep the C items simple.`,
+            contentAr: `## ركّز الجهد حيث يهم
+
+- **تحليل ABC** — صنّف البنود حسب القيمة/الأثر: بنود **A** (قليلة وتمثّل معظم القيمة) تحظى بضبط دقيق؛ وبنود **C** (كثيرة ومنخفضة القيمة) تُدار بقواعد بسيطة.
+- **مستوى الخدمة** — الاحتمال المستهدف لعدم النفاد؛ وكلما ارتفع لزِم مخزون أماني أكبر.
+- **باريتو (80/20)** — غالبًا ما يأتي ٨٠٪ من القيمة من ٢٠٪ من البنود.
+
+> لا يمكنك إدارة كل صنف باهتمام متساوٍ. احرُس بنود A عن قرب وأبقِ بنود C بسيطة.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "The 'bullwhip effect' in a supply chain refers to:",
+                promptAr: "'أثر السوط' في سلسلة الإمداد يشير إلى:",
+                options: [
+                  { text: "Small swings in customer demand amplifying into larger swings upstream", textAr: "تضخّم تقلّبات صغيرة في طلب العميل إلى تقلّبات أكبر صعودًا في السلسلة", correct: true },
+                  { text: "Faster delivery trucks", textAr: "شاحنات توصيل أسرع" },
+                  { text: "A discount on bulk orders", textAr: "خصم على الطلبات الكبيرة" },
+                  { text: "A type of warehouse rack", textAr: "نوع من رفوف المستودعات" },
+                ],
+                explanation: "Demand variability amplifies upstream, causing over- and under-stocking; sharing real demand reduces it.",
+                explanationAr: "يتضخّم تقلّب الطلب صعودًا مسبّبًا إفراطًا ونقصًا؛ ومشاركة الطلب الحقيقي تقلّله.",
+              },
+              {
+                prompt: "The main purpose of S&OP is to:",
+                promptAr: "الغرض الرئيسي من S&OP هو:",
+                options: [
+                  { text: "Align demand, supply and finance into one agreed plan", textAr: "مواءمة الطلب والإمداد والمالية في خطة واحدة متفق عليها", correct: true },
+                  { text: "Replace the accounting system", textAr: "استبدال النظام المحاسبي" },
+                  { text: "Design the warehouse layout", textAr: "تصميم مخطّط المستودع" },
+                  { text: "Hire delivery drivers", textAr: "توظيف سائقي التوصيل" },
+                ],
+                explanation: "S&OP reconciles demand and supply with finance so everyone works to one plan.",
+                explanationAr: "توائم S&OP بين الطلب والإمداد والمالية ليعمل الجميع بخطة واحدة.",
+              },
+              {
+                prompt: "Safety stock exists mainly to:",
+                promptAr: "يوجد المخزون الأماني أساسًا لـ:",
+                options: [
+                  { text: "Buffer against variability in demand and lead time", textAr: "امتصاص تقلّب الطلب ومدة التوريد", correct: true },
+                  { text: "Fill the warehouse completely", textAr: "ملء المستودع بالكامل" },
+                  { text: "Avoid ever placing orders", textAr: "تجنّب تقديم أي طلبات" },
+                  { text: "Increase obsolescence on purpose", textAr: "زيادة التقادم عمدًا" },
+                ],
+                explanation: "Safety stock absorbs normal variability so a fluctuation doesn't cause a stockout.",
+                explanationAr: "يمتصّ المخزون الأماني التقلّب العادي كي لا يسبّب نفادًا.",
+              },
+              {
+                prompt: "In ABC analysis, 'A' items are:",
+                promptAr: "في تحليل ABC، بنود 'A' هي:",
+                options: [
+                  { text: "A small number of items that represent most of the value — tightly controlled", textAr: "عدد قليل من البنود تمثّل معظم القيمة — وتُضبَط بدقة", correct: true },
+                  { text: "The cheapest, least important items", textAr: "الأرخص والأقل أهمية" },
+                  { text: "Items stored alphabetically", textAr: "بنود مخزّنة أبجديًا" },
+                  { text: "Items with no demand", textAr: "بنود بلا طلب" },
+                ],
+                explanation: "A items are the high-value few that justify the tightest inventory control.",
+                explanationAr: "بنود A هي القلّة عالية القيمة التي تستحق أدقّ ضبط للمخزون.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 19) LOGISTICS & TRANSPORTATION — COLD CHAIN & DANGEROUS GOODS
+  // =========================================================================
+  {
+    key: "logistics-coldchain-dg",
+    title: "Cold Chain & Dangerous Goods Logistics",
+    titleAr: "لوجستيات سلسلة التبريد والبضائع الخطرة",
+    description:
+      "Move sensitive and hazardous cargo safely and legally — temperature-controlled cold chain with monitoring and SFDA/HACCP compliance, and dangerous-goods classes, labelling, handling and documentation.",
+    descriptionAr:
+      "انقل الشحنات الحسّاسة والخطرة بأمان وقانونية — سلسلة تبريد متحكَّم بها مع المراقبة والامتثال لهيئة الغذاء والدواء/HACCP، وأصناف البضائع الخطرة ووسمها ومناولتها ومستنداتها.",
+    category: "Logistics & Transportation",
+    level: "INTERMEDIATE",
+    competency: "Specialized Logistics",
+    competencyAr: "اللوجستيات المتخصصة",
+    modules: [
+      {
+        title: "Cold Chain",
+        titleAr: "سلسلة التبريد",
+        lessons: [
+          {
+            title: "Temperature-Controlled Logistics",
+            titleAr: "اللوجستيات المتحكَّم بحرارتها",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Keep it cold, end to end
+
+The **cold chain** keeps temperature-sensitive goods (food, pharmaceuticals, vaccines) within a required range from origin to delivery.
+
+- **Unbroken chain** — storage, loading, transit and the last mile must all stay in range; one warm gap can spoil the whole load.
+- **Pre-cooling** — chill the vehicle/box before loading, not after.
+- **Right equipment** — reefer trucks, insulated boxes and cold-storage warehouses.
+
+> In the cold chain the weakest link sets the quality. A single unmonitored hour on a hot loading bay can ruin a shipment.`,
+            contentAr: `## أبقِها باردة من الطرف إلى الطرف
+
+تُبقي **سلسلة التبريد** البضائع الحسّاسة للحرارة (الأغذية والأدوية واللقاحات) ضمن نطاق مطلوب من المصدر حتى التسليم.
+
+- **سلسلة غير مكسورة** — التخزين والتحميل والنقل والميل الأخير يجب أن تبقى كلها ضمن النطاق؛ وفجوة دافئة واحدة قد تُفسد الحمل كله.
+- **التبريد المسبق** — برّد المركبة/الصندوق قبل التحميل لا بعده.
+- **المعدات المناسبة** — شاحنات مبرَّدة وصناديق معزولة ومستودعات تبريد.
+
+> في سلسلة التبريد تحدّد أضعف حلقة الجودة. وساعة واحدة غير مراقَبة على رصيف تحميل حار قد تُتلف شحنة.`,
+          },
+          {
+            title: "Monitoring & Compliance (HACCP / SFDA)",
+            titleAr: "المراقبة والامتثال (HACCP / هيئة الغذاء والدواء)",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Prove the temperature, don't assume it
+
+- **Data loggers / IoT sensors** record temperature continuously and alert on excursions.
+- **HACCP** — a food-safety system that identifies critical control points (like holding temperature) and sets limits and corrective actions.
+- **Saudi compliance** — temperature-sensitive food and pharma are regulated by the **SFDA**; keep records to demonstrate the chain held.
+
+> "It looked fine" is not evidence. A continuous temperature record is what proves — to the regulator and the customer — that the product is safe.`,
+            contentAr: `## أثبِت الحرارة ولا تفترضها
+
+- **مسجّلات البيانات / حسّاسات إنترنت الأشياء** تسجّل الحرارة باستمرار وتنبّه عند التجاوزات.
+- **HACCP** — نظام سلامة غذائية يحدّد نقاط التحكّم الحرجة (مثل حرارة الحفظ) ويضع الحدود والإجراءات التصحيحية.
+- **الامتثال السعودي** — الأغذية والأدوية الحسّاسة للحرارة تنظّمها **هيئة الغذاء والدواء (SFDA)**؛ احتفظ بالسجلات لإثبات بقاء السلسلة.
+
+> "بدت سليمة" ليست دليلًا. فالسجل الحراري المستمر هو ما يُثبت — للجهة التنظيمية وللعميل — أن المنتج آمن.`,
+          },
+        ],
+      },
+      {
+        title: "Dangerous Goods",
+        titleAr: "البضائع الخطرة",
+        lessons: [
+          {
+            title: "Dangerous Goods Classes & Labelling",
+            titleAr: "أصناف البضائع الخطرة ووسمها",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Know what you are moving
+
+**Dangerous goods (DG)** are classified into hazard classes, for example:
+
+- **Class 1** — explosives
+- **Class 2** — gases
+- **Class 3** — flammable liquids (fuel, solvents)
+- **Class 6** — toxic substances
+- **Class 8** — corrosives
+
+Each has a **label/placard** and a **UN number** identifying the substance. Correct classification drives packaging, labelling, segregation and the route.
+
+> Mislabelling dangerous goods is not paperwork — it is a safety failure that endangers handlers, drivers and the public.`,
+            contentAr: `## اعرف ما الذي تنقله
+
+تُصنَّف **البضائع الخطرة (DG)** إلى فئات خطورة، مثل:
+
+- **الفئة 1** — المتفجرات
+- **الفئة 2** — الغازات
+- **الفئة 3** — السوائل القابلة للاشتعال (الوقود والمذيبات)
+- **الفئة 6** — المواد السامة
+- **الفئة 8** — المواد الأكّالة
+
+لكلٍّ **ملصق/لوحة تحذير** و**رقم أممي (UN)** يحدّد المادة. والتصنيف الصحيح يحدّد التغليف والوسم والفصل والمسار.
+
+> الوسم الخاطئ للبضائع الخطرة ليس إجراءً ورقيًا — بل إخفاق سلامة يهدّد المناولين والسائقين والجمهور.`,
+          },
+          {
+            title: "Safe Handling & Documentation",
+            titleAr: "المناولة الآمنة والمستندات",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Handle, segregate, document
+
+- **Segregation** — incompatible goods (e.g. oxidizers and flammables) must be kept apart.
+- **Packaging** — UN-approved packaging rated for the substance and quantity.
+- **Training** — only trained staff may handle and sign off DG.
+- **Documentation** — a dangerous-goods declaration and the **Safety Data Sheet (SDS)** must travel with the shipment.
+
+### Emergencies
+
+Know the spill/fire response for what you carry before you move it — not during an incident.
+
+> With dangerous goods, "don't know" means "don't move." Verify classification, packaging and paperwork first.`,
+            contentAr: `## ناوِل وافصِل ووثّق
+
+- **الفصل** — يجب إبقاء البضائع غير المتوافقة متباعدة (مثل المؤكسِدات والمواد القابلة للاشتعال).
+- **التغليف** — تغليف معتمد أمميًا ومصنَّف للمادة والكمية.
+- **التدريب** — لا يناوِل البضائع الخطرة ويعتمدها إلا موظفون مدرَّبون.
+- **المستندات** — يجب أن يرافق الشحنةَ إقرارُ بضائع خطرة و**صحيفة بيانات السلامة (SDS)**.
+
+### الطوارئ
+
+اعرف استجابة الانسكاب/الحريق لما تنقله قبل تحريكه — لا أثناء الحادث.
+
+> مع البضائع الخطرة، "لا أعرف" تعني "لا تنقل". تحقّق من التصنيف والتغليف والمستندات أولًا.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "A 'broken cold chain' means:",
+                promptAr: "'سلسلة تبريد مكسورة' تعني:",
+                options: [
+                  { text: "The temperature went out of the required range at some point, risking the product", textAr: "خروج الحرارة عن النطاق المطلوب في مرحلة ما، مع تعريض المنتج للخطر", correct: true },
+                  { text: "A refrigerator door that won't open", textAr: "باب ثلاجة لا يُفتح" },
+                  { text: "A delayed invoice", textAr: "فاتورة متأخرة" },
+                  { text: "A truck with a flat tyre", textAr: "شاحنة بإطار مثقوب" },
+                ],
+                explanation: "Any out-of-range gap — storage, transit or last mile — breaks the chain and can spoil goods.",
+                explanationAr: "أي فجوة خارج النطاق — تخزينًا أو نقلًا أو ميلًا أخيرًا — تكسر السلسلة وقد تُفسد البضائع.",
+              },
+              {
+                prompt: "What best proves a cold-chain shipment stayed in range?",
+                promptAr: "ما الذي يُثبت أفضل أن شحنة سلسلة التبريد بقيت ضمن النطاق؟",
+                options: [
+                  { text: "A continuous temperature record from data loggers/sensors", textAr: "سجل حراري مستمر من مسجّلات البيانات/الحسّاسات", correct: true },
+                  { text: "The driver saying it felt cold", textAr: "قول السائق إنها بدت باردة" },
+                  { text: "The colour of the box", textAr: "لون الصندوق" },
+                  { text: "A low fuel receipt", textAr: "إيصال وقود منخفض" },
+                ],
+                explanation: "Continuous temperature logging is the evidence regulators and customers require.",
+                explanationAr: "التسجيل الحراري المستمر هو الدليل الذي تطلبه الجهات التنظيمية والعملاء.",
+              },
+              {
+                prompt: "In dangerous-goods transport, flammable liquids such as fuel and solvents are:",
+                promptAr: "في نقل البضائع الخطرة، السوائل القابلة للاشتعال كالوقود والمذيبات هي:",
+                options: [
+                  { text: "Class 3", textAr: "الفئة 3", correct: true },
+                  { text: "Class 1 (explosives)", textAr: "الفئة 1 (المتفجرات)" },
+                  { text: "Class 8 (corrosives)", textAr: "الفئة 8 (الأكّالة)" },
+                  { text: "Not classified at all", textAr: "غير مصنّفة إطلاقًا" },
+                ],
+                explanation: "Flammable liquids are dangerous-goods Class 3.",
+                explanationAr: "السوائل القابلة للاشتعال هي الفئة 3 من البضائع الخطرة.",
+              },
+              {
+                prompt: "Which document must travel with a dangerous-goods shipment?",
+                promptAr: "أي مستند يجب أن يرافق شحنة البضائع الخطرة؟",
+                options: [
+                  { text: "The dangerous-goods declaration and the Safety Data Sheet (SDS)", textAr: "إقرار البضائع الخطرة وصحيفة بيانات السلامة (SDS)", correct: true },
+                  { text: "A holiday calendar", textAr: "تقويم الإجازات" },
+                  { text: "The driver's lunch receipt", textAr: "إيصال غداء السائق" },
+                  { text: "A marketing brochure", textAr: "كتيّب تسويقي" },
+                ],
+                explanation: "DG shipments require a declaration and the SDS so handlers know the hazard and response.",
+                explanationAr: "تتطلّب شحنات البضائع الخطرة إقرارًا وصحيفة بيانات سلامة ليعرف المناولون الخطر والاستجابة.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
