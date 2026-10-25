@@ -3921,6 +3921,586 @@ Know the spill/fire response for what you carry before you move it — not durin
       },
     ],
   },
+
+  // =========================================================================
+  // 20) CONSTRUCTION & CONTRACTING — ADVANCED PROJECT CONTROLS
+  // =========================================================================
+  {
+    key: "construction-project-controls",
+    title: "Advanced Construction Project Controls & Earned Value",
+    titleAr: "ضبط مشاريع الإنشاء المتقدّم والقيمة المكتسبة",
+    description:
+      "Control large contracts with data — earned value management (PV/EV/AC, CPI/SPI, forecasting), progress measurement with S-curves, schedule risk and cash-flow forecasting.",
+    descriptionAr:
+      "اضبط العقود الكبيرة بالبيانات — إدارة القيمة المكتسبة (المخطَّطة/المكتسبة/الفعلية ومؤشرات التكلفة والجدول والتنبؤ) وقياس التقدّم بمنحنيات S ومخاطر الجدول والتنبؤ بالتدفق النقدي.",
+    category: "Construction & Contracting",
+    level: "ADVANCED",
+    competency: "Project Controls",
+    competencyAr: "ضبط المشاريع",
+    modules: [
+      {
+        title: "Earned Value Management",
+        titleAr: "إدارة القيمة المكتسبة",
+        lessons: [
+          {
+            title: "PV, EV, AC and the Core Metrics",
+            titleAr: "القيمة المخطَّطة والمكتسبة والفعلية والمقاييس الأساسية",
+            type: "TEXT",
+            durationMinutes: 15,
+            content: `## One method for time AND cost
+
+**Earned Value Management (EVM)** measures schedule and cost performance together, from three numbers:
+
+- **PV (Planned Value)** — the budgeted cost of the work *planned* by now.
+- **EV (Earned Value)** — the budgeted cost of the work *actually done* by now.
+- **AC (Actual Cost)** — what that done work *actually cost*.
+
+### Variances
+
+- **Schedule Variance = EV − PV** (negative = behind schedule).
+- **Cost Variance = EV − AC** (negative = over budget).
+
+> EVM turns "we feel a bit behind" into a number. You cannot manage what you only estimate by feel.`,
+            contentAr: `## منهج واحد للوقت والتكلفة معًا
+
+تقيس **إدارة القيمة المكتسبة (EVM)** أداء الجدول والتكلفة معًا من ثلاثة أرقام:
+
+- **القيمة المخطَّطة (PV)** — الكلفة المُدرَجة للعمل *المخطَّط* حتى الآن.
+- **القيمة المكتسبة (EV)** — الكلفة المُدرَجة للعمل *المنجَز فعلًا* حتى الآن.
+- **الكلفة الفعلية (AC)** — ما كلّفه ذلك العمل المنجَز *فعلًا*.
+
+### الانحرافات
+
+- **انحراف الجدول = EV − PV** (سالب = متأخر عن الجدول).
+- **انحراف التكلفة = EV − AC** (سالب = تجاوز الميزانية).
+
+> تحوّل القيمة المكتسبة "نشعر أننا متأخرون قليلًا" إلى رقم. فلا يمكنك إدارة ما تقدّره بالإحساس فقط.`,
+          },
+          {
+            title: "CPI, SPI & Forecasting (EAC)",
+            titleAr: "مؤشر التكلفة والجدول والتنبؤ (EAC)",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## Turn today's data into a forecast
+
+- **CPI = EV / AC** — cost efficiency. Below 1.0 means every riyal spent earns less than a riyal of value.
+- **SPI = EV / PV** — schedule efficiency. Below 1.0 means slower than planned.
+- **EAC (Estimate At Completion)** — a forecast of the final cost based on performance so far (e.g. Budget ÷ CPI).
+
+### Why it matters
+
+A CPI of 0.9 at 30% complete is an early, quantified warning — act now, not at handover.
+
+> The earlier the trend is visible, the cheaper the correction. EVM makes the trend visible while there is still time to steer.`,
+            contentAr: `## حوّل بيانات اليوم إلى تنبؤ
+
+- **مؤشر أداء التكلفة CPI = EV / AC** — كفاءة التكلفة. وأقل من ١٫٠ يعني أن كل ريال يُنفَق يكسب أقل من ريال من القيمة.
+- **مؤشر أداء الجدول SPI = EV / PV** — كفاءة الجدول. وأقل من ١٫٠ يعني أبطأ من المخطَّط.
+- **التقدير عند الإنجاز (EAC)** — تنبؤ بالكلفة النهائية بناءً على الأداء حتى الآن (مثل الميزانية ÷ CPI).
+
+### لماذا يهم
+
+مؤشر تكلفة ٠٫٩ عند إنجاز ٣٠٪ إنذار مبكر مُكمَّم — تصرّف الآن لا عند التسليم.
+
+> كلما ظهر الاتجاه مبكرًا كانت المعالجة أرخص. وتُظهِر القيمة المكتسبة الاتجاه بينما لا يزال هناك وقت للتوجيه.`,
+          },
+        ],
+      },
+      {
+        title: "Schedule & Cost Risk",
+        titleAr: "مخاطر الجدول والتكلفة",
+        lessons: [
+          {
+            title: "Progress Measurement & S-Curves",
+            titleAr: "قياس التقدّم ومنحنيات S",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Measure progress you can defend
+
+- **Physical progress** — measure what is actually built (e.g. m³ poured), not effort spent or optimism.
+- **Weighting** — weight activities by cost/man-hours so a big activity counts more than a trivial one.
+- **S-curve** — cumulative planned vs. actual progress over time; the gap shows slippage at a glance.
+
+> Percent-complete claimed by feel inflates early and collapses late. Weighted physical measurement keeps the number honest.`,
+            contentAr: `## قِس تقدّمًا يمكنك الدفاع عنه
+
+- **التقدّم المادي** — قِس ما نُفِّذ فعلًا (مثل م³ مصبوبة) لا الجهد المبذول أو التفاؤل.
+- **الترجيح** — رجّح الأنشطة حسب الكلفة/ساعات العمل ليُحتسَب النشاط الكبير أكثر من التافه.
+- **منحنى S** — التقدّم التراكمي المخطَّط مقابل الفعلي عبر الزمن؛ والفجوة تُظهر الانزلاق بلمحة.
+
+> نسبة الإنجاز المدّعاة بالإحساس تتضخّم مبكرًا وتنهار متأخرًا. والقياس المادي المرجَّح يُبقي الرقم صادقًا.`,
+          },
+          {
+            title: "Schedule Risk & Cash Flow Forecasting",
+            titleAr: "مخاطر الجدول والتنبؤ بالتدفق النقدي",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Plan for what might go wrong — and for cash
+
+- **Schedule risk** — identify activities most likely to slip; protect the critical path with realistic buffers, not wishful durations.
+- **Contingency** — allow time and money for known uncertainty.
+- **Cash-flow forecast** — map money in (payments) against money out (costs). A profitable project can still fail if cash runs out before a payment arrives.
+
+> Profit is an opinion until the project ends; cash is a fact every week. Forecast both.`,
+            contentAr: `## خطّط لما قد يسوء — وللنقد
+
+- **مخاطر الجدول** — حدّد الأنشطة الأكثر عرضةً للانزلاق؛ واحمِ المسار الحرج بمخازن واقعية لا بمدد متفائلة.
+- **الاحتياطي** — خصّص وقتًا ومالًا لعدم اليقين المعروف.
+- **التنبؤ بالتدفق النقدي** — طابِق الداخل (الدفعات) مع الخارج (التكاليف). فالمشروع الرابح قد يفشل إن نفد النقد قبل وصول دفعة.
+
+> الربح رأي حتى ينتهي المشروع؛ والنقد حقيقة كل أسبوع. تنبّأ بكليهما.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "In Earned Value Management, 'Earned Value (EV)' is:",
+                promptAr: "في إدارة القيمة المكتسبة، 'القيمة المكتسبة (EV)' هي:",
+                options: [
+                  { text: "The budgeted cost of the work actually done so far", textAr: "الكلفة المُدرَجة للعمل المنجَز فعلًا حتى الآن", correct: true },
+                  { text: "The total project profit", textAr: "إجمالي ربح المشروع" },
+                  { text: "The money left in the bank", textAr: "المال المتبقّي في البنك" },
+                  { text: "The cost of the site office", textAr: "تكلفة مكتب الموقع" },
+                ],
+                explanation: "EV is the budgeted value of work completed to date.",
+                explanationAr: "القيمة المكتسبة هي القيمة المُدرَجة للعمل المنجَز حتى تاريخه.",
+              },
+              {
+                prompt: "A Cost Performance Index (CPI) below 1.0 indicates:",
+                promptAr: "مؤشر أداء التكلفة (CPI) أقل من ١٫٠ يدل على:",
+                options: [
+                  { text: "The project is over budget (spending more than the value earned)", textAr: "المشروع تجاوز الميزانية (ينفق أكثر من القيمة المكتسبة)", correct: true },
+                  { text: "The project is ahead of schedule", textAr: "المشروع متقدّم عن الجدول" },
+                  { text: "The project is under budget", textAr: "المشروع دون الميزانية" },
+                  { text: "Nothing — CPI is cosmetic", textAr: "لا شيء — المؤشر شكليّ" },
+                ],
+                explanation: "CPI = EV/AC; below 1.0 means each riyal spent earns less than a riyal of value.",
+                explanationAr: "CPI = EV/AC؛ وأقل من ١٫٠ يعني أن كل ريال يُنفَق يكسب أقل من ريال.",
+              },
+              {
+                prompt: "An S-curve on a project compares:",
+                promptAr: "منحنى S في المشروع يقارن:",
+                options: [
+                  { text: "Cumulative planned progress against cumulative actual progress over time", textAr: "التقدّم التراكمي المخطَّط مقابل الفعلي عبر الزمن", correct: true },
+                  { text: "The number of workers against the weather", textAr: "عدد العمال مقابل الطقس" },
+                  { text: "Material prices against fuel prices", textAr: "أسعار المواد مقابل أسعار الوقود" },
+                  { text: "Profit against the client's mood", textAr: "الربح مقابل مزاج العميل" },
+                ],
+                explanation: "An S-curve plots cumulative planned vs. actual progress, exposing slippage.",
+                explanationAr: "يرسم منحنى S التقدّم التراكمي المخطَّط مقابل الفعلي ليكشف الانزلاق.",
+              },
+              {
+                prompt: "Why forecast cash flow even on a profitable project?",
+                promptAr: "لماذا التنبؤ بالتدفق النقدي حتى في مشروع رابح؟",
+                options: [
+                  { text: "A project can run out of cash before payments arrive, even if it is profitable overall", textAr: "قد ينفد النقد قبل وصول الدفعات، حتى لو كان المشروع رابحًا إجمالًا", correct: true },
+                  { text: "Cash flow sets the concrete strength", textAr: "التدفق النقدي يحدّد مقاومة الخرسانة" },
+                  { text: "It replaces the safety plan", textAr: "يحلّ محل خطة السلامة" },
+                  { text: "It is required to pour foundations", textAr: "مطلوب لصبّ الأساسات" },
+                ],
+                explanation: "Timing of cash in vs. out can sink a profitable project; forecast it weekly.",
+                explanationAr: "توقيت دخول النقد وخروجه قد يُغرِق مشروعًا رابحًا؛ فتنبّأ به أسبوعيًا.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 21) ENGINEERING & DESIGN — GEOTECHNICAL & FOUNDATIONS
+  // =========================================================================
+  {
+    key: "engineering-geotechnical",
+    title: "Geotechnical & Foundation Engineering",
+    titleAr: "الهندسة الجيوتقنية وهندسة الأساسات",
+    description:
+      "Design what the structure stands on — soil behaviour and site investigation, bearing capacity and settlement, shallow vs. deep foundations, and safe excavation, dewatering and earth retention.",
+    descriptionAr:
+      "صمّم ما تقف عليه المنشأة — سلوك التربة واستكشاف الموقع وقدرة التحمّل والهبوط والأساسات السطحية مقابل العميقة والحفر الآمن ونزح المياه ودعم الجوانب.",
+    category: "Engineering & Design",
+    level: "ADVANCED",
+    competency: "Geotechnical Engineering",
+    competencyAr: "الهندسة الجيوتقنية",
+    modules: [
+      {
+        title: "Soils & Site Investigation",
+        titleAr: "التربة واستكشاف الموقع",
+        lessons: [
+          {
+            title: "Soil Behaviour & Site Investigation",
+            titleAr: "سلوك التربة واستكشاف الموقع",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## Know the ground before you build on it
+
+Soils vary enormously — sand, clay, silt, rock — and each behaves differently under load and water.
+
+- **Site investigation** — boreholes and lab tests reveal soil type, strength and the **water table** before design.
+- **Why it matters** — the same building needs different foundations on sand vs. soft clay.
+- **Unforeseen ground** — the biggest cause of foundation cost overruns is a surprise underground.
+
+> The cheapest borehole is far cheaper than the surprise it prevents. Investigate first, design second.`,
+            contentAr: `## اعرف الأرض قبل أن تبني عليها
+
+تتباين الترب تباينًا كبيرًا — رمل وطين وطَمْي وصخر — ولكلٍّ سلوك مختلف تحت الحمل والماء.
+
+- **استكشاف الموقع** — الجسّات والاختبارات المخبرية تكشف نوع التربة وقوّتها و**منسوب المياه الجوفية** قبل التصميم.
+- **لماذا يهم** — المبنى نفسه يحتاج أساسات مختلفة على الرمل مقارنةً بالطين الليّن.
+- **الأرض غير المتوقَّعة** — أكبر أسباب تجاوز كلفة الأساسات مفاجأة تحت الأرض.
+
+> أرخص جسّة أرخص بكثير من المفاجأة التي تمنعها. استكشِف أولًا وصمّم ثانيًا.`,
+          },
+          {
+            title: "Bearing Capacity & Settlement",
+            titleAr: "قدرة التحمّل والهبوط",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Strong enough, and still enough
+
+Two questions decide a foundation:
+
+- **Bearing capacity** — can the soil carry the load without shear failure? Design keeps pressure safely below the soil's limit.
+- **Settlement** — how much will it sink, and will it sink evenly?
+
+### Differential settlement
+
+Uniform settlement is often tolerable; **differential** settlement (one part sinks more than another) cracks structures and is the real enemy.
+
+> A foundation can be strong enough yet still fail serviceability if it settles unevenly. Control both capacity and settlement.`,
+            contentAr: `## قويّ بما يكفي، ومستقرّ بما يكفي
+
+سؤالان يحدّدان الأساس:
+
+- **قدرة التحمّل** — هل تحمل التربة الحمل دون انهيار قص؟ يُبقي التصميم الضغط بأمان دون حدّ التربة.
+- **الهبوط** — كم سيهبط، وهل سيهبط بانتظام؟
+
+### الهبوط التفاضلي
+
+الهبوط المنتظم محتمَل غالبًا؛ أما **التفاضلي** (هبوط جزء أكثر من آخر) فيُشقّق المنشآت وهو العدو الحقيقي.
+
+> قد يكون الأساس قويًا بما يكفي ويفشل في الخدمة إن هبط بشكل غير منتظم. اضبط القدرة والهبوط معًا.`,
+          },
+        ],
+      },
+      {
+        title: "Foundations",
+        titleAr: "الأساسات",
+        lessons: [
+          {
+            title: "Shallow vs. Deep Foundations",
+            titleAr: "الأساسات السطحية مقابل العميقة",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Match the foundation to the ground and the load
+
+- **Shallow foundations** (pads, strips, rafts) transfer load to competent soil near the surface — economical when the near-surface soil is strong.
+- **Deep foundations** (piles) carry load down to stronger strata or rock when the surface soil is weak, or loads are very high.
+- **Raft** — a single slab under the whole building, used to spread heavy or uneven loads on weaker soil.
+
+> There is no "best" foundation — only the right one for this soil, this load and this budget.`,
+            contentAr: `## طابِق الأساس مع الأرض والحمل
+
+- **الأساسات السطحية** (القواعد المنفصلة والشريطية واللبشة) تنقل الحمل إلى تربة كفؤة قرب السطح — اقتصادية حين تكون التربة السطحية قوية.
+- **الأساسات العميقة** (الخوازيق) تنقل الحمل نزولًا إلى طبقات أقوى أو صخر حين تكون التربة السطحية ضعيفة أو الأحمال عالية جدًا.
+- **اللبشة (Raft)** — بلاطة واحدة تحت المبنى كله، تُستخدم لتوزيع الأحمال الثقيلة أو غير المنتظمة على تربة أضعف.
+
+> لا يوجد أساس "أفضل" — بل الأساس المناسب لهذه التربة وهذا الحمل وهذه الميزانية.`,
+          },
+          {
+            title: "Excavation, Dewatering & Earth Retention",
+            titleAr: "الحفر ونزح المياه ودعم الجوانب",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## The most dangerous phase is below ground
+
+- **Earth retention** — shoring, sheet piles or diaphragm walls hold back soil so deep excavations don't collapse.
+- **Dewatering** — lower the water table so the excavation stays dry and stable; control it so neighbours don't settle.
+- **Excavation safety** — unsupported deep trenches collapse without warning and kill; never enter one that isn't protected.
+
+> Trench and excavation collapses are among construction's deadliest events. Support the ground, control the water, and never gamble with either.`,
+            contentAr: `## أخطر مرحلة هي تحت الأرض
+
+- **دعم الجوانب** — السناد أو الألواح الحديدية أو الجدران الخرسانية (Diaphragm) تحجز التربة كي لا تنهار الحفريات العميقة.
+- **نزح المياه** — اخفض منسوب المياه ليبقى الحفر جافًا ومستقرًا؛ واضبطه كي لا يهبط الجيران.
+- **سلامة الحفر** — الخنادق العميقة غير المدعومة تنهار دون إنذار وتقتل؛ لا تدخل خندقًا غير محميّ أبدًا.
+
+> انهيارات الخنادق والحفريات من أشدّ أحداث الإنشاء فتكًا. ادعم الأرض واضبط الماء ولا تُقامر بأيٍّ منهما.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "A geotechnical site investigation is done mainly to:",
+                promptAr: "يُجرى استكشاف الموقع الجيوتقني أساسًا لـ:",
+                options: [
+                  { text: "Reveal soil type, strength and the water table before design", textAr: "كشف نوع التربة وقوّتها ومنسوب المياه قبل التصميم", correct: true },
+                  { text: "Choose the building's paint", textAr: "اختيار دهان المبنى" },
+                  { text: "Decide the project logo", textAr: "تحديد شعار المشروع" },
+                  { text: "Set worker salaries", textAr: "تحديد رواتب العمال" },
+                ],
+                explanation: "Boreholes and lab tests characterise the ground so foundations can be designed correctly.",
+                explanationAr: "الجسّات والاختبارات تُوصّف الأرض ليُصمَّم الأساس بشكل صحيح.",
+              },
+              {
+                prompt: "Which type of settlement most commonly cracks a structure?",
+                promptAr: "أي نوع من الهبوط يُشقّق المنشأة غالبًا؟",
+                options: [
+                  { text: "Differential settlement (uneven across the structure)", textAr: "الهبوط التفاضلي (غير المنتظم عبر المنشأة)", correct: true },
+                  { text: "Uniform settlement", textAr: "الهبوط المنتظم" },
+                  { text: "No settlement at all", textAr: "لا هبوط إطلاقًا" },
+                  { text: "Upward settlement", textAr: "الهبوط إلى أعلى" },
+                ],
+                explanation: "Differential (uneven) settlement induces distortion and cracking.",
+                explanationAr: "الهبوط التفاضلي (غير المنتظم) يُحدث تشوّهًا وتشقّقًا.",
+              },
+              {
+                prompt: "Deep (pile) foundations are chosen primarily when:",
+                promptAr: "تُختار الأساسات العميقة (الخوازيق) أساسًا عندما:",
+                options: [
+                  { text: "Surface soil is weak or loads are very high, so load must reach stronger strata", textAr: "تكون التربة السطحية ضعيفة أو الأحمال عالية جدًا، فيجب أن يصل الحمل إلى طبقات أقوى", correct: true },
+                  { text: "The surface soil is already very strong", textAr: "تكون التربة السطحية قوية جدًا أصلًا" },
+                  { text: "The client prefers a round building", textAr: "يفضّل العميل مبنى دائريًا" },
+                  { text: "The weather is hot", textAr: "يكون الطقس حارًا" },
+                ],
+                explanation: "Piles transfer load past weak surface soil to competent strata or rock.",
+                explanationAr: "تنقل الخوازيق الحمل متجاوزةً التربة السطحية الضعيفة إلى طبقات كفؤة أو صخر.",
+              },
+              {
+                prompt: "An unsupported deep excavation/trench is dangerous because:",
+                promptAr: "الحفرة/الخندق العميق غير المدعوم خطير لأنه:",
+                options: [
+                  { text: "It can collapse suddenly and bury workers", textAr: "قد ينهار فجأةً ويدفن العمال", correct: true },
+                  { text: "It improves soil strength", textAr: "يحسّن قوّة التربة" },
+                  { text: "It lowers project cost safely", textAr: "يخفض كلفة المشروع بأمان" },
+                  { text: "It speeds up concrete curing", textAr: "يسرّع معالجة الخرسانة" },
+                ],
+                explanation: "Unsupported excavations can collapse without warning — a leading cause of site fatalities.",
+                explanationAr: "الحفريات غير المدعومة قد تنهار دون إنذار — من أبرز أسباب الوفيات في المواقع.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 22) LOGISTICS & TRANSPORTATION — ANALYTICS & PERFORMANCE
+  // =========================================================================
+  {
+    key: "logistics-analytics",
+    title: "Logistics Analytics & Performance Management",
+    titleAr: "تحليلات اللوجستيات وإدارة الأداء",
+    description:
+      "Run logistics by the numbers — key KPIs (OTIF, cost-to-serve), dashboards and data-driven decisions, network design trade-offs, and continuous improvement.",
+    descriptionAr:
+      "أدِر اللوجستيات بالأرقام — المؤشرات الرئيسية (OTIF وتكلفة الخدمة) ولوحات المعلومات والقرارات المبنية على البيانات ومفاضلات تصميم الشبكة والتحسين المستمر.",
+    category: "Logistics & Transportation",
+    level: "ADVANCED",
+    competency: "Logistics Analytics",
+    competencyAr: "تحليلات اللوجستيات",
+    modules: [
+      {
+        title: "Measuring Performance",
+        titleAr: "قياس الأداء",
+        lessons: [
+          {
+            title: "Logistics KPIs (OTIF, Cost-to-Serve)",
+            titleAr: "مؤشرات أداء اللوجستيات (OTIF وتكلفة الخدمة)",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Measure what the customer and the CFO care about
+
+- **OTIF (On-Time In-Full)** — the share of orders delivered on time, complete and undamaged. The headline service metric.
+- **Cost-to-serve** — the true total cost of serving a customer or channel (transport, handling, returns) — not just the average.
+- **Perfect order rate, inventory turns, fill rate** — round out service and efficiency.
+
+### One number is never enough
+
+Cutting cost can wreck OTIF; chasing OTIF can explode cost. Watch service and cost *together*.
+
+> A KPI you don't act on is just a decoration. Measure a few that matter, and manage to them.`,
+            contentAr: `## قِس ما يهمّ العميل والمدير المالي
+
+- **OTIF (في الوقت وبالكامل)** — نسبة الطلبات المُسلَّمة في الوقت وكاملةً وسليمة. وهو مؤشر الخدمة الرئيسي.
+- **تكلفة الخدمة (Cost-to-serve)** — الكلفة الإجمالية الحقيقية لخدمة عميل أو قناة (النقل والمناولة والمرتجعات) — لا المتوسط فقط.
+- **معدّل الطلب المثالي ودوران المخزون ومعدّل التلبية** — تُكمل الخدمة والكفاءة.
+
+### رقم واحد لا يكفي أبدًا
+
+خفض التكلفة قد يُدمّر OTIF؛ وملاحقة OTIF قد تُفجّر التكلفة. راقِب الخدمة والتكلفة *معًا*.
+
+> المؤشر الذي لا تتصرّف بناءً عليه مجرّد زينة. قِس القليل المهم وأدِر وفقه.`,
+          },
+          {
+            title: "Dashboards & Data-Driven Decisions",
+            titleAr: "لوحات المعلومات والقرارات المبنية على البيانات",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## From data to decisions
+
+- **One source of truth** — clean, consistent data beats many conflicting spreadsheets.
+- **Dashboards** — show the few KPIs that drive action, with targets and trends, not a wall of numbers.
+- **Root cause** — when a KPI slips, drill into *why* (a lane, a carrier, a product) instead of reacting to the average.
+
+### Leading vs. lagging
+
+**Lagging** indicators (last month's OTIF) tell you what happened; **leading** indicators (today's late pick rate) let you act before the month is lost.
+
+> Dashboards don't improve anything — the decisions they trigger do. Design them for action, not decoration.`,
+            contentAr: `## من البيانات إلى القرارات
+
+- **مصدر حقيقة واحد** — بيانات نظيفة ومتّسقة خير من جداول متضاربة كثيرة.
+- **لوحات المعلومات** — اعرض المؤشرات القليلة المحرّكة للفعل، مع المستهدفات والاتجاهات، لا جدارًا من الأرقام.
+- **السبب الجذري** — حين ينزلق مؤشر، احفر في *السبب* (مسار، ناقل، منتج) بدل التفاعل مع المتوسط.
+
+### المتقدّمة مقابل المتأخّرة
+
+المؤشرات **المتأخّرة** (OTIF الشهر الماضي) تخبرك بما حدث؛ والمؤشرات **المتقدّمة** (معدّل الانتقاء المتأخر اليوم) تتيح التصرّف قبل خسارة الشهر.
+
+> لوحات المعلومات لا تحسّن شيئًا — بل القرارات التي تُطلِقها. صمّمها للفعل لا للزينة.`,
+          },
+        ],
+      },
+      {
+        title: "Optimizing the Network",
+        titleAr: "تحسين الشبكة",
+        lessons: [
+          {
+            title: "Network Design & Cost Trade-offs",
+            titleAr: "تصميم الشبكة ومفاضلات التكلفة",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Where to put stock, and how to serve from it
+
+- **Network design** — how many warehouses/hubs, where, and which customers each serves.
+- **The core trade-off** — more, closer facilities raise facility cost but cut transport cost and delivery time; fewer, central ones do the opposite.
+- **Centralized vs. distributed inventory** — centralizing pools demand (less total safety stock) but can lengthen delivery.
+
+> There is no free optimum: faster, cheaper and leaner pull against each other. Design the network for the service level the business actually sells.`,
+            contentAr: `## أين تضع المخزون، وكيف تخدم منه
+
+- **تصميم الشبكة** — كم مستودعًا/مركزًا، وأين، وأي عملاء يخدم كلٌّ منها.
+- **المفاضلة الجوهرية** — المرافق الأكثر والأقرب ترفع كلفة المرافق لكنها تخفض كلفة النقل وزمن التسليم؛ والأقل والمركزية تفعل العكس.
+- **المخزون المركزي مقابل الموزَّع** — المركزة تجمّع الطلب (مخزون أماني إجمالي أقل) لكنها قد تُطيل التسليم.
+
+> لا يوجد أمثل مجاني: الأسرع والأرخص والأنحف تتجاذب. صمّم الشبكة لمستوى الخدمة الذي يبيعه العمل فعلًا.`,
+          },
+          {
+            title: "Continuous Improvement in Logistics",
+            titleAr: "التحسين المستمر في اللوجستيات",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Small gains, compounded
+
+- **PDCA (Plan-Do-Check-Act)** — a disciplined loop: pilot a change, measure it, keep what works, standardize it.
+- **Reduce waste** — cut empty running, double-handling, waiting and avoidable returns.
+- **Involve the front line** — drivers and pickers see the waste managers miss; make it easy for them to flag it.
+
+> World-class logistics is rarely one big breakthrough; it is hundreds of measured small improvements that compound over years.`,
+            contentAr: `## مكاسب صغيرة متراكمة
+
+- **PDCA (خطّط-نفّذ-تحقّق-تصرّف)** — حلقة منضبطة: جرّب تغييرًا، وقِسه، وأبقِ ما ينجح، ووحّده.
+- **قلّل الهدر** — قلّل التشغيل الفارغ والمناولة المزدوجة والانتظار والمرتجعات القابلة للتفادي.
+- **أشرِك الصف الأمامي** — السائقون والمنتقون يرون الهدر الذي يفوت المديرين؛ فسهّل عليهم الإبلاغ عنه.
+
+> اللوجستيات عالمية المستوى نادرًا ما تكون اختراقًا كبيرًا واحدًا؛ بل مئات التحسينات الصغيرة المقيسة التي تتراكم عبر السنين.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "'Cost-to-serve' measures:",
+                promptAr: "'تكلفة الخدمة' تقيس:",
+                options: [
+                  { text: "The true total cost of serving a specific customer or channel", textAr: "الكلفة الإجمالية الحقيقية لخدمة عميل أو قناة محدّدة", correct: true },
+                  { text: "The price printed on the product", textAr: "السعر المطبوع على المنتج" },
+                  { text: "The driver's salary only", textAr: "راتب السائق فقط" },
+                  { text: "The warehouse rent only", textAr: "إيجار المستودع فقط" },
+                ],
+                explanation: "Cost-to-serve captures transport, handling and returns for a customer/channel, not just an average.",
+                explanationAr: "تشمل تكلفة الخدمة النقل والمناولة والمرتجعات لعميل/قناة، لا المتوسط فقط.",
+              },
+              {
+                prompt: "A 'leading' indicator differs from a 'lagging' one because it:",
+                promptAr: "يختلف المؤشر 'المتقدّم' عن 'المتأخّر' لأنه:",
+                options: [
+                  { text: "Lets you act before the outcome is locked in", textAr: "يتيح التصرّف قبل أن تُحسَم النتيجة", correct: true },
+                  { text: "Is always more accurate", textAr: "أدقّ دائمًا" },
+                  { text: "Only reports last year's results", textAr: "يبلّغ نتائج العام الماضي فقط" },
+                  { text: "Requires no data", textAr: "لا يحتاج بيانات" },
+                ],
+                explanation: "Leading indicators signal early so you can act; lagging ones report what already happened.",
+                explanationAr: "المؤشرات المتقدّمة تنبّه مبكرًا لتتصرّف؛ والمتأخّرة تبلّغ ما حدث فعلًا.",
+              },
+              {
+                prompt: "A core trade-off in logistics network design is that more, closer warehouses usually:",
+                promptAr: "من المفاضلات الجوهرية في تصميم شبكة اللوجستيات أن المستودعات الأكثر والأقرب عادةً:",
+                options: [
+                  { text: "Raise facility cost but cut transport cost and delivery time", textAr: "ترفع كلفة المرافق لكنها تخفض كلفة النقل وزمن التسليم", correct: true },
+                  { text: "Cut every cost at once with no downside", textAr: "تخفض كل التكاليف دفعةً دون أي عيب" },
+                  { text: "Have no effect on delivery time", textAr: "لا تؤثّر على زمن التسليم" },
+                  { text: "Always reduce service levels", textAr: "تخفض مستويات الخدمة دائمًا" },
+                ],
+                explanation: "More local facilities improve service/transport but cost more to run — a genuine trade-off.",
+                explanationAr: "المرافق المحلية الأكثر تحسّن الخدمة/النقل لكنها أغلى تشغيلًا — مفاضلة حقيقية.",
+              },
+              {
+                prompt: "In the PDCA improvement cycle, the steps are:",
+                promptAr: "في دورة التحسين PDCA، الخطوات هي:",
+                options: [
+                  { text: "Plan, Do, Check, Act", textAr: "خطّط، نفّذ، تحقّق، تصرّف", correct: true },
+                  { text: "Pay, Deliver, Collect, Audit", textAr: "ادفع، سلّم، حصّل، دقّق" },
+                  { text: "Pick, Drive, Count, Ask", textAr: "انتقِ، قُد، عُدّ، اسأل" },
+                  { text: "Plan, Delay, Cancel, Argue", textAr: "خطّط، أجّل، ألغِ، جادِل" },
+                ],
+                explanation: "PDCA = Plan-Do-Check-Act, a disciplined continuous-improvement loop.",
+                explanationAr: "PDCA = خطّط-نفّذ-تحقّق-تصرّف، حلقة تحسين مستمر منضبطة.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
