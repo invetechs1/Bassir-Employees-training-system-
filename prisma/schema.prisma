@@ -70,6 +70,8 @@ model Tenant {
 
   branches             Branch[]
   departments          Department[]
+  positions            Position[]
+  positionPrograms     PositionProgram[]
   users                User[]
   roles                Role[]
   competencyCategories CompetencyCategory[]
@@ -155,6 +157,44 @@ model Department {
   @@map("departments")
 }
 
+/// A job position (e.g. "Business Development Manager"). Tenant-scoped, managed
+/// by HR/admins. A position carries a default set of training courses
+/// (`programs`); when an employee is assigned a position those courses are
+/// pre-selected for them, and can be tweaked per employee at invite time.
+model Position {
+  id        String   @id @default(cuid())
+  tenantId  String
+  title     String
+  titleAr   String? // Arabic title (bilingual); falls back to `title`
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant   Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  users    User[]
+  programs PositionProgram[]
+
+  // Position titles are unique within a company so the managed list stays clean.
+  @@unique([tenantId, title])
+  @@index([tenantId])
+  @@map("positions")
+}
+
+/// Join table: the default training courses mapped to a position.
+model PositionProgram {
+  tenantId   String
+  positionId String
+  programId  String
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  position Position        @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  program  TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@id([positionId, programId])
+  @@index([tenantId])
+  @@index([programId])
+  @@map("position_programs")
+}
+
 // ---------------------------------------------------------------------------
 // IDENTITY & ACCESS
 // ---------------------------------------------------------------------------
@@ -190,6 +230,7 @@ model User {
 
   branchId     String?
   departmentId String?
+  positionId   String?
   managerId    String?
 
   // 9-box talent grid placement (1..3 each). Null until assessed.
@@ -203,6 +244,7 @@ model User {
   tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   branch     Branch?     @relation(fields: [branchId], references: [id], onDelete: SetNull)
   department Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  position   Position?   @relation(fields: [positionId], references: [id], onDelete: SetNull)
   manager    User?       @relation("UserManager", fields: [managerId], references: [id], onDelete: SetNull)
   reports    User[]      @relation("UserManager")
 
@@ -223,6 +265,7 @@ model User {
   @@unique([tenantId, email])
   @@index([tenantId])
   @@index([managerId])
+  @@index([positionId])
   @@map("users")
 }
 
@@ -463,12 +506,13 @@ model TrainingProgram {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
-  tenant       Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  competency   Competency?         @relation(fields: [competencyId], references: [id], onDelete: SetNull)
-  author       User?               @relation("ProgramAuthor", fields: [authorId], references: [id], onDelete: SetNull)
-  enrollments  Enrollment[]
-  modules      TrainingModule[]
-  certificates CourseCertificate[]
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  competency    Competency?         @relation(fields: [competencyId], references: [id], onDelete: SetNull)
+  author        User?               @relation("ProgramAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  enrollments   Enrollment[]
+  modules       TrainingModule[]
+  certificates  CourseCertificate[]
+  positionLinks PositionProgram[]
 
   @@index([tenantId])
   @@map("training_programs")

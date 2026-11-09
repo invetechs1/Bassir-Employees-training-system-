@@ -41,6 +41,87 @@ export function visibleProgramIds(
   return visible;
 }
 
+/**
+ * Pure: of the courses mapped to a position, which ones may actually be
+ * assigned/shown — i.e. the mapped courses that are currently PUBLISHED. A
+ * position may reference a course that was later unpublished or archived; those
+ * are dropped.
+ */
+export function publishedPositionPrograms(
+  programs: { id: string; status: string }[],
+  linkedProgramIds: Iterable<string>
+): string[] {
+  const published = new Set(
+    programs.filter((p) => p.status === "PUBLISHED").map((p) => p.id)
+  );
+  const out: string[] = [];
+  for (const id of linkedProgramIds) {
+    if (published.has(id)) out.push(id);
+  }
+  return out;
+}
+
+/** Published program ids mapped to a position (empty for a null/unknown id). */
+async function programIdsForPosition(
+  tx: Prisma.TransactionClient,
+  positionId: string | null
+): Promise<string[]> {
+  if (!positionId) return [];
+  const links = await tx.positionProgram.findMany({
+    where: { positionId },
+    select: { programId: true },
+  });
+  if (links.length === 0) return [];
+  const programs = await tx.trainingProgram.findMany({
+    where: { id: { in: links.map((l) => l.programId) } },
+    select: { id: true, status: true },
+  });
+  return publishedPositionPrograms(
+    programs,
+    links.map((l) => l.programId)
+  );
+}
+
+/**
+ * Enroll a single user into their position's mapped (published) courses
+ * (idempotent). Returns the number of new enrollments created. Requires an
+ * active tenant context (RLS) on `tx`.
+ */
+export async function assignPositionCourses(
+  tx: Prisma.TransactionClient,
+  tenantId: string,
+  userId: string
+): Promise<number> {
+  const user = await tx.user.findFirst({
+    where: { id: userId },
+    select: { positionId: true },
+  });
+  const ids = await programIdsForPosition(tx, user?.positionId ?? null);
+  return enrollUserInPrograms(tx, tenantId, userId, ids);
+}
+
+/**
+ * Enroll every member of a position into its mapped (published) courses. Fetches
+ * the position's course list ONCE, then batch-enrolls each member. Returns
+ * totals for reporting. Requires an active tenant context on `tx`.
+ */
+export async function assignPositionMembers(
+  tx: Prisma.TransactionClient,
+  tenantId: string,
+  positionId: string
+): Promise<{ users: number; enrollments: number }> {
+  const ids = await programIdsForPosition(tx, positionId);
+  const members = await tx.user.findMany({
+    where: { positionId, status: { in: ["ACTIVE", "INVITED"] } },
+    select: { id: true },
+  });
+  let enrollments = 0;
+  for (const m of members) {
+    enrollments += await enrollUserInPrograms(tx, tenantId, m.id, ids);
+  }
+  return { users: members.length, enrollments };
+}
+
 /** Published program ids in a category (empty for a null/unknown category). */
 async function programIdsForCategory(
   tx: Prisma.TransactionClient,
