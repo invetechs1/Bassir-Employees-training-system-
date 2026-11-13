@@ -86,6 +86,7 @@ export const TRACKS = [
   { key: "Construction & Contracting", en: "Construction & Contracting", ar: "الإنشاء والمقاولات" },
   { key: "Engineering & Design", en: "Engineering & Design", ar: "الهندسة والتصميم" },
   { key: "Logistics & Transportation", en: "Logistics & Transportation", ar: "الخدمات اللوجستية والنقل" },
+  { key: "Quality Management", en: "Quality Management", ar: "إدارة الجودة" },
 ] as const;
 
 export const CURRICULUM: CurriculumProgram[] = [
@@ -4494,6 +4495,774 @@ Cutting cost can wreck OTIF; chasing OTIF can explode cost. Watch service and co
                 ],
                 explanation: "PDCA = Plan-Do-Check-Act, a disciplined continuous-improvement loop.",
                 explanationAr: "PDCA = خطّط-نفّذ-تحقّق-تصرّف، حلقة تحسين مستمر منضبطة.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 23) PROJECT MANAGEMENT — ADVANCED (RISK, PROCUREMENT & STAKEHOLDERS)
+  // =========================================================================
+  {
+    key: "pm-advanced",
+    title: "Advanced Project Management: Risk, Procurement & Stakeholders",
+    titleAr: "إدارة المشاريع المتقدّمة: المخاطر والمشتريات وأصحاب المصلحة",
+    description:
+      "Lead complex projects with confidence — risk management, procurement and contracts, stakeholder and communication management, and controlling scope against change.",
+    descriptionAr:
+      "قُد المشاريع المعقّدة بثقة — إدارة المخاطر والمشتريات والعقود وإدارة أصحاب المصلحة والتواصل وضبط النطاق أمام التغيير.",
+    category: "Project Management",
+    level: "ADVANCED",
+    competency: "Project Management",
+    competencyAr: "إدارة المشاريع",
+    modules: [
+      {
+        title: "Risk & Procurement",
+        titleAr: "المخاطر والمشتريات",
+        lessons: [
+          {
+            title: "Project Risk Management",
+            titleAr: "إدارة مخاطر المشروع",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## Manage uncertainty on purpose
+
+- **Identify** risks (threats and opportunities) early, with the team.
+- **Assess** each by probability and impact; a simple risk matrix ranks what matters.
+- **Respond** — for threats: avoid, mitigate, transfer (e.g. insurance) or accept; for opportunities: exploit or enhance.
+- **Monitor** the risk register continuously; add new risks and close dead ones.
+
+> A risk register you write once and never open is theatre. Review it every cycle, and act on the top risks before they become issues.`,
+            contentAr: `## أدِر عدم اليقين عمدًا
+
+- **حدّد** المخاطر (تهديدات وفرص) مبكرًا مع الفريق.
+- **قيّم** كل خطر بالاحتمال والأثر؛ ومصفوفة مخاطر بسيطة ترتّب ما يهم.
+- **استجب** — للتهديدات: تجنّب، أو خفّف، أو انقل (مثل التأمين)، أو اقبل؛ وللفرص: استغلّ أو عزّز.
+- **راقِب** سجل المخاطر باستمرار؛ أضف الجديد وأغلِق المنتهي.
+
+> سجل مخاطر تكتبه مرة ولا تفتحه مسرحية. راجعه كل دورة، وعالِج أهم المخاطر قبل أن تصبح مشكلات.`,
+          },
+          {
+            title: "Procurement & Contracts",
+            titleAr: "المشتريات والعقود",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Buy what the project needs, on the right terms
+
+- **Make-or-buy** — decide what to deliver in-house vs. procure.
+- **Contract type shifts risk** — fixed-price puts risk on the seller; time-and-materials on the buyer; choose to match the uncertainty.
+- **Clear scope + acceptance criteria** prevent most procurement disputes.
+- **Manage the vendor**, not just the contract: performance, communication and issues.
+
+> The contract is signed once; the relationship is managed daily. Define acceptance up front and hold both sides to it.`,
+            contentAr: `## اشترِ ما يحتاجه المشروع بالشروط المناسبة
+
+- **التصنيع أو الشراء** — قرّر ما يُنفَّذ داخليًا مقابل ما يُشترى.
+- **نوع العقد ينقل المخاطرة** — السعر الثابت يضعها على البائع؛ والوقت والمواد على المشتري؛ اختر بما يناسب عدم اليقين.
+- **نطاق واضح + معايير قبول** يمنعان معظم نزاعات المشتريات.
+- **أدِر المورّد** لا العقد فقط: الأداء والتواصل والمشكلات.
+
+> يُوقَّع العقد مرة؛ وتُدار العلاقة يوميًا. عرّف القبول مسبقًا وألزِم الطرفين به.`,
+          },
+        ],
+      },
+      {
+        title: "Stakeholders & Change",
+        titleAr: "أصحاب المصلحة والتغيير",
+        lessons: [
+          {
+            title: "Stakeholder & Communication Management",
+            titleAr: "إدارة أصحاب المصلحة والتواصل",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Projects succeed or fail on people
+
+- **Identify stakeholders** — anyone affected by or able to affect the project.
+- **Analyze** by power and interest; engage high-power, high-interest closely.
+- **Communication plan** — who needs what information, how often, in what form.
+
+### Expectations
+
+Unmanaged expectations become disputes. Communicate progress and bad news early — surprises destroy trust faster than problems do.
+
+> Most "project" failures are communication failures. Tell the right people the right thing at the right time.`,
+            contentAr: `## تنجح المشاريع أو تفشل بالناس
+
+- **حدّد أصحاب المصلحة** — كل من يتأثر بالمشروع أو يؤثّر فيه.
+- **حلّل** بالسلطة والاهتمام؛ وأشرِك ذوي السلطة والاهتمام العاليين عن قرب.
+- **خطة التواصل** — من يحتاج أي معلومة، وكم مرة، وبأي صيغة.
+
+### التوقّعات
+
+التوقّعات غير المُدارة تصبح نزاعات. أبلِغ بالتقدّم والأخبار السيئة مبكرًا — فالمفاجآت تدمّر الثقة أسرع من المشكلات.
+
+> معظم إخفاقات "المشاريع" إخفاقات تواصل. أبلِغ الأشخاص المناسبين بالشيء المناسب في الوقت المناسب.`,
+          },
+          {
+            title: "Scope, Change Control & Closure",
+            titleAr: "النطاق وضبط التغيير والإغلاق",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Protect the baseline, close properly
+
+- **Scope creep** — uncontrolled additions that quietly blow time and budget.
+- **Change control** — every change is logged, assessed for impact, and approved or rejected — never just absorbed.
+- **Closure** — formal acceptance, lessons learned, and releasing the team.
+
+> "Just a small addition" repeated ten times is a blown project. Say yes through change control, with its cost and time — not for free in the corridor.`,
+            contentAr: `## احمِ الأساس، وأغلِق بشكل صحيح
+
+- **تضخّم النطاق** — إضافات غير منضبطة تستنزف الوقت والميزانية بهدوء.
+- **ضبط التغيير** — كل تغيير يُسجَّل ويُقيَّم أثره ويُعتمَد أو يُرفَض — لا يُمتصّ بلا حساب أبدًا.
+- **الإغلاق** — قبول رسمي ودروس مستفادة وتسريح الفريق.
+
+> "إضافة صغيرة فقط" مكرَّرة عشر مرات مشروع منهار. قُل نعم عبر ضبط التغيير بكلفته ووقته — لا مجانًا في الممر.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "A simple risk matrix ranks risks by:",
+                promptAr: "ترتّب مصفوفة المخاطر البسيطة المخاطر حسب:",
+                options: [
+                  { text: "Probability and impact", textAr: "الاحتمال والأثر", correct: true },
+                  { text: "Alphabetical order", textAr: "الترتيب الأبجدي" },
+                  { text: "Who reported them", textAr: "من أبلغ عنها" },
+                  { text: "Their colour", textAr: "لونها" },
+                ],
+                explanation: "Risks are prioritised by how likely they are and how much they would hurt.",
+                explanationAr: "تُرتَّب المخاطر حسب احتمال حدوثها وحجم ضررها.",
+              },
+              {
+                prompt: "Transferring a threat (e.g. via insurance) is an example of a:",
+                promptAr: "نقل تهديد (مثلًا عبر التأمين) مثال على:",
+                options: [
+                  { text: "Risk response strategy", textAr: "استراتيجية استجابة للمخاطر", correct: true },
+                  { text: "A communication plan", textAr: "خطة تواصل" },
+                  { text: "A closure activity", textAr: "نشاط إغلاق" },
+                  { text: "A procurement dispute", textAr: "نزاع مشتريات" },
+                ],
+                explanation: "Avoid, mitigate, transfer and accept are the threat-response strategies.",
+                explanationAr: "التجنّب والتخفيف والنقل والقبول هي استراتيجيات الاستجابة للتهديدات.",
+              },
+              {
+                prompt: "Which stakeholders should usually be engaged most closely?",
+                promptAr: "أي أصحاب مصلحة يجب إشراكهم عن قرب عادةً؟",
+                options: [
+                  { text: "High power, high interest", textAr: "سلطة عالية واهتمام عالٍ", correct: true },
+                  { text: "Low power, low interest", textAr: "سلطة منخفضة واهتمام منخفض" },
+                  { text: "Only external vendors", textAr: "المورّدون الخارجيون فقط" },
+                  { text: "Only the finance team", textAr: "فريق المالية فقط" },
+                ],
+                explanation: "Power/interest analysis puts the closest engagement on high-power, high-interest stakeholders.",
+                explanationAr: "يضع تحليل السلطة/الاهتمام أقرب إشراك على ذوي السلطة والاهتمام العاليين.",
+              },
+              {
+                prompt: "'Scope creep' is best controlled by:",
+                promptAr: "أفضل ضبط لـ'تضخّم النطاق' يكون بـ:",
+                options: [
+                  { text: "A change-control process that assesses and approves every change", textAr: "عملية ضبط تغيير تقيّم كل تغيير وتعتمده", correct: true },
+                  { text: "Accepting all requests to keep people happy", textAr: "قبول كل الطلبات لإرضاء الناس" },
+                  { text: "Ignoring the schedule", textAr: "تجاهل الجدول" },
+                  { text: "Never talking to stakeholders", textAr: "عدم التحدث إلى أصحاب المصلحة أبدًا" },
+                ],
+                explanation: "Change control logs, assesses and approves changes instead of silently absorbing them.",
+                explanationAr: "يسجّل ضبط التغيير ويقيّم ويعتمد التغييرات بدل امتصاصها بصمت.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 24) HEALTH, SAFETY & ENVIRONMENT — CONSTRUCTION SITE HSE
+  // =========================================================================
+  {
+    key: "hse-construction-permit",
+    title: "Construction Site HSE & Permit-to-Work",
+    titleAr: "الصحة والسلامة في مواقع الإنشاء وتصريح العمل",
+    description:
+      "Keep construction sites safe — the high-risk hazards (the Fatal Four), the permit-to-work system, personal protective equipment, and incident reporting and emergency response.",
+    descriptionAr:
+      "حافظ على سلامة مواقع الإنشاء — المخاطر عالية الخطورة (الأربعة القاتلة) ونظام تصريح العمل ومعدّات الوقاية الشخصية والإبلاغ عن الحوادث والاستجابة للطوارئ.",
+    category: "Health, Safety & Environment",
+    level: "INTERMEDIATE",
+    competency: "Construction Safety",
+    competencyAr: "سلامة الإنشاء",
+    modules: [
+      {
+        title: "Hazards & Permits",
+        titleAr: "المخاطر والتصاريح",
+        lessons: [
+          {
+            title: "High-Risk Hazards (The Fatal Four)",
+            titleAr: "المخاطر عالية الخطورة (الأربعة القاتلة)",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Most site deaths come from four causes
+
+The **"Fatal Four"** account for the majority of construction fatalities:
+
+1. **Falls from height** — edges, openings, scaffolds, ladders.
+2. **Struck by** — vehicles, falling objects, swinging loads.
+3. **Caught-in / between** — trench collapses, machinery, pinch points.
+4. **Electrocution** — overhead and buried lines, faulty equipment.
+
+Control them with a **hierarchy of control**: eliminate the hazard first; only rely on PPE last, not first.
+
+> Knowing the Fatal Four is not enough — design the work so they cannot happen. PPE is the last line, never the plan.`,
+            contentAr: `## معظم وفيات المواقع من أربعة أسباب
+
+تمثّل **"الأربعة القاتلة"** غالبية وفيات الإنشاء:
+
+1. **السقوط من علوّ** — الحواف والفتحات والسقالات والسلالم.
+2. **الاصطدام بالأجسام** — المركبات والأجسام الساقطة والأحمال المتأرجحة.
+3. **الانحشار** — انهيار الخنادق والآلات ونقاط القرص.
+4. **الصعق الكهربائي** — الخطوط العلوية والمدفونة والمعدات المعطوبة.
+
+اضبطها بـ **هرم التحكّم**: أزِل الخطر أولًا؛ ولا تعتمد على معدّات الوقاية إلا أخيرًا لا أولًا.
+
+> معرفة الأربعة القاتلة لا تكفي — صمّم العمل بحيث لا تحدث. فمعدّات الوقاية خط أخير لا خطة.`,
+          },
+          {
+            title: "The Permit-to-Work System",
+            titleAr: "نظام تصريح العمل",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## No permit, no work
+
+A **permit-to-work** is a documented authorization for high-risk activities, confirming the hazards are controlled before work starts. Typical permits:
+
+- **Hot work** — welding, cutting, grinding (fire risk).
+- **Confined space** — tanks, pits (atmosphere risk).
+- **Excavation** — underground services, collapse.
+- **Working at height** and **electrical / isolation (lockout-tagout)**.
+
+The permit names the controls, the people, and the time window — and is closed out when the work is done.
+
+> The permit is not paperwork for its own sake — it is the check that someone confirmed the job is safe before anyone started it.`,
+            contentAr: `## لا تصريح، لا عمل
+
+**تصريح العمل** تفويض موثّق للأنشطة عالية الخطورة، يؤكّد ضبط المخاطر قبل بدء العمل. ومن التصاريح المعتادة:
+
+- **العمل الساخن** — اللحام والقص والجلخ (خطر الحريق).
+- **الأماكن المحصورة** — الخزانات والحُفَر (خطر الغلاف الجوي).
+- **الحفر** — الخدمات المدفونة والانهيار.
+- **العمل على ارتفاع** و**الكهرباء / العزل (lockout-tagout)**.
+
+يحدّد التصريح الضوابط والأشخاص والنافذة الزمنية — ويُغلَق عند انتهاء العمل.
+
+> التصريح ليس ورقًا لذاته — بل تحقّق من أن أحدًا أكّد أن العمل آمن قبل أن يبدأ أحد.`,
+          },
+        ],
+      },
+      {
+        title: "Protection & Response",
+        titleAr: "الوقاية والاستجابة",
+        lessons: [
+          {
+            title: "PPE & Safe Systems of Work",
+            titleAr: "معدّات الوقاية وأنظمة العمل الآمنة",
+            type: "TEXT",
+            durationMinutes: 11,
+            content: `## The right gear, used the right way
+
+- **PPE** — hard hat, safety boots, high-visibility vest, eye protection, gloves, and task-specific gear (harness for height, respirator for dust).
+- **Fit and condition** — damaged or ill-fitting PPE does not protect.
+- **Toolbox talks** — short daily briefings on the day's specific hazards.
+- **Safe system of work** — the agreed method (RAMS) that everyone follows.
+
+> PPE protects one person if everything else fails. Fix the hazard and follow the method — don't rely on the helmet.`,
+            contentAr: `## المعدّات الصحيحة تُستخدم بشكل صحيح
+
+- **معدّات الوقاية** — خوذة وحذاء سلامة وسترة عاكسة وحماية للعين وقفازات ومعدّات حسب المهمة (حزام للارتفاع وكمامة للغبار).
+- **الملاءمة والحالة** — المعدّات التالفة أو غير الملائمة لا تحمي.
+- **محادثات السلامة اليومية** — إحاطات قصيرة عن مخاطر اليوم المحدّدة.
+- **نظام العمل الآمن** — الطريقة المتفق عليها (RAMS) التي يتّبعها الجميع.
+
+> تحمي معدّات الوقاية شخصًا واحدًا إذا فشل كل شيء آخر. عالِج الخطر واتّبع الطريقة — ولا تعتمد على الخوذة.`,
+          },
+          {
+            title: "Incident Reporting & Emergency Response",
+            titleAr: "الإبلاغ عن الحوادث والاستجابة للطوارئ",
+            type: "TEXT",
+            durationMinutes: 11,
+            content: `## Report near-misses before they become injuries
+
+- **Near-miss** — an event that could have caused harm but didn't; reporting it prevents the next real injury.
+- **Investigate root cause** — fix the system, not just blame a person.
+- **Emergency response** — know the evacuation routes, assembly points, first-aid and spill procedures *before* an incident.
+
+> A reported near-miss is a free lesson. A culture where people hide them is an injury waiting to happen.`,
+            contentAr: `## أبلِغ عن الحوادث الوشيكة قبل أن تصبح إصابات
+
+- **الحادث الوشيك** — حدث كان يمكن أن يسبّب ضررًا لكنه لم يفعل؛ والإبلاغ عنه يمنع الإصابة الحقيقية التالية.
+- **حقّق في السبب الجذري** — أصلِح النظام لا أن تلوم شخصًا فقط.
+- **الاستجابة للطوارئ** — اعرف مسارات الإخلاء ونقاط التجمّع والإسعاف وإجراءات الانسكاب *قبل* الحادث.
+
+> الحادث الوشيك المُبلَّغ عنه درس مجاني. وثقافة إخفائه إصابة تنتظر الوقوع.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "Which is one of construction's 'Fatal Four' hazards?",
+                promptAr: "أيٌّ مما يلي من مخاطر 'الأربعة القاتلة' في الإنشاء؟",
+                options: [
+                  { text: "Falls from height", textAr: "السقوط من علوّ", correct: true },
+                  { text: "Slow email replies", textAr: "بطء الردّ على البريد" },
+                  { text: "A noisy radio", textAr: "راديو مرتفع الصوت" },
+                  { text: "Late invoices", textAr: "الفواتير المتأخرة" },
+                ],
+                explanation: "Falls, struck-by, caught-in/between and electrocution are the Fatal Four.",
+                explanationAr: "السقوط والاصطدام والانحشار والصعق هي الأربعة القاتلة.",
+              },
+              {
+                prompt: "In the hierarchy of control, PPE should be:",
+                promptAr: "في هرم التحكّم، ينبغي أن تكون معدّات الوقاية:",
+                options: [
+                  { text: "The last line of defence, after eliminating/controlling the hazard", textAr: "خط الدفاع الأخير، بعد إزالة/ضبط الخطر", correct: true },
+                  { text: "The first and only control needed", textAr: "الضابط الأول والوحيد المطلوب" },
+                  { text: "Optional on all sites", textAr: "اختيارية في كل المواقع" },
+                  { text: "A replacement for training", textAr: "بديلًا عن التدريب" },
+                ],
+                explanation: "Eliminate or control the hazard first; PPE is the last resort, not the plan.",
+                explanationAr: "أزِل الخطر أو اضبطه أولًا؛ ومعدّات الوقاية ملاذ أخير لا خطة.",
+              },
+              {
+                prompt: "A permit-to-work is required mainly for:",
+                promptAr: "تصريح العمل مطلوب أساسًا لـ:",
+                options: [
+                  { text: "High-risk activities such as hot work, confined space and excavation", textAr: "الأنشطة عالية الخطورة كالعمل الساخن والأماكن المحصورة والحفر", correct: true },
+                  { text: "Routine office paperwork", textAr: "الأعمال الورقية المكتبية الروتينية" },
+                  { text: "Taking a lunch break", textAr: "أخذ استراحة الغداء" },
+                  { text: "Reading a drawing", textAr: "قراءة مخطّط" },
+                ],
+                explanation: "Permits authorise high-risk work only after hazards are confirmed controlled.",
+                explanationAr: "تصرّح التصاريح بالأعمال عالية الخطورة فقط بعد تأكيد ضبط المخاطر.",
+              },
+              {
+                prompt: "Why report a near-miss (an event that caused no injury)?",
+                promptAr: "لماذا الإبلاغ عن حادث وشيك (لم يسبّب إصابة)؟",
+                options: [
+                  { text: "It reveals a hazard so the next, real injury can be prevented", textAr: "يكشف خطرًا ليُمنَع ضرر الإصابة الحقيقية التالية", correct: true },
+                  { text: "To punish the worker involved", textAr: "لمعاقبة العامل المعني" },
+                  { text: "There is no reason to report it", textAr: "لا سبب للإبلاغ عنه" },
+                  { text: "To slow down the project", textAr: "لإبطاء المشروع" },
+                ],
+                explanation: "Near-misses are free warnings; reporting and fixing the cause prevents real injuries.",
+                explanationAr: "الحوادث الوشيكة تحذيرات مجانية؛ والإبلاغ ومعالجة السبب يمنعان الإصابات الحقيقية.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 25) PROCUREMENT & SUPPLY CHAIN — STRATEGIC PROCUREMENT & TENDERING
+  // =========================================================================
+  {
+    key: "procurement-strategic-tendering",
+    title: "Strategic Procurement, Tendering & Vendor Management",
+    titleAr: "المشتريات الاستراتيجية والمناقصات وإدارة المورّدين",
+    description:
+      "Buy strategically and manage suppliers well — the sourcing cycle, tendering and bid evaluation, negotiation, and supplier performance and risk management.",
+    descriptionAr:
+      "اشترِ استراتيجيًا وأدِر المورّدين جيدًا — دورة التوريد والمناقصات وتقييم العروض والتفاوض وأداء المورّدين وإدارة مخاطرهم.",
+    category: "Procurement & Supply Chain",
+    level: "INTERMEDIATE",
+    competency: "Strategic Procurement",
+    competencyAr: "المشتريات الاستراتيجية",
+    modules: [
+      {
+        title: "Sourcing & Tendering",
+        titleAr: "التوريد والمناقصات",
+        lessons: [
+          {
+            title: "The Sourcing Cycle & Specifications",
+            titleAr: "دورة التوريد والمواصفات",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Procurement is more than buying
+
+The **sourcing cycle**: define the need → specify → find suppliers → tender/evaluate → award → manage → review.
+
+- **Clear specification** — say what you need by function and standard, not by a single brand, to keep competition open.
+- **Total cost of ownership (TCO)** — price plus delivery, quality, maintenance and risk over the whole life, not just the sticker price.
+- **Category strategy** — treat strategic, high-value items differently from routine ones.
+
+> The lowest price is rarely the lowest cost. Specify well, and buy on total cost of ownership.`,
+            contentAr: `## المشتريات أكثر من الشراء
+
+**دورة التوريد**: عرّف الحاجة ← حدّد المواصفات ← جِد المورّدين ← ناقِص/قيّم ← ارسِ ← أدِر ← راجِع.
+
+- **مواصفة واضحة** — اذكر حاجتك بالوظيفة والمعيار لا بعلامة واحدة، لإبقاء المنافسة مفتوحة.
+- **التكلفة الإجمالية للتملّك (TCO)** — السعر زائد التسليم والجودة والصيانة والمخاطر طوال العمر، لا سعر الملصق فقط.
+- **استراتيجية الفئة** — عامِل البنود الاستراتيجية عالية القيمة بخلاف الروتينية.
+
+> الأرخص سعرًا نادرًا ما يكون الأقل تكلفة. حدّد المواصفات جيدًا واشترِ على التكلفة الإجمالية للتملّك.`,
+          },
+          {
+            title: "Tendering & Bid Evaluation",
+            titleAr: "المناقصات وتقييم العروض",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Fair, transparent, documented
+
+- **RFQ / RFP** — request quotes or proposals against the same clear scope so bids are comparable.
+- **Evaluation criteria** set in advance — price AND quality, delivery, experience and compliance, with agreed weights.
+- **Transparency & fairness** — treat bidders equally; document the decision; avoid conflicts of interest.
+
+### Avoid the cheapest trap
+
+Scoring price only invites low-ball bids that fail on quality or delivery. Weighted evaluation buys value, not just the lowest number.
+
+> A tender decision you cannot explain with documented criteria is a dispute — and an integrity risk — waiting to happen.`,
+            contentAr: `## عادلة وشفّافة وموثّقة
+
+- **طلب عرض سعر / طلب عرض فني (RFQ/RFP)** — اطلب الأسعار أو العروض وفق النطاق الواضح نفسه لتكون قابلة للمقارنة.
+- **معايير تقييم** تُحدَّد مسبقًا — السعر والجودة والتسليم والخبرة والامتثال، بأوزان متفق عليها.
+- **الشفافية والعدالة** — عامِل المتنافسين بالتساوي؛ ووثّق القرار؛ وتجنّب تضارب المصالح.
+
+### تفادَ فخّ الأرخص
+
+تسجيل السعر وحده يجلب عروضًا متدنّية تفشل في الجودة أو التسليم. والتقييم المرجَّح يشتري القيمة لا الرقم الأدنى فقط.
+
+> قرار مناقصة لا تستطيع تفسيره بمعايير موثّقة نزاع — ومخاطرة نزاهة — ينتظر الوقوع.`,
+          },
+        ],
+      },
+      {
+        title: "Negotiation & Vendor Management",
+        titleAr: "التفاوض وإدارة المورّدين",
+        lessons: [
+          {
+            title: "Negotiation Essentials",
+            titleAr: "أساسيات التفاوض",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Aim for value, not just a lower price
+
+- **Prepare** — know your needs, the market price, and your **BATNA** (best alternative if there is no deal).
+- **Interests, not positions** — understand what each side really needs; find trades that cost you little and give them a lot.
+- **Win-win where possible** — a supplier squeezed to failure is not a saving; it is a future risk.
+
+> Power in a negotiation comes from preparation and a credible alternative, not from volume. Walk in knowing your BATNA.`,
+            contentAr: `## استهدف القيمة لا السعر الأدنى فقط
+
+- **استعدّ** — اعرف حاجاتك وسعر السوق و**بديلك الأفضل (BATNA)** إن لم يُبرَم الاتفاق.
+- **المصالح لا المواقف** — افهم ما يحتاجه كل طرف فعلًا؛ وجِد مقايضات تكلّفك قليلًا وتعطيهم كثيرًا.
+- **المنفعة المتبادلة حيثما أمكن** — المورّد المعصور حتى الفشل ليس توفيرًا؛ بل مخاطرة مستقبلية.
+
+> قوة التفاوض من الاستعداد والبديل الموثوق لا من الحجم. ادخل عارفًا بديلك الأفضل.`,
+          },
+          {
+            title: "Supplier Performance & Risk",
+            titleAr: "أداء المورّدين والمخاطر",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## The deal is only as good as the delivery
+
+- **Measure performance** — quality, on-time delivery, responsiveness (a supplier scorecard).
+- **Supplier risk** — single-source dependence, financial health, and geographic/geopolitical exposure.
+- **Relationship** — collaborate with strategic suppliers; they innovate and prioritise partners, not one-off buyers.
+
+> Sign the contract, then manage the supplier. The savings on paper are only real if the goods arrive on time, on quality, every time.`,
+            contentAr: `## الصفقة بقدر التسليم فقط
+
+- **قِس الأداء** — الجودة والتسليم في الوقت والاستجابة (بطاقة أداء المورّد).
+- **مخاطر المورّد** — الاعتماد على مصدر وحيد والصحة المالية والتعرّض الجغرافي/الجيوسياسي.
+- **العلاقة** — تعاوَن مع المورّدين الاستراتيجيين؛ فهم يبتكرون ويقدّمون الشركاء لا المشترين لمرة.
+
+> وقّع العقد ثم أدِر المورّد. التوفير على الورق حقيقي فقط إن وصلت البضائع في الوقت وبالجودة كل مرة.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "'Total Cost of Ownership (TCO)' means buying based on:",
+                promptAr: "'التكلفة الإجمالية للتملّك (TCO)' تعني الشراء بناءً على:",
+                options: [
+                  { text: "Price plus delivery, quality, maintenance and risk over the whole life", textAr: "السعر زائد التسليم والجودة والصيانة والمخاطر طوال العمر", correct: true },
+                  { text: "Only the purchase price", textAr: "سعر الشراء فقط" },
+                  { text: "The supplier's logo", textAr: "شعار المورّد" },
+                  { text: "The colour of the packaging", textAr: "لون التغليف" },
+                ],
+                explanation: "TCO counts the whole-life cost, not just the sticker price.",
+                explanationAr: "تحسب TCO كلفة العمر كاملةً لا سعر الملصق فقط.",
+              },
+              {
+                prompt: "Why set bid evaluation criteria BEFORE opening tenders?",
+                promptAr: "لماذا تُحدَّد معايير تقييم العروض قبل فتح المناقصات؟",
+                options: [
+                  { text: "To keep the decision fair, transparent and defensible", textAr: "لإبقاء القرار عادلًا وشفّافًا وقابلًا للدفاع عنه", correct: true },
+                  { text: "To slow the project down", textAr: "لإبطاء المشروع" },
+                  { text: "To favour one supplier secretly", textAr: "لمحاباة مورّد سرًّا" },
+                  { text: "There is no reason", textAr: "لا يوجد سبب" },
+                ],
+                explanation: "Pre-set, weighted criteria make the award objective and auditable.",
+                explanationAr: "المعايير المحدّدة مسبقًا والمرجَّحة تجعل الترسية موضوعية وقابلة للتدقيق.",
+              },
+              {
+                prompt: "In negotiation, your 'BATNA' is:",
+                promptAr: "في التفاوض، 'بديلك الأفضل (BATNA)' هو:",
+                options: [
+                  { text: "Your best alternative if no deal is reached", textAr: "أفضل بديل لديك إن لم يُبرَم الاتفاق", correct: true },
+                  { text: "The supplier's phone number", textAr: "رقم هاتف المورّد" },
+                  { text: "The largest possible order", textAr: "أكبر طلب ممكن" },
+                  { text: "A type of contract", textAr: "نوع من العقود" },
+                ],
+                explanation: "A strong BATNA gives you real power — you can walk away.",
+                explanationAr: "البديل الأفضل القوي يمنحك قوة حقيقية — تستطيع الانسحاب.",
+              },
+              {
+                prompt: "A key supplier risk to monitor is:",
+                promptAr: "من مخاطر المورّدين المهمة للمراقبة:",
+                options: [
+                  { text: "Single-source dependence and the supplier's financial health", textAr: "الاعتماد على مصدر وحيد والصحة المالية للمورّد", correct: true },
+                  { text: "The supplier's office paint", textAr: "دهان مكتب المورّد" },
+                  { text: "How tall the supplier's staff are", textAr: "طول موظفي المورّد" },
+                  { text: "The day of the week", textAr: "يوم الأسبوع" },
+                ],
+                explanation: "Over-reliance on one source and a supplier's financial weakness are core procurement risks.",
+                explanationAr: "الاعتماد الزائد على مصدر وحيد وضعف المورّد المالي من صميم مخاطر المشتريات.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 26) QUALITY MANAGEMENT — QMS & ISO 9001
+  // =========================================================================
+  {
+    key: "quality-iso9001",
+    title: "Quality Management & ISO 9001",
+    titleAr: "إدارة الجودة والأيزو 9001",
+    description:
+      "Build quality into how work is done — quality principles, the ISO 9001 quality management system, process approach and continuous improvement, and audits and non-conformities.",
+    descriptionAr:
+      "اجعل الجودة جزءًا من طريقة العمل — مبادئ الجودة ونظام إدارة الجودة الأيزو 9001 ونهج العمليات والتحسين المستمر والتدقيق وحالات عدم المطابقة.",
+    category: "Quality Management",
+    level: "FOUNDATION",
+    competency: "Quality Management",
+    competencyAr: "إدارة الجودة",
+    modules: [
+      {
+        title: "Quality & ISO 9001",
+        titleAr: "الجودة والأيزو 9001",
+        lessons: [
+          {
+            title: "Quality Principles & Cost of Quality",
+            titleAr: "مبادئ الجودة وتكلفة الجودة",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Quality is meeting requirements, consistently
+
+- **Quality = conformance to requirements** — not luxury; the product does what was agreed, every time.
+- **Prevention over inspection** — it is cheaper to build it right than to find and fix defects later.
+- **Cost of quality** — prevention + appraisal (good spend) vs. internal + external failure (the cost of getting it wrong).
+
+### QA vs. QC
+
+- **Quality Assurance (QA)** — the processes that prevent defects.
+- **Quality Control (QC)** — the checks that detect defects.
+
+> Inspecting quality in at the end is slow and expensive. Build it in through good process — QA first, QC to verify.`,
+            contentAr: `## الجودة هي تلبية المتطلبات باستمرار
+
+- **الجودة = المطابقة للمتطلبات** — ليست رفاهية؛ المنتج يفعل ما اتُّفق عليه في كل مرة.
+- **الوقاية قبل التفتيش** — التنفيذ الصحيح أرخص من اكتشاف العيوب وإصلاحها لاحقًا.
+- **تكلفة الجودة** — الوقاية + التقييم (إنفاق جيد) مقابل الإخفاق الداخلي + الخارجي (كلفة الخطأ).
+
+### ضمان الجودة مقابل ضبط الجودة
+
+- **ضمان الجودة (QA)** — العمليات التي تمنع العيوب.
+- **ضبط الجودة (QC)** — الفحوص التي تكتشف العيوب.
+
+> تفتيش الجودة في النهاية بطيء ومكلف. ابنِها عبر عملية جيدة — الضمان أولًا والضبط للتحقّق.`,
+          },
+          {
+            title: "The ISO 9001 Quality Management System",
+            titleAr: "نظام إدارة الجودة الأيزو 9001",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## A framework trusted worldwide
+
+**ISO 9001** is the international standard for a **Quality Management System (QMS)**. Core ideas:
+
+- **Customer focus** — understand and meet customer requirements.
+- **Process approach** — manage activities as connected processes with inputs, outputs and owners.
+- **Documented information** — say what you do, do what you say, and keep records that prove it.
+- **Leadership & engagement** — quality is owned by management, delivered by everyone.
+
+> ISO 9001 certification is not a plaque on the wall — it is evidence that the business does what it says, consistently and checkably.`,
+            contentAr: `## إطار موثوق عالميًا
+
+**الأيزو 9001** هو المعيار الدولي لـ **نظام إدارة الجودة (QMS)**. وأفكاره الأساسية:
+
+- **التركيز على العميل** — افهم متطلبات العميل ولبِّها.
+- **نهج العمليات** — أدِر الأنشطة كعمليات مترابطة بمدخلات ومخرجات ومُلّاك.
+- **المعلومات الموثّقة** — قل ما تفعله، وافعل ما تقوله، واحتفظ بسجلات تُثبته.
+- **القيادة والمشاركة** — الجودة تملكها الإدارة ويحقّقها الجميع.
+
+> شهادة الأيزو 9001 ليست لوحة على الجدار — بل دليل أن العمل يفعل ما يقوله، باتّساق وقابلية للتحقّق.`,
+          },
+        ],
+      },
+      {
+        title: "Improvement & Audits",
+        titleAr: "التحسين والتدقيق",
+        lessons: [
+          {
+            title: "Process Approach & Continuous Improvement",
+            titleAr: "نهج العمليات والتحسين المستمر",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Improve the process, not just the output
+
+- **PDCA (Plan-Do-Check-Act)** — the improvement loop at the heart of ISO 9001.
+- **Root cause analysis** — tools like the **5 Whys** find the real cause, so a problem is fixed, not just patched.
+- **Measure** — use data (defect rates, on-time delivery, customer feedback) to know whether a change actually helped.
+
+> Fixing the same defect again and again means you treated the symptom. Find the root cause and change the process.`,
+            contentAr: `## حسّن العملية لا المُخرَج فقط
+
+- **PDCA (خطّط-نفّذ-تحقّق-تصرّف)** — حلقة التحسين في قلب الأيزو 9001.
+- **تحليل السبب الجذري** — أدوات مثل **الأسئلة الخمسة (5 Whys)** تجد السبب الحقيقي ليُحَل المشكل لا أن يُرقَّع.
+- **قِس** — استخدم البيانات (معدّلات العيوب والتسليم في الوقت وملاحظات العملاء) لتعرف إن كان التغيير نفع فعلًا.
+
+> إصلاح العيب نفسه مرارًا يعني أنك عالجت العرَض. جِد السبب الجذري وغيّر العملية.`,
+          },
+          {
+            title: "Audits & Non-Conformities",
+            titleAr: "التدقيق وحالات عدم المطابقة",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Check honestly, correct properly
+
+- **Internal audit** — a planned, independent check that the QMS is followed and effective — not a witch-hunt.
+- **Non-conformity (NC)** — where reality does not meet the requirement.
+- **Corrective action** — fix the immediate problem AND the root cause so it does not recur.
+- **Management review** — leadership reviews performance and decides improvements.
+
+> An audit that never raises a finding is not proof of perfection — it usually means nobody looked hard enough. Findings are how a QMS improves.`,
+            contentAr: `## دقّق بصدق، وصحّح بشكل سليم
+
+- **التدقيق الداخلي** — فحص مخطَّط ومستقل لاتّباع نظام الجودة وفعاليته — لا مطاردة للأخطاء.
+- **عدم المطابقة (NC)** — حيث لا يلبّي الواقع المتطلب.
+- **الإجراء التصحيحي** — عالِج المشكلة الفورية والسبب الجذري معًا كي لا تتكرّر.
+- **مراجعة الإدارة** — تراجع القيادة الأداء وتقرّر التحسينات.
+
+> التدقيق الذي لا يرفع أي ملاحظة ليس دليل كمال — بل يعني غالبًا أن أحدًا لم يدقّق كفايةً. فالملاحظات هي كيف يتحسّن نظام الجودة.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "In quality management, 'quality' is best defined as:",
+                promptAr: "في إدارة الجودة، تُعرَّف 'الجودة' على أنها:",
+                options: [
+                  { text: "Conformance to requirements, consistently", textAr: "المطابقة للمتطلبات باستمرار", correct: true },
+                  { text: "The most expensive option", textAr: "الخيار الأغلى" },
+                  { text: "Luxury finishes only", textAr: "التشطيبات الفاخرة فقط" },
+                  { text: "Whatever the supplier prefers", textAr: "ما يفضّله المورّد" },
+                ],
+                explanation: "Quality means meeting the agreed requirements every time — not luxury.",
+                explanationAr: "الجودة تعني تلبية المتطلبات المتفق عليها كل مرة — لا الرفاهية.",
+              },
+              {
+                prompt: "The difference between QA and QC is that:",
+                promptAr: "الفرق بين ضمان الجودة وضبط الجودة هو أن:",
+                options: [
+                  { text: "QA prevents defects (process); QC detects defects (checks)", textAr: "الضمان يمنع العيوب (العملية)؛ والضبط يكتشفها (الفحوص)", correct: true },
+                  { text: "They are exactly the same thing", textAr: "كلاهما الشيء نفسه تمامًا" },
+                  { text: "QA is only for finance", textAr: "الضمان للمالية فقط" },
+                  { text: "QC happens before any work starts", textAr: "الضبط يحدث قبل بدء أي عمل" },
+                ],
+                explanation: "QA builds quality into the process; QC verifies it by checking outputs.",
+                explanationAr: "يبني الضمان الجودة في العملية؛ ويتحقّق الضبط منها بفحص المخرجات.",
+              },
+              {
+                prompt: "ISO 9001 is the international standard for:",
+                promptAr: "الأيزو 9001 هو المعيار الدولي لـ:",
+                options: [
+                  { text: "A Quality Management System (QMS)", textAr: "نظام إدارة الجودة (QMS)", correct: true },
+                  { text: "Fire-alarm wiring", textAr: "توصيلات إنذار الحريق" },
+                  { text: "Concrete mix design", textAr: "تصميم خلطة الخرسانة" },
+                  { text: "Payroll processing", textAr: "معالجة الرواتب" },
+                ],
+                explanation: "ISO 9001 defines the requirements for a quality management system.",
+                explanationAr: "يحدّد الأيزو 9001 متطلبات نظام إدارة الجودة.",
+              },
+              {
+                prompt: "After finding a non-conformity, effective corrective action addresses:",
+                promptAr: "بعد اكتشاف عدم مطابقة، الإجراء التصحيحي الفعّال يعالج:",
+                options: [
+                  { text: "Both the immediate problem and its root cause, so it does not recur", textAr: "المشكلة الفورية وسببها الجذري معًا كي لا تتكرّر", correct: true },
+                  { text: "Only who to blame", textAr: "من يُلام فقط" },
+                  { text: "Nothing — just record it", textAr: "لا شيء — فقط سجّلها" },
+                  { text: "Hiding it from the auditor", textAr: "إخفاؤها عن المدقّق" },
+                ],
+                explanation: "Corrective action fixes the symptom and the root cause to prevent recurrence.",
+                explanationAr: "يعالج الإجراء التصحيحي العرَض والسبب الجذري لمنع التكرار.",
               },
             ],
           },

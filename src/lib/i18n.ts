@@ -310,6 +310,7 @@ export const DICT: Record<string, Entry> = {
   "track.Construction & Contracting": { en: "Construction & Contracting", ar: "الإنشاء والمقاولات" },
   "track.Engineering & Design": { en: "Engineering & Design", ar: "الهندسة والتصميم" },
   "track.Logistics & Transportation": { en: "Logistics & Transportation", ar: "الخدمات اللوجستية والنقل" },
+  "track.Quality Management": { en: "Quality Management", ar: "إدارة الجودة" },
 
   // Competencies
   "comp.subtitle": { en: "Measure real capability — self, manager and target levels across the competency framework.", ar: "قِس القدرة الحقيقية — مستويات التقييم الذاتي والمدير والهدف عبر إطار الجدارات." },
