@@ -87,6 +87,7 @@ export const TRACKS = [
   { key: "Engineering & Design", en: "Engineering & Design", ar: "الهندسة والتصميم" },
   { key: "Logistics & Transportation", en: "Logistics & Transportation", ar: "الخدمات اللوجستية والنقل" },
   { key: "Quality Management", en: "Quality Management", ar: "إدارة الجودة" },
+  { key: "Professional Skills", en: "Professional Skills", ar: "المهارات المهنية" },
 ] as const;
 
 export const CURRICULUM: CurriculumProgram[] = [
@@ -5263,6 +5264,764 @@ Scoring price only invites low-ball bids that fail on quality or delivery. Weigh
                 ],
                 explanation: "Corrective action fixes the symptom and the root cause to prevent recurrence.",
                 explanationAr: "يعالج الإجراء التصحيحي العرَض والسبب الجذري لمنع التكرار.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 27) ACCOUNTING & FINANCE — FINANCE FOR NON-FINANCE MANAGERS
+  // =========================================================================
+  {
+    key: "finance-non-finance",
+    title: "Finance for Non-Finance Managers",
+    titleAr: "المالية لغير الماليين",
+    description:
+      "Read the numbers and manage a budget — the three financial statements, budgets and variance, cash vs. profit, and the cost and margin basics every manager needs.",
+    descriptionAr:
+      "اقرأ الأرقام وأدِر ميزانية — القوائم المالية الثلاث والموازنات والانحرافات والنقد مقابل الربح وأساسيات التكلفة والهامش التي يحتاجها كل مدير.",
+    category: "Accounting & Finance",
+    level: "INTERMEDIATE",
+    competency: "Financial Acumen",
+    competencyAr: "الفطنة المالية",
+    modules: [
+      {
+        title: "Reading the Numbers",
+        titleAr: "قراءة الأرقام",
+        lessons: [
+          {
+            title: "The Three Financial Statements",
+            titleAr: "القوائم المالية الثلاث",
+            type: "TEXT",
+            durationMinutes: 14,
+            content: `## What each statement tells you
+
+- **Income statement (P&L)** — revenue minus costs over a period: are we profitable?
+- **Balance sheet** — assets, liabilities and equity at a point in time: what we own and owe.
+- **Cash flow statement** — cash actually in and out: can we pay our bills?
+
+### They connect
+
+Profit on the P&L flows into equity on the balance sheet; cash movements explain the change in the bank. A manager who reads all three sees the whole picture, not one angle.
+
+> Profit is an opinion; cash is a fact. Healthy businesses watch both.`,
+            contentAr: `## ماذا تخبرك كل قائمة
+
+- **قائمة الدخل (الأرباح والخسائر)** — الإيراد ناقص التكاليف خلال فترة: هل نحقّق ربحًا؟
+- **الميزانية العمومية** — الأصول والالتزامات وحقوق الملكية في لحظة: ما نملكه وما ندين به.
+- **قائمة التدفقات النقدية** — النقد الداخل والخارج فعلًا: هل نستطيع سداد التزاماتنا؟
+
+### وهي مترابطة
+
+يتدفّق ربح قائمة الدخل إلى حقوق الملكية في الميزانية؛ وتفسّر حركات النقد التغيّر في البنك. والمدير الذي يقرأ الثلاث يرى الصورة كاملة لا زاوية واحدة.
+
+> الربح رأي؛ والنقد حقيقة. والشركات السليمة تراقب كليهما.`,
+          },
+          {
+            title: "Profit vs. Cash",
+            titleAr: "الربح مقابل النقد",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Why a profitable business can run out of money
+
+Profit is recorded when earned; cash moves when paid. The gap between them can sink a healthy company:
+
+- **Receivables** — you booked the sale but the customer hasn't paid yet.
+- **Inventory** — cash is tied up in stock on the shelf.
+- **Timing** — you pay suppliers before your customers pay you.
+
+**Working capital** is the cash locked in day-to-day operations. Managing it well frees cash without earning a single extra riyal of profit.
+
+> A sale isn't money until it's collected. Watch cash, not just the P&L.`,
+            contentAr: `## لماذا قد ينفد المال من شركة رابحة
+
+يُسجَّل الربح عند تحقّقه؛ ويتحرّك النقد عند الدفع. والفجوة بينهما قد تُغرِق شركة سليمة:
+
+- **الذمم المدينة** — سجّلت البيع لكن العميل لم يدفع بعد.
+- **المخزون** — النقد محتجَز في بضاعة على الرف.
+- **التوقيت** — تدفع للمورّدين قبل أن يدفع لك عملاؤك.
+
+**رأس المال العامل** هو النقد المحتجَز في العمليات اليومية. وإدارته جيدًا تحرّر النقد دون كسب ريال ربح إضافي.
+
+> البيع ليس مالًا حتى يُحصَّل. راقِب النقد لا قائمة الأرباح فقط.`,
+          },
+        ],
+      },
+      {
+        title: "Managing a Budget",
+        titleAr: "إدارة الميزانية",
+        lessons: [
+          {
+            title: "Budgets & Variance Analysis",
+            titleAr: "الموازنات وتحليل الانحرافات",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Plan, then explain the difference
+
+- **Budget** — the financial plan for the period (expected revenue and costs).
+- **Actual** — what really happened.
+- **Variance = actual − budget** — favourable or adverse; investigate the big ones.
+
+### Make it useful
+
+A variance is a question, not a verdict: *why* did it happen, and is it one-off or a trend? Act on the drivers, not the number.
+
+> A budget nobody reviews is a wish. Monthly variance review turns it into control.`,
+            contentAr: `## خطّط ثم فسّر الفرق
+
+- **الموازنة** — الخطة المالية للفترة (الإيراد والتكاليف المتوقَّعة).
+- **الفعلي** — ما حدث حقًا.
+- **الانحراف = الفعلي − الموازنة** — موجب أو سالب؛ وحقّق في الكبير منه.
+
+### اجعله مفيدًا
+
+الانحراف سؤال لا حكم: *لماذا* حدث، وهل هو لمرة أم اتجاه؟ عالِج المسبّبات لا الرقم.
+
+> الموازنة التي لا يراجعها أحد أمنية. والمراجعة الشهرية للانحرافات تحوّلها إلى ضبط.`,
+          },
+          {
+            title: "Cost, Margin & Breakeven",
+            titleAr: "التكلفة والهامش ونقطة التعادل",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Know what a decision really costs
+
+- **Fixed vs. variable costs** — fixed don't change with volume (rent); variable do (materials).
+- **Gross margin** — revenue minus the direct cost of what you sold; the room to cover overheads and profit.
+- **Breakeven** — the volume at which revenue covers all costs; below it you lose money, above it you earn.
+
+> Cutting price to win work can destroy margin faster than it adds volume. Know your breakeven before you discount.`,
+            contentAr: `## اعرف الكلفة الحقيقية للقرار
+
+- **التكاليف الثابتة مقابل المتغيّرة** — الثابتة لا تتغيّر بالحجم (الإيجار)؛ والمتغيّرة تتغيّر (المواد).
+- **هامش الربح الإجمالي** — الإيراد ناقص الكلفة المباشرة لما بعته؛ وهو المتاح لتغطية المصاريف والربح.
+- **نقطة التعادل** — الحجم الذي يغطّي عنده الإيراد كل التكاليف؛ دونها تخسر وفوقها تربح.
+
+> خفض السعر لكسب العمل قد يدمّر الهامش أسرع مما يضيف حجمًا. اعرف نقطة تعادلك قبل أن تمنح خصمًا.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "Which statement shows whether a business was profitable over a period?",
+                promptAr: "أي قائمة تُظهر ما إذا كانت الشركة رابحة خلال فترة؟",
+                options: [
+                  { text: "The income statement (P&L)", textAr: "قائمة الدخل (الأرباح والخسائر)", correct: true },
+                  { text: "The balance sheet", textAr: "الميزانية العمومية" },
+                  { text: "The org chart", textAr: "الهيكل التنظيمي" },
+                  { text: "The attendance sheet", textAr: "كشف الحضور" },
+                ],
+                explanation: "The P&L reports revenue minus costs over a period.",
+                explanationAr: "تعرض قائمة الأرباح والخسائر الإيراد ناقص التكاليف خلال فترة.",
+              },
+              {
+                prompt: "A profitable company can still run out of cash mainly because:",
+                promptAr: "قد ينفد النقد من شركة رابحة أساسًا لأن:",
+                options: [
+                  { text: "Profit is earned on paper before cash is actually collected", textAr: "الربح يُسجَّل على الورق قبل تحصيل النقد فعلًا", correct: true },
+                  { text: "Profit and cash are always identical", textAr: "الربح والنقد متطابقان دائمًا" },
+                  { text: "Cash never matters", textAr: "النقد لا يهم أبدًا" },
+                  { text: "Budgets cause losses", textAr: "الموازنات تسبّب الخسائر" },
+                ],
+                explanation: "Timing gaps (receivables, inventory, supplier terms) tie up cash even when profitable.",
+                explanationAr: "فجوات التوقيت (الذمم والمخزون وشروط المورّدين) تحتجز النقد حتى مع الربح.",
+              },
+              {
+                prompt: "In variance analysis, 'variance' is:",
+                promptAr: "في تحليل الانحرافات، 'الانحراف' هو:",
+                options: [
+                  { text: "The difference between actual and budget", textAr: "الفرق بين الفعلي والموازنة", correct: true },
+                  { text: "The total revenue", textAr: "إجمالي الإيراد" },
+                  { text: "The number of employees", textAr: "عدد الموظفين" },
+                  { text: "The tax rate", textAr: "معدّل الضريبة" },
+                ],
+                explanation: "Variance = actual − budget; investigate the significant ones.",
+                explanationAr: "الانحراف = الفعلي − الموازنة؛ وحقّق في المهم منه.",
+              },
+              {
+                prompt: "'Breakeven' is the point at which:",
+                promptAr: "'نقطة التعادل' هي النقطة التي عندها:",
+                options: [
+                  { text: "Revenue exactly covers all costs (no profit, no loss)", textAr: "يغطّي الإيراد كل التكاليف تمامًا (لا ربح ولا خسارة)", correct: true },
+                  { text: "The company doubles its profit", textAr: "تضاعف الشركة ربحها" },
+                  { text: "All staff take leave", textAr: "يأخذ كل الموظفين إجازة" },
+                  { text: "Costs become zero", textAr: "تصبح التكاليف صفرًا" },
+                ],
+                explanation: "At breakeven, total revenue equals total cost.",
+                explanationAr: "عند التعادل يساوي إجمالي الإيراد إجمالي التكلفة.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 28) ENGINEERING & DESIGN — DIGITAL CONSTRUCTION & BIM
+  // =========================================================================
+  {
+    key: "engineering-digital-bim",
+    title: "Digital Construction & BIM",
+    titleAr: "البناء الرقمي ونمذجة معلومات البناء",
+    description:
+      "Deliver projects digitally — BIM concepts and maturity, the common data environment, 3D/4D/5D models and clash detection, and digital twins for operations.",
+    descriptionAr:
+      "نفّذ المشاريع رقميًا — مفاهيم ونضج نمذجة معلومات البناء وبيئة البيانات المشتركة والنماذج ثلاثية/رباعية/خماسية الأبعاد وكشف التعارضات والتوائم الرقمية للتشغيل.",
+    category: "Engineering & Design",
+    level: "INTERMEDIATE",
+    competency: "Digital Construction",
+    competencyAr: "البناء الرقمي",
+    modules: [
+      {
+        title: "BIM Foundations",
+        titleAr: "أسس نمذجة معلومات البناء",
+        lessons: [
+          {
+            title: "What BIM Really Is",
+            titleAr: "ما هي نمذجة معلومات البناء حقًا",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Information, not just 3D
+
+**BIM (Building Information Modelling)** is a shared digital model carrying both geometry **and data** (materials, costs, schedules, specifications) that the whole team builds and uses.
+
+- **Not just a pretty 3D picture** — the value is the structured information behind it.
+- **Single source of truth** — everyone works from the same coordinated model.
+- **Lifecycle** — the model serves design, construction *and* operation.
+
+> BIM's "I" — information — is the point. A 3D view with no reliable data behind it is just a drawing that spins.`,
+            contentAr: `## معلومات لا مجرّد ثلاثي أبعاد
+
+**نمذجة معلومات البناء (BIM)** نموذج رقمي مشترك يحمل الهندسة **والبيانات** معًا (المواد والتكاليف والجداول والمواصفات) يبنيه الفريق كله ويستخدمه.
+
+- **ليست صورة ثلاثية جميلة فقط** — القيمة في المعلومات المنظَّمة خلفها.
+- **مصدر حقيقة واحد** — يعمل الجميع من النموذج المنسَّق نفسه.
+- **دورة الحياة** — يخدم النموذج التصميم والتنفيذ *والتشغيل*.
+
+> حرف "I" في BIM — المعلومات — هو المقصد. فالعرض الثلاثي دون بيانات موثوقة مجرّد مخطط يدور.`,
+          },
+          {
+            title: "The Common Data Environment & Maturity",
+            titleAr: "بيئة البيانات المشتركة ومستويات النضج",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## One place, agreed rules
+
+- **Common Data Environment (CDE)** — the single, controlled place where project information is stored, shared and approved, so everyone uses the current version.
+- **BIM maturity** — from CAD drawings (Level 0/1) to a fully collaborative shared model and data (Level 2+), which many public clients now require.
+- **Standards & naming** — agreed conventions keep the model usable by all disciplines.
+
+> Without a CDE and naming rules, "BIM" becomes a pile of conflicting files. Governance is what makes the model trustworthy.`,
+            contentAr: `## مكان واحد بقواعد متفق عليها
+
+- **بيئة البيانات المشتركة (CDE)** — المكان الواحد المضبوط لتخزين معلومات المشروع ومشاركتها واعتمادها، ليستخدم الجميع النسخة الحالية.
+- **نضج BIM** — من مخططات CAD (المستوى 0/1) إلى نموذج وبيانات تعاونية مشتركة بالكامل (المستوى 2+)، وهو ما يتطلّبه كثير من العملاء الحكوميين الآن.
+- **المعايير والتسمية** — الاصطلاحات المتفق عليها تُبقي النموذج صالحًا لكل التخصّصات.
+
+> دون بيئة بيانات مشتركة وقواعد تسمية، تصبح "BIM" كومة ملفات متضاربة. فالحوكمة هي ما يجعل النموذج موثوقًا.`,
+          },
+        ],
+      },
+      {
+        title: "Value Across the Lifecycle",
+        titleAr: "القيمة عبر دورة الحياة",
+        lessons: [
+          {
+            title: "4D, 5D & Clash Detection",
+            titleAr: "الأبعاد الرباعية والخماسية وكشف التعارضات",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Add time and cost to the model
+
+- **3D** — coordinated geometry.
+- **4D** — 3D + **time**: link the model to the schedule to simulate the build sequence.
+- **5D** — 4D + **cost**: quantities and costs flow from the model.
+- **Clash detection** — automatically find where services collide (a duct through a beam) *before* site.
+
+> Catching a clash in the model costs minutes; catching it on site costs days and rework. That is where BIM pays for itself.`,
+            contentAr: `## أضِف الزمن والتكلفة إلى النموذج
+
+- **ثلاثي الأبعاد** — هندسة منسَّقة.
+- **رباعي الأبعاد** — الثلاثي + **الزمن**: اربط النموذج بالجدول لمحاكاة تسلسل التنفيذ.
+- **خماسي الأبعاد** — الرباعي + **التكلفة**: تتدفّق الكميات والتكاليف من النموذج.
+- **كشف التعارضات** — إيجاد تصادم الخدمات تلقائيًا (مجرى يخترق جسرًا) *قبل* الموقع.
+
+> ضبط تعارض في النموذج يكلّف دقائق؛ وضبطه في الموقع يكلّف أيامًا وإعادة عمل. وهناك تُثبت BIM جدواها.`,
+          },
+          {
+            title: "Digital Twins & Handover",
+            titleAr: "التوائم الرقمية والتسليم",
+            type: "TEXT",
+            durationMinutes: 11,
+            content: `## The model lives on after handover
+
+- **As-built model** — updated to reflect what was actually built, handed to the operator.
+- **Digital twin** — a living model linked to real building data (sensors, maintenance) used to run and maintain the asset.
+- **Facilities management** — asset data in the model means faster maintenance and fewer surprises over the building's decades of life.
+
+> Most of a building's cost is in operating it, not building it. A good digital handover keeps paying back for years.`,
+            contentAr: `## النموذج يستمرّ بعد التسليم
+
+- **نموذج كما نُفِّذ** — مُحدَّث ليعكس ما بُني فعلًا، ويُسلَّم للمشغّل.
+- **التوأم الرقمي** — نموذج حيّ مرتبط ببيانات المبنى الحقيقية (الحسّاسات والصيانة) يُستخدم لتشغيل الأصل وصيانته.
+- **إدارة المرافق** — وجود بيانات الأصول في النموذج يعني صيانة أسرع ومفاجآت أقل عبر عقود عمر المبنى.
+
+> معظم كلفة المبنى في تشغيله لا في بنائه. والتسليم الرقمي الجيد يستمرّ في العائد لسنوات.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "The most important part of BIM is:",
+                promptAr: "أهم جزء في نمذجة معلومات البناء هو:",
+                options: [
+                  { text: "The structured information (data) carried with the model", textAr: "المعلومات المنظَّمة (البيانات) المحمولة مع النموذج", correct: true },
+                  { text: "Only how realistic the 3D looks", textAr: "مدى واقعية المظهر الثلاثي فقط" },
+                  { text: "The colour of the renders", textAr: "لون الإخراج المرئي" },
+                  { text: "The software brand name", textAr: "اسم العلامة البرمجية" },
+                ],
+                explanation: "BIM's value is the information behind the geometry, not just the 3D view.",
+                explanationAr: "قيمة BIM في المعلومات خلف الهندسة لا في العرض الثلاثي فقط.",
+              },
+              {
+                prompt: "A Common Data Environment (CDE) is:",
+                promptAr: "بيئة البيانات المشتركة (CDE) هي:",
+                options: [
+                  { text: "The single controlled place project information is stored, shared and approved", textAr: "المكان الواحد المضبوط لتخزين معلومات المشروع ومشاركتها واعتمادها", correct: true },
+                  { text: "A type of concrete", textAr: "نوع من الخرسانة" },
+                  { text: "A site safety helmet", textAr: "خوذة سلامة الموقع" },
+                  { text: "A tax document", textAr: "مستند ضريبي" },
+                ],
+                explanation: "The CDE keeps everyone working from the current, approved information.",
+                explanationAr: "تُبقي بيئة البيانات المشتركة الجميع يعملون من المعلومات الحالية المعتمدة.",
+              },
+              {
+                prompt: "In BIM, '4D' adds which dimension to the 3D model?",
+                promptAr: "في BIM، يضيف 'البُعد الرابع' أي بُعد إلى النموذج الثلاثي؟",
+                options: [
+                  { text: "Time (the schedule / build sequence)", textAr: "الزمن (الجدول / تسلسل التنفيذ)", correct: true },
+                  { text: "Colour", textAr: "اللون" },
+                  { text: "Weight", textAr: "الوزن" },
+                  { text: "Temperature", textAr: "الحرارة" },
+                ],
+                explanation: "4D links the 3D model to time; 5D adds cost.",
+                explanationAr: "يربط البُعد الرابع النموذج الثلاثي بالزمن؛ ويضيف الخامس التكلفة.",
+              },
+              {
+                prompt: "A 'digital twin' is primarily used to:",
+                promptAr: "يُستخدم 'التوأم الرقمي' أساسًا لـ:",
+                options: [
+                  { text: "Run and maintain the building using live data after handover", textAr: "تشغيل المبنى وصيانته ببيانات حيّة بعد التسليم", correct: true },
+                  { text: "Replace the construction contract", textAr: "استبدال عقد الإنشاء" },
+                  { text: "Pay the workers", textAr: "دفع أجور العمال" },
+                  { text: "Decorate the lobby", textAr: "تزيين البهو" },
+                ],
+                explanation: "A digital twin links the model to real operating data to run and maintain the asset.",
+                explanationAr: "يربط التوأم الرقمي النموذج ببيانات التشغيل الحقيقية لتشغيل الأصل وصيانته.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 29) EXECUTIVE / COO — LEADING & MANAGING TEAMS
+  // =========================================================================
+  {
+    key: "exec-leading-teams",
+    title: "Leading & Managing Teams",
+    titleAr: "قيادة الفرق وإدارتها",
+    description:
+      "Get results through people — leadership vs. management, delegation, motivation, giving feedback and coaching, and handling difficult conversations.",
+    descriptionAr:
+      "حقّق النتائج عبر الناس — القيادة مقابل الإدارة والتفويض والتحفيز وتقديم الملاحظات والتدريب والتعامل مع المحادثات الصعبة.",
+    category: "Executive / COO",
+    level: "INTERMEDIATE",
+    competency: "People Leadership",
+    competencyAr: "قيادة الأفراد",
+    modules: [
+      {
+        title: "Lead and Delegate",
+        titleAr: "القيادة والتفويض",
+        lessons: [
+          {
+            title: "Leadership vs. Management",
+            titleAr: "القيادة مقابل الإدارة",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## You need both
+
+- **Management** — planning, organizing and controlling the work: doing things right.
+- **Leadership** — setting direction and inspiring people to follow: doing the right things.
+- Great team leads switch between them: structure *and* vision.
+
+### Trust is the foundation
+
+Teams give their best to leaders they trust — built through consistency, fairness and following through on your word.
+
+> Manage the work; lead the people. A team that is only managed complies; one that is also led commits.`,
+            contentAr: `## تحتاج كليهما
+
+- **الإدارة** — التخطيط والتنظيم والضبط للعمل: فعل الأشياء بشكل صحيح.
+- **القيادة** — تحديد الاتجاه وإلهام الناس للاتّباع: فعل الأشياء الصحيحة.
+- وقادة الفرق البارعون ينتقلون بينهما: البنية *والرؤية*.
+
+### الثقة هي الأساس
+
+تمنح الفرق أفضل ما لديها لقادة تثق بهم — وتُبنى الثقة بالاتّساق والعدل والوفاء بالكلمة.
+
+> أدِر العمل؛ وقُد الناس. الفريق المُدار فقط يمتثل؛ والمُقاد أيضًا يلتزم.`,
+          },
+          {
+            title: "Delegation & Motivation",
+            titleAr: "التفويض والتحفيز",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Multiply yourself, don't burn out
+
+- **Delegate** the task *and* the authority to do it — then support, don't micromanage.
+- **Match** the task to the person's skill and stretch.
+- **Motivation** is mostly intrinsic — purpose, growth and recognition often beat money alone.
+
+### Recognition is cheap and powerful
+
+Specific, timely appreciation for good work costs nothing and drives more of it.
+
+> If you can't delegate, you can't grow — the team stays capped at what you personally can do.`,
+            contentAr: `## ضاعِف نفسك دون أن تحترق
+
+- **فوّض** المهمة *والصلاحية* لتنفيذها — ثم ادعم ولا تُدِر بتفصيل مُفرِط.
+- **طابِق** المهمة مع مهارة الشخص وقدرته على التمدّد.
+- **التحفيز** داخليّ في الغالب — الغاية والنمو والتقدير غالبًا تتفوّق على المال وحده.
+
+### التقدير رخيص وقويّ
+
+الامتنان المحدّد في وقته للعمل الجيد لا يكلّف شيئًا ويحفّز المزيد منه.
+
+> إن لم تستطع التفويض لن تنمُ — ويبقى الفريق محدودًا بما تستطيعه أنت شخصيًا.`,
+          },
+        ],
+      },
+      {
+        title: "Develop and Correct",
+        titleAr: "التطوير والتصحيح",
+        lessons: [
+          {
+            title: "Feedback & Coaching",
+            titleAr: "الملاحظات والتدريب",
+            type: "TEXT",
+            durationMinutes: 12,
+            content: `## Grow people in real time
+
+- **Feedback** — specific, timely, and about behaviour, not personality. Describe what you saw and its impact.
+- **Balance** — recognize what works, not only what doesn't; people repeat what is noticed.
+- **Coaching** — ask questions that help people find their own answers, rather than always giving the solution.
+
+> "Good job" and "fix it" both teach nothing. Specific feedback on behaviour and impact is what changes performance.`,
+            contentAr: `## طوّر الناس في حينه
+
+- **الملاحظات** — محدّدة وفي وقتها وعن السلوك لا الشخصية. صِف ما رأيته وأثره.
+- **التوازن** — أقرّ بما ينجح لا بما يخفق فقط؛ فالناس يكرّرون ما يُلاحَظ.
+- **التدريب** — اطرح أسئلة تساعد الناس على إيجاد إجاباتهم بدل إعطاء الحل دائمًا.
+
+> "عمل جيد" و"أصلِحه" كلاهما لا يُعلّم شيئًا. فالملاحظة المحدّدة عن السلوك والأثر هي ما يغيّر الأداء.`,
+          },
+          {
+            title: "Difficult Conversations",
+            titleAr: "المحادثات الصعبة",
+            type: "TEXT",
+            durationMinutes: 11,
+            content: `## Address problems early and respectfully
+
+- **Don't avoid** — small issues grow when ignored; address them while they are small.
+- **Prepare** — facts, the specific impact, and the outcome you want.
+- **Private and respectful** — criticize in private, praise in public; attack the problem, not the person.
+- **Listen** — there may be context you don't have; agree concrete next steps.
+
+> The conversation you're dreading rarely gets easier by waiting. Handled early and fairly, it protects the team and the relationship.`,
+            contentAr: `## عالِج المشكلات مبكرًا وباحترام
+
+- **لا تتجنّب** — تكبر المشكلات الصغيرة إذا أُهمِلت؛ عالِجها وهي صغيرة.
+- **استعدّ** — الحقائق والأثر المحدّد والنتيجة التي تريدها.
+- **خاص ومحترم** — انتقد سرًّا وامتدح علنًا؛ وهاجِم المشكلة لا الشخص.
+- **استمع** — قد يكون هناك سياق تجهله؛ واتّفق على خطوات تالية ملموسة.
+
+> المحادثة التي تخشاها نادرًا ما تَسهُل بالانتظار. ومعالجتها مبكرًا وبإنصاف تحمي الفريق والعلاقة.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "The clearest distinction between management and leadership is:",
+                promptAr: "أوضح فرق بين الإدارة والقيادة هو:",
+                options: [
+                  { text: "Management is doing things right; leadership is doing the right things / setting direction", textAr: "الإدارة فعل الأشياء بشكل صحيح؛ والقيادة فعل الأشياء الصحيحة / تحديد الاتجاه", correct: true },
+                  { text: "They are identical", textAr: "كلاهما متطابق" },
+                  { text: "Leadership is only for executives", textAr: "القيادة للتنفيذيين فقط" },
+                  { text: "Management means never planning", textAr: "الإدارة تعني عدم التخطيط أبدًا" },
+                ],
+                explanation: "Manage the work (do things right); lead the people (do the right things).",
+                explanationAr: "أدِر العمل (بشكل صحيح)؛ وقُد الناس (الأشياء الصحيحة).",
+              },
+              {
+                prompt: "Effective delegation means handing over:",
+                promptAr: "التفويض الفعّال يعني تسليم:",
+                options: [
+                  { text: "The task AND the authority to do it, then supporting (not micromanaging)", textAr: "المهمة والصلاحية لتنفيذها، ثم الدعم (لا الإدارة التفصيلية)", correct: true },
+                  { text: "Only the blame if it fails", textAr: "اللوم فقط إن فشلت" },
+                  { text: "Nothing — do it all yourself", textAr: "لا شيء — افعل كل شيء بنفسك" },
+                  { text: "The task but watching every step", textAr: "المهمة مع مراقبة كل خطوة" },
+                ],
+                explanation: "Delegate task and authority, then support — don't micromanage.",
+                explanationAr: "فوّض المهمة والصلاحية ثم ادعم — دون إدارة تفصيلية.",
+              },
+              {
+                prompt: "Good feedback is:",
+                promptAr: "الملاحظة الجيدة:",
+                options: [
+                  { text: "Specific, timely, and about behaviour and its impact", textAr: "محدّدة وفي وقتها وعن السلوك وأثره", correct: true },
+                  { text: "Vague and delayed for months", textAr: "غامضة ومؤجَّلة أشهرًا" },
+                  { text: "An attack on the person's character", textAr: "هجوم على شخصية الفرد" },
+                  { text: "Only ever negative", textAr: "سلبية دائمًا فقط" },
+                ],
+                explanation: "Describe the behaviour and its impact, promptly — not personality.",
+                explanationAr: "صِف السلوك وأثره في حينه — لا الشخصية.",
+              },
+              {
+                prompt: "The best approach to a difficult conversation is to:",
+                promptAr: "أفضل نهج للمحادثة الصعبة هو:",
+                options: [
+                  { text: "Address it early, in private, with facts and respect", textAr: "معالجتها مبكرًا وسرًّا وبالحقائق والاحترام", correct: true },
+                  { text: "Avoid it until it explodes", textAr: "تجنّبها حتى تنفجر" },
+                  { text: "Criticize the person publicly", textAr: "انتقاد الشخص علنًا" },
+                  { text: "Only communicate by email", textAr: "التواصل بالبريد فقط" },
+                ],
+                explanation: "Early, private, fact-based and respectful conversations protect the team and the relationship.",
+                explanationAr: "المحادثات المبكرة الخاصة المبنية على الحقائق والمحترمة تحمي الفريق والعلاقة.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 30) PROFESSIONAL SKILLS — BUSINESS COMMUNICATION & REPORT WRITING
+  // =========================================================================
+  {
+    key: "skills-business-communication",
+    title: "Business Communication & Report Writing",
+    titleAr: "التواصل المهني وكتابة التقارير",
+    description:
+      "Communicate clearly at work — professional email and messaging, structured report writing, effective meetings, and confident presentations.",
+    descriptionAr:
+      "تواصل بوضوح في العمل — البريد والرسائل المهنية وكتابة التقارير المنظَّمة والاجتماعات الفعّالة والعروض بثقة.",
+    category: "Professional Skills",
+    level: "FOUNDATION",
+    competency: "Business Communication",
+    competencyAr: "التواصل المهني",
+    modules: [
+      {
+        title: "Writing at Work",
+        titleAr: "الكتابة في العمل",
+        lessons: [
+          {
+            title: "Professional Email & Messaging",
+            titleAr: "البريد والرسائل المهنية",
+            type: "TEXT",
+            durationMinutes: 11,
+            content: `## Respect the reader's time
+
+- **Clear subject line** — the reader should know the topic and any action before opening.
+- **Lead with the point** — put the ask or conclusion first, details after.
+- **One email, one purpose** — and name the action and deadline explicitly.
+- **Tone** — professional and polite; re-read before sending, especially when annoyed.
+
+> Most workplace confusion is a vague message. A clear subject and a clear ask save a dozen replies.`,
+            contentAr: `## احترم وقت القارئ
+
+- **عنوان واضح** — ينبغي أن يعرف القارئ الموضوع وأي إجراء قبل أن يفتح.
+- **ابدأ بالخلاصة** — ضع الطلب أو النتيجة أولًا والتفاصيل بعدها.
+- **بريد واحد لغرض واحد** — وحدّد الإجراء والموعد صراحةً.
+- **النبرة** — مهنية ومهذّبة؛ وأعِد القراءة قبل الإرسال، خاصةً عند الانزعاج.
+
+> معظم ارتباك العمل رسالة غامضة. فعنوان واضح وطلب واضح يوفّران عشرات الردود.`,
+          },
+          {
+            title: "Structured Report Writing",
+            titleAr: "كتابة التقارير المنظَّمة",
+            type: "TEXT",
+            durationMinutes: 13,
+            content: `## Make it easy to read and act on
+
+- **Know the purpose and reader** — what decision should this report enable?
+- **Structure** — a short **summary / recommendation first**, then background, findings, and next steps.
+- **Evidence** — support claims with data; separate fact from opinion.
+- **Clarity** — short sentences, headings, and visuals where they help.
+
+> Executives read the summary and the recommendation. Put your conclusion on page one, not page ten.`,
+            contentAr: `## اجعله سهل القراءة والتنفيذ
+
+- **اعرف الغرض والقارئ** — أي قرار يُفترَض أن يتيحه هذا التقرير؟
+- **البنية** — **خلاصة / توصية قصيرة أولًا**، ثم الخلفية والنتائج والخطوات التالية.
+- **الأدلة** — ادعم الادّعاءات بالبيانات؛ وافصِل الحقيقة عن الرأي.
+- **الوضوح** — جمل قصيرة وعناوين ورسوم حيث تفيد.
+
+> يقرأ التنفيذيون الخلاصة والتوصية. ضع نتيجتك في الصفحة الأولى لا العاشرة.`,
+          },
+        ],
+      },
+      {
+        title: "Speaking at Work",
+        titleAr: "التحدّث في العمل",
+        lessons: [
+          {
+            title: "Effective Meetings",
+            titleAr: "الاجتماعات الفعّالة",
+            type: "TEXT",
+            durationMinutes: 11,
+            content: `## Meetings should produce decisions
+
+- **Agenda + purpose** — if there's no agenda and no decision to make, it may not need a meeting.
+- **Right people, right length** — invite who is needed; protect everyone's time.
+- **Minutes & actions** — capture decisions and **who does what by when**; a meeting with no actions achieves little.
+
+> A meeting with no agenda and no actions is a meeting that didn't need to happen. End with clear owners and deadlines.`,
+            contentAr: `## الاجتماعات يجب أن تُنتج قرارات
+
+- **جدول أعمال + غرض** — إن لم يكن هناك جدول ولا قرار يُتّخذ، فقد لا يلزم اجتماع.
+- **الأشخاص المناسبون والمدة المناسبة** — ادعُ من يلزم؛ واحمِ وقت الجميع.
+- **المحضر والإجراءات** — دوّن القرارات و**من يفعل ماذا ومتى**؛ فالاجتماع بلا إجراءات يحقّق القليل.
+
+> الاجتماع بلا جدول ولا إجراءات اجتماع لم يكن ضروريًا. اختِم بمسؤولين ومواعيد واضحة.`,
+          },
+          {
+            title: "Confident Presentations",
+            titleAr: "العروض بثقة",
+            type: "TEXT",
+            durationMinutes: 11,
+            content: `## Help the audience follow and remember
+
+- **One message per slide** — slides support you; they are not your script.
+- **Structure** — tell them what you'll say, say it, then summarize.
+- **Know your audience** — pitch the detail to what they need and already know.
+- **Practice** — rehearsal turns nerves into confidence; know your opening cold.
+
+> Death by bullet points loses the room. One clear idea per slide, and let the speaker — you — carry the story.`,
+            contentAr: `## ساعِد الجمهور على المتابعة والتذكّر
+
+- **رسالة واحدة لكل شريحة** — الشرائح تدعمك؛ وليست نصّك.
+- **البنية** — أخبرهم بما ستقول، ثم قُله، ثم لخّص.
+- **اعرف جمهورك** — اضبط مستوى التفصيل وفق ما يحتاجونه ويعرفونه.
+- **التدرّب** — يحوّل التمرين التوتّر إلى ثقة؛ أتقِن مقدّمتك تمامًا.
+
+> الموت بالنقاط يفقد القاعة. فكرة واضحة واحدة لكل شريحة، ودع المتحدّث — أنت — يحمل القصة.`,
+          },
+        ],
+      },
+      {
+        title: "Knowledge Check",
+        titleAr: "اختبار المعرفة",
+        lessons: [
+          {
+            title: "Course Quiz",
+            titleAr: "اختبار الدورة",
+            type: "QUIZ",
+            durationMinutes: 8,
+            content: "",
+            contentAr: "",
+            passMark: 70,
+            questions: [
+              {
+                prompt: "A professional email should usually:",
+                promptAr: "ينبغي للبريد المهني عادةً أن:",
+                options: [
+                  { text: "Have a clear subject and lead with the point / the action needed", textAr: "يحمل عنوانًا واضحًا ويبدأ بالخلاصة / الإجراء المطلوب", correct: true },
+                  { text: "Bury the request in the last paragraph", textAr: "يدفن الطلب في الفقرة الأخيرة" },
+                  { text: "Cover five unrelated topics at once", textAr: "يغطّي خمسة مواضيع غير مرتبطة دفعةً" },
+                  { text: "Never state a deadline", textAr: "لا يذكر موعدًا أبدًا" },
+                ],
+                explanation: "Clear subject + point first + a named action and deadline saves back-and-forth.",
+                explanationAr: "عنوان واضح + الخلاصة أولًا + إجراء وموعد محدّدان يوفّران تبادل الرسائل.",
+              },
+              {
+                prompt: "In a business report for executives, you should put:",
+                promptAr: "في تقرير أعمال للتنفيذيين، ينبغي أن تضع:",
+                options: [
+                  { text: "The summary and recommendation first", textAr: "الخلاصة والتوصية أولًا", correct: true },
+                  { text: "The conclusion only on the last page", textAr: "النتيجة في الصفحة الأخيرة فقط" },
+                  { text: "No structure at all", textAr: "لا بنية إطلاقًا" },
+                  { text: "Opinion with no evidence", textAr: "رأيًا دون أدلة" },
+                ],
+                explanation: "Lead with the summary/recommendation; executives decide from page one.",
+                explanationAr: "ابدأ بالخلاصة/التوصية؛ فالتنفيذيون يقرّرون من الصفحة الأولى.",
+              },
+              {
+                prompt: "A productive meeting needs, above all:",
+                promptAr: "الاجتماع المنتِج يحتاج قبل كل شيء:",
+                options: [
+                  { text: "An agenda/purpose and clear actions (who does what by when)", textAr: "جدول أعمال/غرضًا وإجراءات واضحة (من يفعل ماذا ومتى)", correct: true },
+                  { text: "As many attendees as possible", textAr: "أكبر عدد من الحضور" },
+                  { text: "To run with no end time", textAr: "أن يستمرّ دون وقت انتهاء" },
+                  { text: "No notes of any decisions", textAr: "عدم تدوين أي قرارات" },
+                ],
+                explanation: "Agenda, the right people, and recorded actions make a meeting worthwhile.",
+                explanationAr: "جدول الأعمال والأشخاص المناسبون والإجراءات المدوّنة تجعل الاجتماع مجديًا.",
+              },
+              {
+                prompt: "A good presentation slide should:",
+                promptAr: "الشريحة الجيدة في العرض ينبغي أن:",
+                options: [
+                  { text: "Carry one clear message and support the speaker", textAr: "تحمل رسالة واحدة واضحة وتدعم المتحدّث", correct: true },
+                  { text: "Contain the entire script in tiny text", textAr: "تحتوي النص كاملًا بخط صغير" },
+                  { text: "Have as many bullet points as possible", textAr: "تضمّ أكبر عدد من النقاط" },
+                  { text: "Replace the speaker entirely", textAr: "تحلّ محل المتحدّث تمامًا" },
+                ],
+                explanation: "One message per slide; the slide supports you, it isn't your script.",
+                explanationAr: "رسالة واحدة لكل شريحة؛ فالشريحة تدعمك وليست نصّك.",
               },
             ],
           },
