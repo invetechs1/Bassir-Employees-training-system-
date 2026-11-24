@@ -103,6 +103,14 @@ export default async function TrainingPage() {
               {t("dept.link")}
             </Link>
           ) : null}
+          {canManage ? (
+            <Link
+              href="/training/teacher"
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              {t("teacher.link")}
+            </Link>
+          ) : null}
           {canCreate ? (
             <Link
               href="/training/new"
@@ -141,6 +149,26 @@ export default async function TrainingPage() {
                     <p className="text-xs text-slate-500">
                       {t(`level.${e.program.level}`)} · {t(`estatus.${e.status}`)}
                     </p>
+                    {e.dueAt && e.status !== "COMPLETED" ? (
+                      (() => {
+                        const overdue = e.dueAt.getTime() < Date.now();
+                        const d = new Intl.DateTimeFormat(
+                          locale === "ar" ? "ar" : "en-GB",
+                          { day: "numeric", month: "short", year: "numeric" }
+                        ).format(e.dueAt);
+                        return (
+                          <span
+                            className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                              overdue
+                                ? "bg-rose-100 text-rose-700"
+                                : "bg-amber-50 text-amber-700"
+                            }`}
+                          >
+                            {overdue ? t("course.overdue") : t("course.due")} {d}
+                          </span>
+                        );
+                      })()
+                    ) : null}
                   </div>
                   <span className="text-sm font-semibold text-brand-700">
                     {e.progress}%

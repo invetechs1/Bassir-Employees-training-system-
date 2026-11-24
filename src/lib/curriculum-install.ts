@@ -37,7 +37,7 @@ async function installProgram(
   categoryId: string,
   spec: CurriculumProgram,
   authorId: string | null
-): Promise<number> {
+): Promise<{ programId: string; lessonsCreated: number }> {
   const competencyId = await ensureCompetency(
     tx,
     tenantId,
@@ -120,7 +120,53 @@ async function installProgram(
       lessonsCreated++;
     }
   }
-  return lessonsCreated;
+  return { programId: program.id, lessonsCreated };
+}
+
+/** Ensure the shared competency category that groups generated/library content. */
+async function ensureLibraryCategory(
+  tx: Prisma.TransactionClient,
+  tenantId: string
+): Promise<string> {
+  const CATEGORY_NAME = "Professional Development";
+  let category = await tx.competencyCategory.findFirst({
+    where: { tenantId, name: CATEGORY_NAME },
+  });
+  if (!category) {
+    category = await tx.competencyCategory.create({
+      data: { tenantId, name: CATEGORY_NAME },
+    });
+  }
+  return category.id;
+}
+
+/**
+ * Install (or reuse) a single program from a CurriculumProgram spec. Idempotent
+ * by (tenantId, title): if a program with the same title already exists it is
+ * returned unchanged. Returns the program id and whether it was newly created.
+ * Requires an active tenant context (RLS) on `tx`.
+ */
+export async function installSingleProgram(
+  tx: Prisma.TransactionClient,
+  tenantId: string,
+  spec: CurriculumProgram,
+  opts: { authorId?: string | null } = {}
+): Promise<{ programId: string; created: boolean }> {
+  const existing = await tx.trainingProgram.findFirst({
+    where: { tenantId, title: spec.title },
+    select: { id: true },
+  });
+  if (existing) return { programId: existing.id, created: false };
+
+  const categoryId = await ensureLibraryCategory(tx, tenantId);
+  const { programId } = await installProgram(
+    tx,
+    tenantId,
+    categoryId,
+    spec,
+    opts.authorId ?? null
+  );
+  return { programId, created: true };
 }
 
 export async function installCurriculum(
@@ -131,15 +177,7 @@ export async function installCurriculum(
   const authorId = opts.authorId ?? null;
 
   // A dedicated competency category groups the library's linked competencies.
-  const CATEGORY_NAME = "Professional Development";
-  let category = await tx.competencyCategory.findFirst({
-    where: { tenantId, name: CATEGORY_NAME },
-  });
-  if (!category) {
-    category = await tx.competencyCategory.create({
-      data: { tenantId, name: CATEGORY_NAME },
-    });
-  }
+  const categoryId = await ensureLibraryCategory(tx, tenantId);
 
   const result: InstallResult = {
     programsCreated: 0,
@@ -156,15 +194,15 @@ export async function installCurriculum(
       result.programsSkipped++;
       continue;
     }
-    const lessons = await installProgram(
+    const { lessonsCreated } = await installProgram(
       tx,
       tenantId,
-      category.id,
+      categoryId,
       spec,
       authorId
     );
     result.programsCreated++;
-    result.lessonsCreated += lessons;
+    result.lessonsCreated += lessonsCreated;
   }
 
   return result;

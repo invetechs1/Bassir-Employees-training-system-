@@ -700,6 +700,12 @@ model Enrollment {
   score       Int? // final assessment score, 0-100
   enrolledAt  DateTime         @default(now())
   completedAt DateTime?
+  // Optional deadline for assigned training (null = self-paced, no due date).
+  dueAt       DateTime?
+  // How this enrollment was created: "self", "department", "position",
+  // "manager", or "teacher-agent" (the automated monthly generator). Null for
+  // historical rows created before this was tracked.
+  assignedVia String?
 
   tenant  Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   program TrainingProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
