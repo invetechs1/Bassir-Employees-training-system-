@@ -154,6 +154,61 @@ This link expires in ${ttlMinutes} minutes. If you didn't request this, you can 
   return { subject, html, text };
 }
 
+/** Build the training-reminder email body, styled with the company's branding. */
+export function trainingReminderEmail(params: {
+  companyName: string;
+  userName: string;
+  link: string;
+  courses: { title: string; due: string; overdue: boolean }[];
+  brand?: EmailBranding;
+}): { subject: string; html: string; text: string } {
+  const { companyName, userName, link, courses, brand } = params;
+  const btnColor = brand?.color ?? "#2953d9";
+  const anyOverdue = courses.some((c) => c.overdue);
+  const subject = anyOverdue
+    ? `Overdue training on ${companyName}`
+    : `Training due soon on ${companyName}`;
+
+  const lines = courses
+    .map(
+      (c) =>
+        `• ${c.title} — ${c.overdue ? `OVERDUE (was due ${c.due})` : `due ${c.due}`}`
+    )
+    .join("\n");
+  const text = `Hi ${userName},
+
+You have training to complete on ${companyName}:
+
+${lines}
+
+Continue your training:
+${link}`;
+
+  const items = courses
+    .map(
+      (c) =>
+        `<li style="margin:6px 0"><strong>${c.title}</strong> — ${
+          c.overdue
+            ? `<span style="color:#be123c">overdue (was due ${c.due})</span>`
+            : `<span style="color:#b45309">due ${c.due}</span>`
+        }</li>`
+    )
+    .join("");
+  const html = `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:auto;color:#0f1729">
+  ${emailHeader(companyName, brand)}
+  <div style="border:1px solid #e3e8f2;border-top:0;padding:24px;border-radius:0 0 12px 12px">
+    <p>Hi ${userName},</p>
+    <p>You have training to complete on <strong>${companyName}</strong>:</p>
+    <ul style="padding-left:18px;margin:12px 0">${items}</ul>
+    <p style="margin:24px 0">
+      <a href="${link}" style="background:${btnColor};color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600;display:inline-block">Continue your training</a>
+    </p>
+    <p style="color:#7a869c;font-size:13px">Or paste this link into your browser:<br><a href="${link}" style="color:${btnColor}">${link}</a></p>
+  </div>
+</div>`;
+  return { subject, html, text };
+}
+
 /** Build the email-verification email body, styled with the company's branding. */
 export function verifyEmailEmail(params: {
   companyName: string;

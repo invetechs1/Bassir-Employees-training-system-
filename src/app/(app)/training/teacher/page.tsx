@@ -50,6 +50,14 @@ export default async function TeacherAgentPage() {
           skipped: t("teacher.skipped"),
           viaLlm: t("teacher.viaLlm"),
           viaDet: t("teacher.viaDet"),
+          remindTitle: t("teacher.remindTitle"),
+          remindSubtitle: t("teacher.remindSubtitle"),
+          remindRun: t("teacher.remindRun"),
+          remindRunning: t("teacher.remindRunning"),
+          remindResult: t("teacher.remindResult"),
+          remindCandidates: t("teacher.remindCandidates"),
+          remindNotified: t("teacher.remindNotified"),
+          remindSent: t("teacher.remindSent"),
         }}
       />
 

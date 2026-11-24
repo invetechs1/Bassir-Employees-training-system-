@@ -246,7 +246,7 @@ invitation/reset e-mails are built from it.
 | **E-mail (SMTP)** | ➖ | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`. Without these, invitations still work — the admin gets a link to share manually. |
 | **Stripe billing** | ➖ | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_GROWTH`, `STRIPE_PRICE_ENTERPRISE`. Without these, plan changes apply in-app with no payment. |
 | **Platform console** | ➖ | `PLATFORM_ADMIN_EMAIL`, `PLATFORM_ADMIN_PASSWORD` enable the vendor `/platform` console. Leave unset to disable it. |
-| **Teacher agent** | ➖ | `ANTHROPIC_API_KEY` turns on the Claude-powered course generator (without it, the built-in offline engine is used). `CRON_SECRET` enables the scheduled runner at `POST /api/teacher-agent/run` (send it in the `x-cron-secret` header). Optional: `TEACHER_AGENT_MODEL` (default `claude-opus-5-5`), `TEACHER_AGENT_ENGINE=deterministic` to force the offline engine. |
+| **Teacher agent** | ➖ | `ANTHROPIC_API_KEY` turns on the Claude-powered course generator (without it, the built-in offline engine is used). `CRON_SECRET` enables the scheduled runners (send it in the `x-cron-secret` header): `POST /api/teacher-agent/run` (generate & assign monthly courses) and `POST /api/reminders/run` (email due/overdue reminders, best run daily). Optional: `TEACHER_AGENT_MODEL` (default `claude-opus-5-5`), `TEACHER_AGENT_ENGINE=deterministic` to force the offline engine. Reminder emails need SMTP configured. |
 | **Legal pages** | ➖ | `LEGAL_ENTITY_NAME`, `LEGAL_CONTACT_EMAIL` for the terms/privacy pages. |
 
 See `.env.example` for the annotated master list.
